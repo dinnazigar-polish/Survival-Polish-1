@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 1 – Etap 3: Pisanie ze słuchu i obrazków</title>
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --primary-green-hover: #27ae60;
+            --badge-green-bg: #e8f8f0;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-light: #e2e8f0;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.1);
+            --wrong-red: #e74c3c;
+            --correct-green: #2ecc71;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        /* Nawigacja górna */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-green);
+        }
+
+        .breadcrumb {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        /* Karta nagłówkowa */
+        .header-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 2rem;
+        }
+
+        .header-title-area {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .module-badge {
+            background-color: var(--badge-green-bg);
+            color: var(--primary-green);
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: var(--text-dark);
+            font-weight: 800;
+        }
+
+        .header-desc {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Pasek postępu */
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 14px;
+            background-color: var(--border-light);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-green);
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        /* Karta zadania pisania */
+        .quiz-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            box-shadow: var(--shadow-soft);
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .word-icon {
+            font-size: 4.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .translation-hint {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            max-width: 450px;
+            margin: 0 auto 1.5rem auto;
+        }
+
+        .typing-input {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-align: center;
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            color: var(--text-dark);
+            background-color: #fafbfc;
+        }
+
+        .typing-input:focus {
+            border-color: var(--primary-green);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.15);
+        }
+
+        .typing-input.correct {
+            border-color: var(--correct-green);
+            background-color: #e8f8f0;
+            color: #27ae60;
+        }
+
+        .typing-input.wrong {
+            border-color: var(--wrong-red);
+            background-color: #fceae8;
+            color: #c0392b;
+            animation: shake 0.3s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        /* Przyciski polskich znaków */
+        .special-keys {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .key-btn {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-light);
+            color: var(--text-dark);
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 0.5rem 0.9rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            user-select: none;
+        }
+
+        .key-btn:hover {
+            background-color: var(--badge-green-bg);
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        .key-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Komunikat zwrotny */
+        .feedback-message {
+            min-height: 30px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 1rem;
+        }
+
+        .feedback-message.correct {
+            color: var(--correct-green);
+        }
+
+        .feedback-message.wrong {
+            color: var(--wrong-red);
+        }
+
+        /* Przyciski Akcji */
+        .action-area {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            background-color: var(--primary-green);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 0.9rem 2.5rem;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-green-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: #cbd5e1;
+        }
+
+        /* Ekran podsumowania */
+        .completion-card {
+            display: none;
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            margin-top: 1rem;
+        }
+
+        .completion-card h2 {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .completion-card p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .achievement-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--badge-green-bg);
+            color: var(--primary-green);
+            font-weight: 700;
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Confetti */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        @media (max-width: 600px) {
+            .quiz-card {
+                padding: 1.5rem 1rem;
+            }
+            .word-icon {
+                font-size: 3.5rem;
+            }
+            .typing-input {
+                font-size: 1.1rem;
+            }
+            .action-area {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="container">
+        <!-- Nawigacja górna -->
+        <div class="top-nav">
+            <a href="module-1-vocab.html" class="back-link">
+                ← Powrót do modułu
+            </a>
+            <div class="breadcrumb">
+                <a href="index.html">🏠 Strona główna</a> &gt; <a href="module-1-vocab.html">Moduł 1</a> &gt; <strong>Etap 3: Pisanie</strong>
+            </div>
+        </div>
+
+        <!-- Nagłówek -->
+        <div class="header-card">
+            <div class="header-title-area">
+                <span class="module-badge">Etap 3</span>
+            </div>
+            <h1>Wpisz słowo po polsku</h1>
+            <p class="header-desc">Spójrz na obrazek i angielskie tłumaczenie, a następnie wpisz odpowiednie słowo po polsku.</p>
+
+            <!-- Pasek postępu -->
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span id="step-counter">Pytanie: 1/22</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progress-bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Karta do pisania -->
+        <div class="quiz-card" id="quiz-card">
+            <span class="word-icon" id="word-icon">🏠</span>
+            <div class="translation-hint" id="translation-hint">house</div>
+
+            <form id="typing-form" onsubmit="event.preventDefault(); checkAnswer();">
+                <div class="input-group">
+                    <input type="text" id="user-input" class="typing-input" placeholder="Wpisz po polsku..." autocomplete="off" spellcheck="false" autofocus>
+                </div>
+
+                <!-- Przyciski z polskimi znakami -->
+                <div class="special-keys">
+                    <button type="button" class="key-btn" onclick="addChar('ą')">ą</button>
+                    <button type="button" class="key-btn" onclick="addChar('ć')">ć</button>
+                    <button type="button" class="key-btn" onclick="addChar('ę')">ę</button>
+                    <button type="button" class="key-btn" onclick="addChar('ł')">ł</button>
+                    <button type="button" class="key-btn" onclick="addChar('ń')">ń</button>
+                    <button type="button" class="key-btn" onclick="addChar('ó')">ó</button>
+                    <button type="button" class="key-btn" onclick="addChar('ś')">ś</button>
+                    <button type="button" class="key-btn" onclick="addChar('ź')">ź</button>
+                    <button type="button" class="key-btn" onclick="addChar('ż')">ż</button>
+                </div>
+
+                <div class="feedback-message" id="feedback-message"></div>
+
+                <div class="action-area">
+                    <button type="button" class="btn btn-secondary" id="hint-btn" onclick="showHint()">Podpowiedź</button>
+                    <button type="submit" class="btn" id="submit-btn">Sprawdź answer</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Ekran ukończenia etapu -->
+        <div class="completion-card" id="completion-card">
+            <div style="font-size: 4rem; margin-bottom: 0.5rem;">🎉</div>
+            <div class="achievement-badge">🏆 Osiągnięcie: Mistrz Pisowni!</div>
+            <h2>Niesamowicie! Etap 3 ukończony!</h2>
+            <p>Świetna robota! Pomyślnie wpisano wszystkie 22 słowa po polsku.</p>
+            <a href="grammar.html" class="btn">Przejdź do Etapu 4 →</a>
+        </div>
+    </div>
+
+    <script>
+        // Dokładna lista 22 słówek dla Modułu 1 (dokładnie ta sama co w Etapie 1 i 2)
+        const vocabulary = [
+            { id: 1, pl: "dom", en: "house", icon: "🏠" },
+            { id: 2, pl: "mieszkanie", en: "apartment", icon: "🏢" },
+            { id: 3, pl: "pokój", en: "room", icon: "🛋️" },
+            { id: 4, pl: "salon", en: "living room", icon: "📺" },
+            { id: 5, pl: "kuchnia", en: "kitchen", icon: "🍳" },
+            { id: 6, pl: "łazienka", en: "bathroom", icon: "🛁" },
+            { id: 7, pl: "ogród", en: "garden", icon: "🏡" },
+            { id: 8, pl: "garaż", en: "garage", icon: "🚗" },
+            { id: 9, pl: "okno", en: "window", icon: "🪟" },
+            { id: 10, pl: "drzwi", en: "door", icon: "🚪" },
+            { id: 11, pl: "stół", en: "table", icon: "🪑" },
+            { id: 12, pl: "krzesło", en: "chair", icon: "🪑" },
+            { id: 13, pl: "kanapa", en: "sofa", icon: "🛋️" },
+            { id: 14, pl: "lodówka", en: "fridge", icon: "🧊" },
+            { id: 15, pl: "kawa", en: "coffee", icon: "☕" },
+            { id: 16, pl: "herbata", en: "tea", icon: "🫖" },
+            { id: 17, pl: "mleko", en: "milk", icon: "🥛" },
+            { id: 18, pl: "woda niegazowana", en: "still water", icon: "💧" },
+            { id: 19, pl: "truskawki", en: "strawberries", icon: "🍓" },
+            { id: 20, pl: "borówki", en: "blueberries", icon: "🫐" },
+            { id: 21, pl: "owoce", en: "fruits", icon: "🧺" },
+            { id: 22, pl: "ciasto jabłkowe", en: "apple pie", icon: "🥧" }
+        ];
+
+        const MODULE_KEY = 'm1_progress';
+        let currentIndex = 0;
+        let questions = [];
+        let isWaitingNext = false;
+
+        function initQuiz() {
+            // Klonowanie i wymieszanie słówek
+            questions = [...vocabulary].sort(() => Math.random() - 0.5);
+            currentIndex = 0;
+            isWaitingNext = false;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const currentItem = questions[currentIndex];
+            document.getElementById('word-icon').textContent = currentItem.icon;
+            document.getElementById('translation-hint').textContent = currentItem.en;
+            
+            const input = document.getElementById('user-input');
+            input.value = '';
+            input.className = 'typing-input';
+            input.disabled = false;
+            input.focus();
+
+            document.getElementById('feedback-message').textContent = '';
+            document.getElementById('feedback-message').className = 'feedback-message';
+            
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.textContent = 'Sprawdź';
+            
+            isWaitingNext = false;
+            updateProgress();
+        }
+
+        function addChar(char) {
+            const input = document.getElementById('user-input');
+            if (input.disabled) return;
+            
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            const text = input.value;
+            
+            input.value = text.substring(0, start) + char + text.substring(end);
+            input.selectionStart = input.selectionEnd = start + 1;
+            input.focus();
+        }
+
+        function normalizeText(text) {
+            return text.trim().toLowerCase().replace(/\s+/g, ' ');
+        }
+
+        function checkAnswer() {
+            if (isWaitingNext) {
+                nextQuestion();
+                return;
+            }
+
+            const input = document.getElementById('user-input');
+            const userAnswer = normalizeText(input.value);
+            const correctAnswer = normalizeText(questions[currentIndex].pl);
+            const feedback = document.getElementById('feedback-message');
+            const submitBtn = document.getElementById('submit-btn');
+
+            if (userAnswer === '') return;
+
+            if (userAnswer === correctAnswer) {
+                input.className = 'typing-input correct';
+                feedback.textContent = '✨ Doskonale! Poprawna odpowiedź!';
+                feedback.className = 'feedback-message correct';
+                input.disabled = true;
+                
+                submitBtn.textContent = 'Dalej →';
+                isWaitingNext = true;
+            } else {
+                input.className = 'typing-input wrong';
+                feedback.textContent = `❌ Spróbuj ponownie. Prawidłowa pisownia: "${questions[currentIndex].pl}"`;
+                feedback.className = 'feedback-message wrong';
+                
+                setTimeout(() => {
+                    if (!isWaitingNext) {
+                        input.className = 'typing-input';
+                    }
+                }, 1200);
+            }
+        }
+
+        function showHint() {
+            if (isWaitingNext) return;
+            const correctAnswer = questions[currentIndex].pl;
+            const input = document.getElementById('user-input');
+            
+            // Pokaż pierwszą literę lub powiększ podpowiedź
+            if (input.value.length === 0) {
+                input.value = correctAnswer.charAt(0);
+            } else {
+                const currentLen = input.value.length;
+                if (currentLen < correctAnswer.length) {
+                    input.value = correctAnswer.substring(0, currentLen + 1);
+                }
+            }
+            input.focus();
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < questions.length) {
+                loadQuestion();
+            } else {
+                completeStage();
+            }
+        }
+
+        function updateProgress() {
+            const percentage = Math.round((currentIndex / questions.length) * 100);
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            document.getElementById('progress-percent').textContent = percentage + '%';
+            document.getElementById('step-counter').textContent = `Pytanie: ${currentIndex + 1}/${questions.length}`;
+        }
+
+        function completeStage() {
+            // Zapis do localStorage
+            let progress = { stage1: true, stage2: true, stage3: false, stage4: false, stage5: false, stage6: false };
+            const saved = localStorage.getItem(MODULE_KEY);
+            if (saved) {
+                try { progress = JSON.parse(saved); } catch(e) {}
+            }
+            
+            progress.stage3 = true; // Odblokowanie Etapu 4
+            localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
+
+            // Pokazanie paska postępu na 100%
+            document.getElementById('progress-bar').style.width = '100%';
+            document.getElementById('progress-percent').textContent = '100%';
+
+            // Pokaż ekran ukończenia i uruchom konfetti
+            setTimeout(() => {
+                document.getElementById('quiz-card').style.display = 'none';
+                document.getElementById('completion-card').style.display = 'block';
+                runConfetti();
+            }, 400);
+        }
+
+        function runConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = Array.from({ length: 70 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                size: Math.random() * 8 + 4,
+                color: ['#2ecc71', '#3498db', '#f1c40f', '#e74c3c'][Math.floor(Math.random() * 4)],
+                speed: Math.random() * 3 + 2
+            }));
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.y += p.speed;
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(p.x, p.y, p.size, p.size);
+                });
+                if (particles.some(p => p.y < canvas.height)) {
+                    requestAnimationFrame(draw);
+                }
+            }
+            draw();
+        }
+
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>
