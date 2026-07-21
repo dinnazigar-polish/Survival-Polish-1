@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polski A1-A2 | Platforma Edukacyjna</title>
+    <style>
+        :root {
+            --primary-color: #34c759;
+            --primary-hover: #28a745;
+            --secondary-color: #007bff;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #212529;
+            --text-muted: #6c757d;
+            --border-radius: 16px;
+            --box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+            --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid #e9ecef;
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 15px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        nav a:hover {
+            background-color: #f1f3f5;
+            color: var(--primary-color);
+        }
+
+        /* --- Hero Banner --- */
+        .hero {
+            background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #1b4332;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- Main Content --- */
+        main {
+            max-width: 1100px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+            width: 100%;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 4px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        /* --- Module Grid --- */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .module-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #f1f3f5;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+        }
+
+        .module-badge {
+            align-self: flex-start;
+            background-color: #e8f5e9;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 4px 12px;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .module-badge.pdf-badge {
+            background-color: #e3f2fd;
+            color: var(--secondary-color);
+        }
+
+        .module-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .module-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .resource-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            transition: background 0.2s;
+            border: none;
+            cursor: pointer;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid #e9ecef;
+            color: var(--text-color);
+        }
+
+        .btn-outline:hover {
+            background-color: #f8f9fa;
+            border-color: #ced4da;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--card-bg);
+            border-top: 1px solid #e9ecef;
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">🇵🇱 Język Polski A1–A2</a>
+            <nav>
+                <ul>
+                    <li><a href="#moduly">Moduły</a></li>
+                    <li><a href="#materialy">PDF i Pliki</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Materiały do nauki języka polskiego</h1>
+            <p>Interaktywne quizy, ćwiczenia, wiktoriny oraz pliki PDF dla obcokrajowców.</p>
+        </div>
+    </section>
+
+    <main>
+        <!-- Sekcja z Modułami i Quizami -->
+        <section id="moduly">
+            <h2 class="section-title">Moduły Edukacyjne</h2>
+            <div class="modules-grid">
+
+                <!-- MODUŁ 1 -->
+                <div class="module-card">
+                    <div>
+                        <span class="module-badge">Moduł 1</span>
+                        <h3>Dom i jedzenie</h3>
+                        <p>Naucz się 20 podstawowych słów, potrenuj fiszki, dopasowywanie, pisanie oraz podstawową gramatykę.</p>
+                    </div>
+                    <div class="resource-links">
+                        <!-- Link do stworzonego wcześniej quizu w HTML -->
+                        <a href="polish_a1_home_food_quiz.html" class="btn btn-primary">Uruchom Quiz 🎯</a>
+                    </div>
+                </div>
+
+                <!-- MODUŁ 2 (Przykład gotowy do podlinkowania w przyszłości) -->
+                <div class="module-card">
+                    <div>
+                        <span class="module-badge">Moduł 2</span>
+                        <h3>Rodzina i Przyjaciele</h3>
+                        <p>Poznaj słownictwo związane z rodziną, opisem osób oraz podstawowymi relacjami.</p>
+                    </div>
+                    <div class="resource-links">
+                        <!-- Wystarczy podmienić href na nazwę nowego pliku HTML -->
+                        <a href="#" class="btn btn-outline" style="opacity: 0.6; pointer-events: none;">Wkrótce... ⏳</a>
+                    </div>
+                </div>
+
+                <!-- MODUŁ 3 -->
+                <div class="module-card">
+                    <div>
+                        <span class="module-badge">Moduł 3</span>
+                        <h3>Zakupy i Sklep</h3>
+                        <p>Ćwiczenia ze słownictwa i dialogów w sklepie, pytania o cenę oraz nazwy produktów.</p>
+                    </div>
+                    <div class="resource-links">
+                        <a href="#" class="btn btn-outline" style="opacity: 0.6; pointer-events: none;">Wkrótce... ⏳</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Sekcja z materiałami PDF / Wiktorinami -->
+        <section id="materialy">
+            <h2 class="section-title">Materiały do pobrania (PDF)</h2>
+            <div class="modules-grid">
+
+                <!-- KARTA PDF 1 -->
+                <div class="module-card">
+                    <div>
+                        <span class="module-badge pdf-badge">PDF • Karty Pracy</span>
+                        <h3>Karty ze słownictwem: Dom</h3>
+                        <p>Zestaw obrazkowy ze słownictwem z modułu 1 gotowy do wydruku.</p>
+                    </div>
+                    <div class="resource-links">
+                        <!-- Link do pliku PDF zapisanego w folderze pdf/ lub obok -->
+                        <a href="pdf/dom_slownictwo.pdf" target="_blank" class="btn btn-outline">Pobierz PDF 📄</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Platforma Edukacyjna – Język Polski jako Obcy. Wszystkie prawa zastrzeżone.</p>
+    </footer>
+
+</body>
+</html>
