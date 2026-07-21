@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 1 – Etap 2: Dopasuj słowa</title>
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --primary-green-hover: #27ae60;
+            --badge-green-bg: #e8f8f0;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-light: #e2e8f0;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.1);
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --wrong-red: #e74c3c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        /* Nawigacja górna */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-green);
+        }
+
+        .breadcrumb {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        /* Karta nagłówkowa */
+        .header-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 2rem;
+        }
+
+        .header-title-area {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .module-badge {
+            background-color: var(--badge-green-bg);
+            color: var(--primary-green);
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: var(--text-dark);
+            font-weight: 800;
+        }
+
+        .header-desc {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Pasek postępu */
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 14px;
+            background-color: var(--border-light);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-green);
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        /* Siatka gry */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .match-card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            padding: 1.5rem 1rem;
+            min-height: 110px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.4s ease;
+            user-select: none;
+        }
+
+        .match-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-green);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .match-card .icon {
+            font-size: 2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .match-card .text {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text-dark);
+        }
+
+        /* Stany kafelków */
+        .match-card.selected {
+            border-color: var(--primary-green);
+            background-color: var(--badge-green-bg);
+            transform: scale(1.03);
+        }
+
+        .match-card.wrong {
+            border-color: var(--wrong-red);
+            background-color: #fceae8;
+            animation: shake 0.3s ease;
+        }
+
+        .match-card.matched {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        /* Ekran podsumowania */
+        .completion-card {
+            display: none;
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            margin-top: 1rem;
+        }
+
+        .completion-card h2 {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .completion-card p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .achievement-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--badge-green-bg);
+            color: var(--primary-green);
+            font-weight: 700;
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            background-color: var(--primary-green);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 0.9rem 2.5rem;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-green-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Confetti */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        @media (max-width: 600px) {
+            .game-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="container">
+        <!-- Nawigacja górna -->
+        <div class="top-nav">
+            <a href="index.html" class="back-link">
+                ← Powrót do modułów
+            </a>
+            <div class="breadcrumb">
+                <a href="index.html">🏠 Strona główna</a> &gt; <strong>Etap 2: Dopasuj obrazki</strong>
+            </div>
+        </div>
+
+        <!-- Nagłówek -->
+        <div class="header-card">
+            <div class="header-title-area">
+                <span class="module-badge">Etap 2</span>
+            </div>
+            <h1>Dopasuj obrazki i słowa</h1>
+            <p class="header-desc">Dopasuj polskie słowa do odpowiednich grafik i angielskich tłumaczeń.</p>
+
+            <!-- Pasek postępu -->
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span id="pairs-left-text">Postęp: 0/22 par</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progress-bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Siatka gry -->
+        <div class="game-grid" id="game-grid">
+            <!-- Kafelki zostaną wygenerowane automatycznie przez JavaScript -->
+        </div>
+
+        <!-- Ekran ukończenia etapu -->
+        <div class="completion-card" id="completion-card">
+            <div style="font-size: 4rem; margin-bottom: 0.5rem;">🎉</div>
+            <div class="achievement-badge">🏆 Osiągnięcie: Mistrz Słownictwa!</div>
+            <h2>Niesamowicie! Etap 2 ukończony!</h2>
+            <p>Świetna robota. Wszystkie 22 słowa zostały poprawnie dopasowane.</p>
+            <a href="modul-1-pisanie.html" class="btn">Przejdź do Etapu 3 →</a>
+        </div>
+    </div>
+
+    <script>
+        // Dokładna lista 22 słówek dla Modułu 1
+        const vocabulary = [
+            { id: 1, pl: "dom", en: "house", icon: "🏠" },
+            { id: 2, pl: "mieszkanie", en: "apartment", icon: "🏢" },
+            { id: 3, pl: "pokój", en: "room", icon: "🛋️" },
+            { id: 4, pl: "salon", en: "living room", icon: "📺" },
+            { id: 5, pl: "kuchnia", en: "kitchen", icon: "🍳" },
+            { id: 6, pl: "łazienka", en: "bathroom", icon: "🛁" },
+            { id: 7, pl: "ogród", en: "garden", icon: "🏡" },
+            { id: 8, pl: "garaż", en: "garage", icon: "🚗" },
+            { id: 9, pl: "okno", en: "window", icon: "🪟" },
+            { id: 10, pl: "drzwi", en: "door", icon: "🚪" },
+            { id: 11, pl: "stół", en: "table", icon: "🪑" },
+            { id: 12, pl: "krzesło", en: "chair", icon: "🪑" },
+            { id: 13, pl: "kanapa", en: "sofa", icon: "🛋️" },
+            { id: 14, pl: "lodówka", en: "fridge", icon: "🧊" },
+            { id: 15, pl: "kawa", en: "coffee", icon: "☕" },
+            { id: 16, pl: "herbata", en: "tea", icon: "🫖" },
+            { id: 17, pl: "mleko", en: "milk", icon: "🥛" },
+            { id: 18, pl: "woda niegazowana", en: "still water", icon: "💧" },
+            { id: 19, pl: "truskawki", en: "strawberries", icon: "🍓" },
+            { id: 20, pl: "borówki", en: "blueberries", icon: "🫐" },
+            { id: 21, pl: "owoce", en: "fruits", icon: "🧺" },
+            { id: 22, pl: "ciasto jabłkowe", en: "apple pie", icon: "🥧" }
+        ];
+
+        const MODULE_KEY = 'm1_progress';
+        let selectedCards = [];
+        let matchedPairs = 0;
+        const totalPairs = vocabulary.length;
+
+        function initGame() {
+            const grid = document.getElementById('game-grid');
+            grid.innerHTML = '';
+
+            // Generowanie podwójnej liczby kafelków (polski oraz angielski z ikoną)
+            let cardsData = [];
+            vocabulary.forEach(item => {
+                cardsData.push({ pairId: item.id, text: item.pl, icon: '', type: 'pl' });
+                cardsData.push({ pairId: item.id, text: item.en, icon: item.icon, type: 'en' });
+            });
+
+            // Losowe przetasowanie kafelków
+            cardsData.sort(() => Math.random() - 0.5);
+
+            // Wyświetlanie kafelków w gridzie
+            cardsData.forEach(data => {
+                const card = document.createElement('div');
+                card.className = 'match-card';
+                card.dataset.pairId = data.pairId;
+                
+                card.innerHTML = `
+                    ${data.icon ? `<div class="icon">${data.icon}</div>` : ''}
+                    <div class="text">${data.text}</div>
+                `;
+
+                card.addEventListener('click', () => handleCardClick(card));
+                grid.appendChild(card);
+            });
+
+            updateProgress();
+        }
+
+        function handleCardClick(card) {
+            // Unikanie ponownego kliknięcia w wybrane lub już usunięte kafelki
+            if (card.classList.contains('matched') || card.classList.contains('selected') || selectedCards.length >= 2) {
+                return;
+            }
+
+            card.classList.add('selected');
+            selectedCards.push(card);
+
+            if (selectedCards.length === 2) {
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = selectedCards;
+            const isMatch = card1.dataset.pairId === card2.dataset.pairId;
+
+            if (isMatch) {
+                setTimeout(() => {
+                    card1.classList.remove('selected');
+                    card2.classList.remove('selected');
+                    card1.classList.add('matched');
+                    card2.classList.add('matched');
+                    
+                    matchedPairs++;
+                    updateProgress();
+                    selectedCards = [];
+
+                    if (matchedPairs === totalPairs) {
+                        completeStage();
+                    }
+                }, 300);
+            } else {
+                card1.classList.add('wrong');
+                card2.classList.add('wrong');
+
+                setTimeout(() => {
+                    card1.classList.remove('selected', 'wrong');
+                    card2.classList.remove('selected', 'wrong');
+                    selectedCards = [];
+                }, 700);
+            }
+        }
+
+        function updateProgress() {
+            const percentage = Math.round((matchedPairs / totalPairs) * 100);
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            document.getElementById('progress-percent').textContent = percentage + '%';
+            document.getElementById('pairs-left-text').textContent = `Postęp: ${matchedPairs}/${totalPairs} par`;
+        }
+
+        function completeStage() {
+            // Zapis do localStorage
+            let progress = { stage1: true, stage2: false, stage3: false, stage4: false, stage5: false, stage6: false };
+            const saved = localStorage.getItem(MODULE_KEY);
+            if (saved) {
+                try { progress = JSON.parse(saved); } catch(e) {}
+            }
+            
+            progress.stage2 = true; // Odblokowanie Etapu 3 na stronie głównej
+            localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
+
+            // Pokaż ekran ukończenia i wywołaj konfetti
+            setTimeout(() => {
+                document.getElementById('game-grid').style.display = 'none';
+                document.getElementById('completion-card').style.display = 'block';
+                runConfetti();
+            }, 500);
+        }
+
+        function runConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = Array.from({ length: 70 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                size: Math.random() * 8 + 4,
+                color: ['#2ecc71', '#3498db', '#f1c40f', '#e74c3c'][Math.floor(Math.random() * 4)],
+                speed: Math.random() * 3 + 2
+            }));
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.y += p.speed;
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(p.x, p.y, p.size, p.size);
+                });
+                if (particles.some(p => p.y < canvas.height)) {
+                    requestAnimationFrame(draw);
+                }
+            }
+            draw();
+        }
+
+        document.addEventListener('DOMContentLoaded', initGame);
+    </script>
+</body>
+</html>
