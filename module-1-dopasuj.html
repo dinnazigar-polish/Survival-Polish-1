@@ -324,12 +324,11 @@
             <div class="achievement-badge">🏆 Osiągnięcie: Mistrz Słownictwa!</div>
             <h2>Niesamowicie! Etap 2 ukończony!</h2>
             <p>Świetna robota. Wszystkie 22 słowa zostały poprawnie dopasowane.</p>
-            <a href="modul-1-pisanie.html" class="btn">Przejdź do Etapu 3 →</a>
+            <a href="module-1-pisanie.html" class="btn">Przejdź do Etapu 3 →</a>
         </div>
     </div>
 
     <script>
-        // Dokładna lista 22 słówek dla Modułu 1
         const vocabulary = [
             { id: 1, pl: "dom", en: "house", icon: "🏠" },
             { id: 2, pl: "mieszkanie", en: "apartment", icon: "🏢" },
@@ -364,17 +363,14 @@
             const grid = document.getElementById('game-grid');
             grid.innerHTML = '';
 
-            // Generowanie podwójnej liczby kafelków (polski oraz angielski z ikoną)
             let cardsData = [];
             vocabulary.forEach(item => {
                 cardsData.push({ pairId: item.id, text: item.pl, icon: '', type: 'pl' });
                 cardsData.push({ pairId: item.id, text: item.en, icon: item.icon, type: 'en' });
             });
 
-            // Losowe przetasowanie kafelków
             cardsData.sort(() => Math.random() - 0.5);
 
-            // Wyświetlanie kafelków w gridzie
             cardsData.forEach(data => {
                 const card = document.createElement('div');
                 card.className = 'match-card';
@@ -393,7 +389,6 @@
         }
 
         function handleCardClick(card) {
-            // Unikanie ponownego kliknięcia w wybrane lub już usunięte kafelki
             if (card.classList.contains('matched') || card.classList.contains('selected') || selectedCards.length >= 2) {
                 return;
             }
@@ -445,17 +440,15 @@
         }
 
         function completeStage() {
-            // Zapis do localStorage
             let progress = { stage1: true, stage2: false, stage3: false, stage4: false, stage5: false, stage6: false };
             const saved = localStorage.getItem(MODULE_KEY);
             if (saved) {
                 try { progress = JSON.parse(saved); } catch(e) {}
             }
             
-            progress.stage2 = true; // Odblokowanie Etapu 3 na stronie głównej
+            progress.stage2 = true;
             localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
 
-            // Pokaż ekran ukończenia i wywołaj konfetti
             setTimeout(() => {
                 document.getElementById('game-grid').style.display = 'none';
                 document.getElementById('completion-card').style.display = 'block';
