@@ -8,130 +8,403 @@
         :root {
             --primary-salmon: #f49c96;
             --primary-salmon-hover: #e0857f;
-            --badge-salmon-bg: #fdf0ef;
-            --badge-salmon-text: #d96b63;
             --bg-color: #f8f9fa;
             --card-bg: #ffffff;
             --text-dark: #2c3e50;
             --text-muted: #7f8c8d;
             --border-light: #e2e8f0;
+            --bubble-left: #f1f5f9;
+            --bubble-right: #fdf0ef;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--text-dark); padding: 2rem 1rem; }
-        .container { max-width: 650px; margin: 0 auto; }
-        .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .back-link { color: var(--text-muted); text-decoration: none; font-weight: 600; }
-        .back-link:hover { color: var(--primary-salmon); }
-        .counter-badge { background-color: var(--badge-salmon-bg); color: var(--badge-salmon-text); font-weight: 700; padding: 0.4rem 1rem; border-radius: 20px; }
 
-        .chat-box { background: var(--card-bg); border-radius: 24px; padding: 1.5rem; border: 2px solid var(--border-light); margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
-        .bubble { padding: 0.9rem 1.2rem; border-radius: 18px; max-width: 80%; font-weight: 600; }
-        .bubble.left { background-color: var(--bg-color); border: 1px solid var(--border-light); align-self: flex-start; }
-        .bubble.right { background-color: var(--badge-salmon-bg); color: var(--badge-salmon-text); align-self: flex-end; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-        .opt-btn { background: var(--card-bg); border: 2px solid var(--border-light); border-radius: 12px; padding: 0.9rem; font-weight: 600; cursor: pointer; text-align: left; margin-bottom: 0.5rem; width: 100%; }
-        .opt-btn:hover { border-color: var(--primary-salmon); }
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
 
-        .btn { background-color: var(--primary-salmon); color: white; font-weight: 700; padding: 0.9rem 1.8rem; border-radius: 30px; border: none; cursor: pointer; text-decoration: none; display: inline-block; width: 100%; text-align: center; }
-        .btn:hover { background-color: var(--primary-salmon-hover); }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-salmon);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background-color: var(--border-light);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: var(--primary-salmon);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .dialogue-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .chat-window {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            min-height: 260px;
+            margin-bottom: 2rem;
+        }
+
+        .chat-bubble {
+            max-width: 80%;
+            padding: 1rem 1.2rem;
+            border-radius: 18px;
+            font-size: 1.05rem;
+            position: relative;
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-bubble.speaker-a {
+            align-self: flex-start;
+            background-color: var(--bubble-left);
+            color: var(--text-dark);
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-bubble.speaker-b {
+            align-self: flex-end;
+            background-color: var(--bubble-right);
+            color: var(--text-dark);
+            border-bottom-right-radius: 4px;
+            border: 1px solid var(--primary-salmon);
+        }
+
+        .speaker-name {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.2rem;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option-btn {
+            background-color: #ffffff;
+            border: 2px solid var(--border-light);
+            padding: 1rem 1.2rem;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary-salmon);
+            background-color: #fffaf9;
+        }
+
+        .option-btn.correct {
+            border-color: var(--success-color);
+            background-color: #eafaf1;
+            color: var(--success-color);
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--error-color);
+            background-color: #fdf2f2;
+            color: var(--error-color);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .next-btn {
+            margin-top: 1.5rem;
+            width: 100%;
+            background-color: var(--primary-salmon);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .next-btn:hover {
+            background-color: var(--primary-salmon-hover);
+        }
+
+        /* Reading timer indicator */
+        .timer-badge {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        .completion-screen {
+            text-align: center;
+            padding: 3rem 1rem;
+            display: none;
+        }
+
+        .completion-screen h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn-finish {
+            display: inline-block;
+            background-color: var(--primary-salmon);
+            color: white;
+            text-decoration: none;
+            padding: 0.9rem 2rem;
+            border-radius: 30px;
+            font-weight: 700;
+            margin-top: 1.5rem;
+        }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <div class="top-nav">
-            <a href="module-2-vocab.html" class="back-link">← Powrót do Modułu 2</a>
-            <span class="counter-badge" id="counter">Dialog 1 / 3</span>
+        <div class="header">
+            <a href="module-2-vocab.html" class="back-link">← Powrót do listy etapów</a>
+            <span id="step-counter" style="font-weight: 700; color: var(--text-muted);">Dialog 1 / 6</span>
         </div>
 
-        <div id="dialog-area">
-            <div class="chat-box" id="chat"></div>
-            <div id="options-box"></div>
+        <div class="progress-bar-container">
+            <div class="progress-fill" id="progress-bar"></div>
         </div>
 
-        <div id="comp-area" style="display: none; text-align: center; background: var(--card-bg); padding: 2rem; border-radius: 24px; border: 2px solid var(--border-light);">
-            <h2>💬 Dialogi ukończone!</h2>
-            <p style="color: var(--text-muted); margin: 1rem 0 2rem;">Świetnie radzisz sobie z konwersacjami o rodzinie!</p>
-            <a href="module-2-vocab.html" class="btn">Powrót do menu modułu</a>
+        <!-- Główna karta dialogu -->
+        <div class="dialogue-card" id="dialogue-card">
+            <div class="chat-window" id="chat-window">
+                <!-- Wiadomości będą generowane automatycznie -->
+            </div>
+
+            <div id="interaction-area">
+                <p style="font-weight: 700; margin-bottom: 0.8rem; color: var(--text-dark);">Wybierz pasującą odpowiedź:</p>
+                <div class="options-container" id="options-container">
+                    <!-- Opcje do wyboru -->
+                </div>
+            </div>
+
+            <button class="next-btn" id="next-btn" onclick="nextDialogue()">Kontynuuj →</button>
+        </div>
+
+        <!-- Ekran końcowy -->
+        <div class="completion-screen" id="completion-screen">
+            <h2>🎉 Świetnie!</h2>
+            <p>Ukończyłeś Etap 5: Dialogi. Wszystkie rozmowy zostały opanowane!</p>
+            <a href="module-2-vocab.html" class="btn-finish" onclick="markStageComplete()">Zapisz i wróć do modułu</a>
         </div>
     </div>
 
     <script>
         const dialogues = [
             {
-                speaker1: "Cześć! Z kim dzisiaj jesz obiad?",
-                speaker2Opts: [
-                    { text: "Jem obiad razem z moją rodziną.", correct: true },
-                    { text: "Mój sąsiad mieszkać daleko.", correct: false }
+                prompt: "Kto odbiera Wasze dzieci ze szkoły?",
+                options: [
+                    { text: "Moja żona po pracy jedzie po dzieci.", correct: true },
+                    { text: "Moja mama jest nauczycielką w liceum.", correct: false }
                 ],
-                reply: "Super! A Twoja mama też będzie?"
+                reaction: "Rozumiem, to bardzo wygodne rozwiązanie."
             },
             {
-                speaker1: "Czy Twój brat mieszka w Warszawie?",
-                speaker2Opts: [
-                    { text: "Tak, mój brat i siostra mieszkają razem w Warszawie.", correct: true },
-                    { text: "Nie, moja żona to przyjaciółka.", correct: false }
+                prompt: "Czym zajmuje się Twoja mama?",
+                options: [
+                    { text: "Moja mama jest nauczycielką. Naucza matematyki i fizyki.", correct: true },
+                    { text: "Moja mama piecze pyszne ciasta w cukierni.", correct: false }
                 ],
-                reply: "To świetnie! Często ich odwiedzasz?"
+                reaction: "Wow! Matematyka i fizyka są dla mnie bardzo trudne."
             },
             {
-                speaker1: "Kto Ci pomaga w ogrodzie?",
-                speaker2Opts: [
-                    { text: "Mój dobry sąsiad i wujek zawsze mi pomagają.", correct: true },
-                    { text: "Rodzice rozmawiać gotować.", correct: false }
+                prompt: "Kto Ciebie nauczył tak dobrze mówić po polsku?",
+                options: [
+                    { text: "Nasza babcia świetnie mówi po polsku. Urodziła się w Polsce.", correct: true },
+                    { text: "Mój bratanek bardzo lubi uczyć się języków obcych.", correct: false }
                 ],
-                reply: "Masz bardzo miłych bliskich!"
+                reaction: "To niesamowite! Masz wspaniałą rodzinną historię."
+            },
+            {
+                prompt: "Kto upiekł ten pyszny tort?",
+                options: [
+                    { text: "Moja mama piecze pyszne ciasta. Ona pracuje w cukierni.", correct: true },
+                    { text: "Mój tata codziennie gotuje obiad dla całej rodziny.", correct: false }
+                ],
+                reaction: "Naprawdę wyśmienity! Muszę poprosić o przepis."
+            },
+            {
+                prompt: "Czy masz rodzeństwo?",
+                options: [
+                    { text: "Tak, mam starszego brata i młodszą siostrę.", correct: true },
+                    { text: "Tak, moi rodzice są już na emeryturze.", correct: false }
+                ],
+                reaction: "Fajnie! Często się spotykacie?"
+            },
+            {
+                prompt: "Jak wygląda Twój najlepszy przyjaciel?",
+                options: [
+                    { text: "Jest wysoki, ma krótkie ciemne włosy i nosi okulary.", correct: true },
+                    { text: "Mój przyjaciel pracuje jako inżynier w dużej firmie.", correct: false }
+                ],
+                reaction: "Wydaje się bardzo sympatyczny!"
             }
         ];
 
-        let curIdx = 0;
+        let currentIndex = 0;
 
-        function loadDialog() {
-            document.getElementById('counter').textContent = `Dialog ${curIdx + 1} / ${dialogues.length}`;
-            const d = dialogues[curIdx];
-            const chat = document.getElementById('chat');
-            chat.innerHTML = `<div class="bubble left">${d.speaker1}</div>`;
+        function renderDialogue() {
+            const current = dialogues[currentIndex];
+            const chatWindow = document.getElementById('chat-window');
+            const optionsContainer = document.getElementById('options-container');
+            const nextBtn = document.getElementById('next-btn');
 
-            const optsBox = document.getElementById('options-box');
-            optsBox.innerHTML = '';
-            d.speaker2Opts.forEach(opt => {
+            chatWindow.innerHTML = '';
+            optionsContainer.innerHTML = '';
+            nextBtn.style.display = 'none';
+
+            // Pokaż pierwsze pytanie
+            const bubbleA = document.createElement('div');
+            bubbleA.className = 'chat-bubble speaker-a';
+            bubbleA.innerHTML = `<div class="speaker-name">Rozmówca A</div>${current.prompt}`;
+            chatWindow.appendChild(bubbleA);
+
+            // Pomieszaj opcje
+            const shuffledOptions = [...current.options].sort(() => Math.random() - 0.5);
+
+            shuffledOptions.forEach(opt => {
                 const btn = document.createElement('button');
-                btn.className = 'opt-btn';
+                btn.className = 'option-btn';
                 btn.textContent = opt.text;
-                btn.onclick = () => selectOpt(opt, d.reply);
-                optsBox.appendChild(btn);
+                btn.onclick = () => selectOption(btn, opt.correct, current.reaction);
+                optionsContainer.appendChild(btn);
             });
+
+            updateProgress();
         }
 
-        function selectOpt(opt, reply) {
-            if (!opt.correct) return alert("Spróbuj wybrać bardziej naturalną odpowiedź!");
+        function selectOption(selectedBtn, isCorrect, reactionText) {
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(btn => btn.disabled = true);
 
-            const chat = document.getElementById('chat');
-            chat.innerHTML += `<div class="bubble right">${opt.text}</div>`;
-            document.getElementById('options-box').innerHTML = '';
+            if (isCorrect) {
+                selectedBtn.classList.add('correct');
 
-            setTimeout(() => {
-                chat.innerHTML += `<div class="bubble left">${reply}</div>`;
+                // Wyświetl wybraną odpowiedź jako chmurkę rozmówcy B
+                const chatWindow = document.getElementById('chat-window');
+                const bubbleB = document.createElement('div');
+                bubbleB.className = 'chat-bubble speaker-b';
+                bubbleB.innerHTML = `<div class="speaker-name">Ty</div>${selectedBtn.textContent}`;
+                chatWindow.appendChild(bubbleB);
+
+                // Wydłużone opóźnienie (min. 7 sekund na spokojne przeczytanie treści i reakcji)
                 setTimeout(() => {
-                    curIdx++;
-                    if (curIdx < dialogues.length) {
-                        loadDialog();
-                    } else {
-                        finishStage();
-                    }
+                    const bubbleReaction = document.createElement('div');
+                    bubbleReaction.className = 'chat-bubble speaker-a';
+                    bubbleReaction.innerHTML = `<div class="speaker-name">Rozmówca A</div>${reactionText}`;
+                    chatWindow.appendChild(bubbleReaction);
+
+                    // Pokaż przycisk Kontynuuj
+                    document.getElementById('next-btn').style.display = 'block';
+                }, 1200);
+
+            } else {
+                selectedBtn.classList.add('incorrect');
+                // Jeśli odpowiedź jest błędna, po krótkiej chwili pozwalamy spróbować ponownie
+                setTimeout(() => {
+                    selectedBtn.classList.remove('incorrect');
+                    allBtns.forEach(btn => btn.disabled = false);
                 }, 1500);
-            }, 600);
+            }
         }
 
-        function finishStage() {
-            let progress = JSON.parse(localStorage.getItem('m2_progress') || '{}');
+        function nextDialogue() {
+            currentIndex++;
+            if (currentIndex < dialogues.length) {
+                renderDialogue();
+            } else {
+                showCompletion();
+            }
+        }
+
+        function updateProgress() {
+            const total = dialogues.length;
+            const progressPct = ((currentIndex) / total) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPct}%`;
+            document.getElementById('step-counter').textContent = `Dialog ${currentIndex + 1} / ${total}`;
+        }
+
+        function showCompletion() {
+            document.getElementById('dialogue-card').style.display = 'none';
+            document.getElementById('completion-screen').style.display = 'block';
+            document.getElementById('progress-bar').style.width = '100%';
+        }
+
+        function markStageComplete() {
+            const MODULE_KEY = 'm2_progress';
+            let progress = JSON.parse(localStorage.getItem(MODULE_KEY)) || {};
             progress.stage5 = true;
-            localStorage.setItem('m2_progress', JSON.stringify(progress));
-            document.getElementById('dialog-area').style.display = 'none';
-            document.getElementById('comp-area').style.display = 'block';
+            localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
         }
 
-        loadDialog();
+        // Inicjalizacja
+        renderDialogue();
     </script>
 </body>
 </html>
