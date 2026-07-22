@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 2 – Etap 7: Test końcowy</title>
+    <style>
+        :root {
+            --primary-salmon: #f49c96;
+            --primary-salmon-hover: #e0857f;
+            --badge-salmon-bg: #fdf0ef;
+            --badge-salmon-text: #d96b63;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-light: #e2e8f0;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--text-dark); padding: 2rem 1rem; }
+        .container { max-width: 650px; margin: 0 auto; }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .back-link { color: var(--text-muted); text-decoration: none; font-weight: 600; }
+        .back-link:hover { color: var(--primary-salmon); }
+        .counter-badge { background-color: var(--badge-salmon-bg); color: var(--badge-salmon-text); font-weight: 700; padding: 0.4rem 1rem; border-radius: 20px; }
+
+        .card { background: var(--card-bg); border-radius: 24px; padding: 2rem; border: 2px solid var(--border-light); }
+        .question { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.2rem; }
+
+        .opt-btn { background: var(--card-bg); border: 2px solid var(--border-light); border-radius: 12px; padding: 0.9rem; font-weight: 600; cursor: pointer; text-align: left; margin-bottom: 0.6rem; width: 100%; }
+        .opt-btn:hover { border-color: var(--primary-salmon); }
+        .opt-btn.selected { border-color: var(--primary-salmon); background-color: var(--badge-salmon-bg); }
+
+        .btn { background-color: var(--primary-salmon); color: white; font-weight: 700; padding: 0.9rem 1.8rem; border-radius: 30px; border: none; cursor: pointer; text-decoration: none; display: inline-block; width: 100%; text-align: center; margin-top: 1rem; }
+        .btn:hover { background-color: var(--primary-salmon-hover); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-nav">
+            <a href="module-2-vocab.html" class="back-link">← Powrót do Modułu 2</a>
+            <span class="counter-badge" id="counter">Pytanie 1 / 5</span>
+        </div>
+
+        <div class="card" id="test-card">
+            <div class="question" id="q-text">Jak przetłumaczysz słowo "parents"?</div>
+            <div id="opts"></div>
+            <button class="btn" onclick="nextQ()">Następne pytanie →</button>
+        </div>
+
+        <div class="card" id="comp-card" style="display: none; text-align: center;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
+            <h2>Gratulacje! Moduł 2 ukończony!</h2>
+            <p style="color: var(--text-muted); margin: 1rem 0 2rem;">Twój wynik: <span id="final-score">5/5</span></p>
+            <a href="index.html" class="btn">Powrót do strony głównej</a>
+        </div>
+    </div>
+
+    <script>
+        const testQuestions = [
+            { q: "Co oznacza słowo 'rodzice'?", opts: ["parents", "grandparents", "aunts"], correct: 0 },
+            { q: "Jak przetłumaczysz: 'Mój brat mieszka w Krakowie'?", opts: ["My brother lives in Krakow", "My sister lives in Krakow", "My father lives in Krakow"], correct: 0 },
+            { q: "Które słowo oznacza 'to visit'?", opts: ["mieszkać", "odwiedzać", "pomagać"], correct: 1 },
+            { q: "Wybierz poprawne połączenie: 'moja ...'", opts: ["syn", "żona", "mąż"], correct: 1 },
+            { q: "Co oznacza 'razem'?", opts: ["together", "alone", "never"], correct: 0 }
+        ];
+
+        let curIdx = 0;
+        let selected = null;
+        let score = 0;
+
+        function loadQ() {
+            selected = null;
+            const q = testQuestions[curIdx];
+            document.getElementById('counter').textContent = `Pytanie ${curIdx + 1} / ${testQuestions.length}`;
+            document.getElementById('q-text').textContent = q.q;
+
+            const optsBox = document.getElementById('opts');
+            optsBox.innerHTML = '';
+            q.opts.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'opt-btn';
+                btn.textContent = opt;
+                btn.onclick = () => {
+                    document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    selected = idx;
+                };
+                optsBox.appendChild(btn);
+            });
+        }
+
+        function nextQ() {
+            if (selected === null) return alert("Wybierz odpowiedź!");
+            if (selected === testQuestions[curIdx].correct) score++;
+
+            curIdx++;
+            if (curIdx < testQuestions.length) {
+                loadQ();
+            } else {
+                finishTest();
+            }
+        }
+
+        function finishTest() {
+            let progress = JSON.parse(localStorage.getItem('m2_progress') || '{}');
+            progress.stage7 = true;
+            localStorage.setItem('m2_progress', JSON.stringify(progress));
+
+            document.getElementById('final-score').textContent = `${score} / ${testQuestions.length}`;
+            document.getElementById('test-card').style.display = 'none';
+            document.getElementById('comp-card').style.display = 'block';
+        }
+
+        loadQ();
+    </script>
+</body>
+</html>

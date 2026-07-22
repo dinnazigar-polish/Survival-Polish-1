@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 2 – Etap 2: Dopasowywanie</title>
+    <style>
+        :root {
+            --primary-salmon: #f49c96;
+            --primary-salmon-hover: #e0857f;
+            --badge-salmon-bg: #fdf0ef;
+            --badge-salmon-text: #d96b63;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-light: #e2e8f0;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--text-dark); padding: 2rem 1rem; }
+        .container { max-width: 700px; margin: 0 auto; }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .back-link { color: var(--text-muted); text-decoration: none; font-weight: 600; }
+        .back-link:hover { color: var(--primary-salmon); }
+        .counter-badge { background-color: var(--badge-salmon-bg); color: var(--badge-salmon-text); font-weight: 700; padding: 0.4rem 1rem; border-radius: 20px; }
+
+        .matching-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+        .match-card {
+            background: var(--card-bg); border: 2px solid var(--border-light); border-radius: 16px;
+            padding: 1rem; text-align: center; font-weight: 700; cursor: pointer; transition: all 0.2s;
+        }
+        .match-card:hover { border-color: var(--primary-salmon); }
+        .match-card.selected { border-color: var(--primary-salmon); background-color: var(--badge-salmon-bg); color: var(--badge-salmon-text); }
+        .match-card.matched { border-color: #2ecc71; background-color: #e8f8f0; color: #27ae60; cursor: default; }
+
+        .btn { background-color: var(--primary-salmon); color: white; font-weight: 700; padding: 0.9rem 1.8rem; border-radius: 30px; border: none; cursor: pointer; text-decoration: none; display: inline-block; text-align: center; width: 100%; margin-top: 2rem; }
+        .btn:hover { background-color: var(--primary-salmon-hover); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-nav">
+            <a href="module-2-vocab.html" class="back-link">← Powrót do Modułu 2</a>
+            <span class="counter-badge" id="pairs-left">Pozostało par: 5</span>
+        </div>
+
+        <h2 style="margin-bottom: 0.5rem;">Dopasuj słowa (Runda <span id="round-num">1</span> z 3)</h2>
+        <p style="color: var(--text-muted);">Połącz polskie słowa z ich angielskimi odpowiednikami.</p>
+
+        <div class="matching-grid" id="grid"></div>
+
+        <div id="completion" style="display: none; text-align: center; margin-top: 2rem;">
+            <h3>🎉 Świetna robota! Dopasowałeś wszystkie słowa!</h3>
+            <a href="module-2-vocab.html" class="btn">Powrót do menu modułu</a>
+        </div>
+    </div>
+
+    <script>
+        const allPairs = [
+            [{pl: "mama", en: "mum / mother"}, {pl: "tata", en: "dad / father"}, {pl: "żona", en: "wife"}, {pl: "mąż", en: "husband"}, {pl: "syn", en: "son"}],
+            [{pl: "córka", en: "daughter"}, {pl: "brat", en: "brother"}, {pl: "siostra", en: "sister"}, {pl: "babcia", en: "grandmother"}, {pl: "dziadek", en: "grandfather"}],
+            [{pl: "przyjaciel", en: "friend (male)"}, {pl: "sąsiad", en: "neighbour (male)"}, {pl: "pomagać", en: "to help"}, {pl: "odwiedzać", en: "to visit"}, {pl: "razem", en: "together"}]
+        ];
+
+        let currentRound = 0;
+        let selectedPL = null;
+        let selectedEN = null;
+        let matchedCount = 0;
+
+        function loadRound() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            matchedCount = 0;
+            document.getElementById('pairs-left').textContent = `Pozostało par: 5`;
+            document.getElementById('round-num').textContent = currentRound + 1;
+
+            const roundData = allPairs[currentRound];
+            let plItems = roundData.map(item => item.pl).sort(() => Math.random() - 0.5);
+            let enItems = roundData.map(item => item.en).sort(() => Math.random() - 0.5);
+
+            let html = '<div style="display:flex; flex-direction:column; gap:0.8rem;">';
+            plItems.forEach(word => {
+                html += `<div class="match-card" data-type="pl" data-word="${word}" onclick="selectCard(this)">${word}</div>`;
+            });
+            html += '</div><div style="display:flex; flex-direction:column; gap:0.8rem;">';
+            enItems.forEach(word => {
+                html += `<div class="match-card" data-type="en" data-word="${word}" onclick="selectCard(this)">${word}</div>`;
+            });
+            html += '</div>';
+
+            grid.innerHTML = html;
+        }
+
+        function selectCard(el) {
+            if (el.classList.contains('matched')) return;
+
+            const type = el.getAttribute('data-type');
+            if (type === 'pl') {
+                document.querySelectorAll('.match-card[data-type="pl"]').forEach(c => c.classList.remove('selected'));
+                el.classList.add('selected');
+                selectedPL = el;
+            } else {
+                document.querySelectorAll('.match-card[data-type="en"]').forEach(c => c.classList.remove('selected'));
+                el.classList.add('selected');
+                selectedEN = el;
+            }
+
+            if (selectedPL && selectedEN) {
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            const plWord = selectedPL.getAttribute('data-word');
+            const enWord = selectedEN.getAttribute('data-word');
+            const roundData = allPairs[currentRound];
+            const isMatch = roundData.some(item => item.pl === plWord && item.en === enWord);
+
+            if (isMatch) {
+                selectedPL.className = 'match-card matched';
+                selectedEN.className = 'match-card matched';
+                matchedCount++;
+                document.getElementById('pairs-left').textContent = `Pozostało par: ${5 - matchedCount}`;
+
+                if (matchedCount === 5) {
+                    setTimeout(() => {
+                        currentRound++;
+                        if (currentRound < allPairs.length) {
+                            loadRound();
+                        } else {
+                            finishStage();
+                        }
+                    }, 800);
+                }
+            } else {
+                selectedPL.classList.remove('selected');
+                selectedEN.classList.remove('selected');
+            }
+            selectedPL = null;
+            selectedEN = null;
+        }
+
+        function finishStage() {
+            let progress = JSON.parse(localStorage.getItem('m2_progress') || '{}');
+            progress.stage2 = true;
+            localStorage.setItem('m2_progress', JSON.stringify(progress));
+            document.getElementById('grid').style.display = 'none';
+            document.getElementById('completion').style.display = 'block';
+        }
+
+        loadRound();
+    </script>
+</body>
+</html>

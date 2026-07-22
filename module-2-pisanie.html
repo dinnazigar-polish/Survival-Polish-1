@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 2 – Etap 3: Pisanie</title>
+    <style>
+        :root {
+            --primary-salmon: #f49c96;
+            --primary-salmon-hover: #e0857f;
+            --badge-salmon-bg: #fdf0ef;
+            --badge-salmon-text: #d96b63;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-light: #e2e8f0;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--text-dark); padding: 2rem 1rem; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .back-link { color: var(--text-muted); text-decoration: none; font-weight: 600; }
+        .back-link:hover { color: var(--primary-salmon); }
+        .counter-badge { background-color: var(--badge-salmon-bg); color: var(--badge-salmon-text); font-weight: 700; padding: 0.4rem 1rem; border-radius: 20px; }
+
+        .card { background: var(--card-bg); border-radius: 24px; padding: 2rem; border: 2px solid var(--border-light); text-align: center; }
+        .translation-prompt { font-size: 1.5rem; font-weight: 800; color: var(--text-dark); margin-bottom: 1rem; }
+        
+        input[type="text"] {
+            width: 100%; padding: 0.9rem; font-size: 1.1rem; border: 2px solid var(--border-light);
+            border-radius: 12px; outline: none; margin-bottom: 1rem; text-align: center; font-weight: 600;
+        }
+        input[type="text"]:focus { border-color: var(--primary-salmon); }
+
+        .btn { background-color: var(--primary-salmon); color: white; font-weight: 700; padding: 0.9rem 1.8rem; border-radius: 30px; border: none; cursor: pointer; text-decoration: none; display: inline-block; width: 100%; }
+        .btn:hover { background-color: var(--primary-salmon-hover); }
+
+        .feedback { margin-top: 1rem; font-weight: 700; display: none; }
+        .feedback.correct { color: #27ae60; }
+        .feedback.wrong { color: #e74c3c; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-nav">
+            <a href="module-2-vocab.html" class="back-link">← Powrót do Modułu 2</a>
+            <span class="counter-badge" id="counter">Słowo 1 / 6</span>
+        </div>
+
+        <div class="card" id="task-card">
+            <p style="color: var(--text-muted); margin-bottom: 0.5rem;">Przetłumacz na język polski:</p>
+            <div class="translation-prompt" id="prompt-en">parents</div>
+
+            <input type="text" id="user-input" placeholder="Wpisz po polsku..." autocomplete="off">
+            <button class="btn" onclick="checkAnswer()">Sprawdź</button>
+
+            <div class="feedback" id="feedback"></div>
+        </div>
+
+        <div class="card" id="completion-card" style="display: none;">
+            <h2>🎉 Wszystko wpisane poprawnie!</h2>
+            <p style="color: var(--text-muted); margin: 1rem 0 2rem;">Ukończyłeś etap pisania w Module 2.</p>
+            <a href="module-2-vocab.html" class="btn">Powrót do menu modułu</a>
+        </div>
+    </div>
+
+    <script>
+        const tasks = [
+            { en: "parents", pl: "rodzice" },
+            { en: "sister", pl: "siostra" },
+            { en: "brother", pl: "brat" },
+            { en: "to live", pl: "mieszkać" },
+            { en: "together", pl: "razem" },
+            { en: "uncle", pl: "wujek" }
+        ];
+
+        let currentIdx = 0;
+
+        function loadTask() {
+            document.getElementById('prompt-en').textContent = tasks[currentIdx].en;
+            document.getElementById('counter').textContent = `Słowo ${currentIdx + 1} / ${tasks.length}`;
+            document.getElementById('user-input').value = '';
+            document.getElementById('feedback').style.display = 'none';
+        }
+
+        function checkAnswer() {
+            const input = document.getElementById('user-input').value.trim().toLowerCase();
+            const target = tasks[currentIdx].pl.toLowerCase();
+            const feedback = document.getElementById('feedback');
+
+            if (input === target) {
+                feedback.textContent = "✅ Dobrze!";
+                feedback.className = "feedback correct";
+                feedback.style.display = "block";
+                setTimeout(() => {
+                    currentIdx++;
+                    if (currentIdx < tasks.length) {
+                        loadTask();
+                    } else {
+                        finishStage();
+                    }
+                }, 1000);
+            } else {
+                feedback.textContent = `❌ Niepoprawnie. Prawidłowa odpowiedź: ${tasks[currentIdx].pl}`;
+                feedback.className = "feedback wrong";
+                feedback.style.display = "block";
+            }
+        }
+
+        function finishStage() {
+            let progress = JSON.parse(localStorage.getItem('m2_progress') || '{}');
+            progress.stage3 = true;
+            localStorage.setItem('m2_progress', JSON.stringify(progress));
+            document.getElementById('task-card').style.display = 'none';
+            document.getElementById('completion-card').style.display = 'block';
+        }
+
+        loadTask();
+    </script>
+</body>
+</html>

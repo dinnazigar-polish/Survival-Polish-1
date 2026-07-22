@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 2 – Etap 6: Mini Gra</title>
+    <style>
+        :root {
+            --primary-salmon: #f49c96;
+            --primary-salmon-hover: #e0857f;
+            --badge-salmon-bg: #fdf0ef;
+            --badge-salmon-text: #d96b63;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-light: #e2e8f0;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--text-dark); padding: 2rem 1rem; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .back-link { color: var(--text-muted); text-decoration: none; font-weight: 600; }
+        .back-link:hover { color: var(--primary-salmon); }
+        .counter-badge { background-color: var(--badge-salmon-bg); color: var(--badge-salmon-text); font-weight: 700; padding: 0.4rem 1rem; border-radius: 20px; }
+
+        .game-card { background: var(--card-bg); border-radius: 24px; padding: 2rem; border: 2px solid var(--border-light); text-align: center; }
+        .timer { font-size: 2rem; font-weight: 800; color: var(--badge-salmon-text); margin-bottom: 1rem; }
+        
+        .word-display { font-size: 1.8rem; font-weight: 800; margin-bottom: 1.5rem; }
+        .btn-group { display: flex; gap: 1rem; }
+        .btn { background-color: var(--primary-salmon); color: white; font-weight: 700; padding: 0.9rem; border-radius: 30px; border: none; cursor: pointer; text-decoration: none; display: inline-block; flex: 1; text-align: center; }
+        .btn:hover { background-color: var(--primary-salmon-hover); }
+        .btn-wrong { background-color: #e74c3c; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-nav">
+            <a href="module-2-vocab.html" class="back-link">← Powrót do Modułu 2</a>
+            <span class="counter-badge" id="score">Punkty: 0 / 8</span>
+        </div>
+
+        <div class="game-card" id="game-card">
+            <div class="timer" id="time">Czysty refleks!</div>
+            <p style="color: var(--text-muted); margin-bottom: 0.5rem;">Czy to tłumaczenie jest poprawne?</p>
+            <div class="word-display" id="pair">mama = mum</div>
+
+            <div class="btn-group">
+                <button class="btn btn-wrong" onclick="answer(false)">❌ FAKSZ</button>
+                <button class="btn" onclick="answer(true)">✅ PRAWDA</button>
+            </div>
+        </div>
+
+        <div class="game-card" id="comp-card" style="display: none;">
+            <h2>🎮 Gra zakończona!</h2>
+            <p style="color: var(--text-muted); margin: 1rem 0 2rem;">Świetny wynik! Test końcowy z Modułu 2 został odblokowany!</p>
+            <a href="module-2-vocab.html" class="btn">Powrót do menu modułu</a>
+        </div>
+    </div>
+
+    <script>
+        const pairs = [
+            { pl: "mama", en: "mum / mother", correct: true },
+            { pl: "dziadek", en: "sister", correct: false },
+            { pl: "mąż", en: "husband", correct: true },
+            { pl: "córka", en: "son", correct: false },
+            { pl: "rozmawiać", en: "to talk", correct: true },
+            { pl: "sąsiad", en: "grandmother", correct: false },
+            { pl: "rodzice", en: "parents", correct: true },
+            { pl: "razem", en: "together", correct: true }
+        ];
+
+        let curIdx = 0;
+        let score = 0;
+
+        function loadPair() {
+            const p = pairs[curIdx];
+            document.getElementById('pair').textContent = `${p.pl} = ${p.en}`;
+            document.getElementById('score').textContent = `Punkty: ${score} / ${pairs.length}`;
+        }
+
+        function answer(userChoice) {
+            if (userChoice === pairs[curIdx].correct) score++;
+            curIdx++;
+            if (curIdx < pairs.length) {
+                loadPair();
+            } else {
+                finishStage();
+            }
+        }
+
+        function finishStage() {
+            let progress = JSON.parse(localStorage.getItem('m2_progress') || '{}');
+            progress.stage6 = true;
+            localStorage.setItem('m2_progress', JSON.stringify(progress));
+            document.getElementById('game-card').style.display = 'none';
+            document.getElementById('comp-card').style.display = 'block';
+        }
+
+        loadPair();
+    </script>
+</body>
+</html>

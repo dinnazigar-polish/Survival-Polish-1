@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 2 – Etap 1: Fiszki</title>
+    <style>
+        :root {
+            --primary-salmon: #f49c96;
+            --primary-salmon-hover: #e0857f;
+            --badge-salmon-bg: #fdf0ef;
+            --badge-salmon-text: #d96b63;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-light: #e2e8f0;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--text-dark); line-height: 1.6; padding: 2rem 1rem; }
+        .container { max-width: 600px; margin: 0 auto; }
+        
+        .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .back-link { color: var(--text-muted); text-decoration: none; font-weight: 600; }
+        .back-link:hover { color: var(--primary-salmon); }
+        .counter-badge { background-color: var(--badge-salmon-bg); color: var(--badge-salmon-text); font-weight: 700; padding: 0.4rem 1rem; border-radius: 20px; }
+
+        .progress-track { width: 100%; height: 10px; background-color: var(--border-light); border-radius: 10px; overflow: hidden; margin-bottom: 2rem; }
+        .progress-fill { height: 100%; background-color: var(--primary-salmon); width: 0%; transition: width 0.3s ease; }
+
+        .flashcard-container { perspective: 1000px; margin-bottom: 2rem; }
+        .flashcard {
+            width: 100%; height: 280px; background-color: var(--card-bg); border-radius: 24px;
+            box-shadow: var(--shadow-soft); border: 2px solid var(--border-light);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            cursor: pointer; transition: transform 0.6s; transform-style: preserve-3d; position: relative; text-align: center; padding: 2rem;
+        }
+        .flashcard.flipped { transform: rotateY(180deg); }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 24px; padding: 1.5rem; }
+        .card-front { background-color: var(--card-bg); }
+        .card-back { background-color: var(--badge-salmon-bg); transform: rotateY(180deg); color: var(--badge-salmon-text); }
+        
+        .word-main { font-size: 2.2rem; font-weight: 800; color: var(--text-dark); }
+        .word-sub { font-size: 1.8rem; font-weight: 700; }
+        .hint { margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted); }
+
+        .controls { display: flex; gap: 1rem; justify-content: space-between; }
+        .btn {
+            background-color: var(--primary-salmon); color: white; font-weight: 700; font-size: 1rem;
+            padding: 0.9rem 1.8rem; border-radius: 30px; border: none; cursor: pointer; transition: background 0.2s; text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+        }
+        .btn:hover { background-color: var(--primary-salmon-hover); }
+        .btn-outline { background-color: transparent; border: 2px solid var(--border-light); color: var(--text-dark); }
+        .btn-outline:hover { border-color: var(--primary-salmon); color: var(--primary-salmon); }
+
+        .completion-screen { display: none; text-align: center; background: var(--card-bg); padding: 3rem 2rem; border-radius: 24px; border: 2px solid var(--border-light); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-nav">
+            <a href="module-2-vocab.html" class="back-link">← Powrót do Modułu 2</a>
+            <span class="counter-badge" id="card-counter">Fiszka 1 / 28</span>
+        </div>
+
+        <div class="progress-track"><div class="progress-fill" id="progress-bar"></div></div>
+
+        <div id="quiz-area">
+            <div class="flashcard-container">
+                <div class="flashcard" id="flashcard" onclick="flipCard()">
+                    <div class="card-face card-front">
+                        <div class="word-main" id="word-pl">rodzina</div>
+                        <div class="hint">Kliknij, aby zobaczyć tłumaczenie 🔄</div>
+                    </div>
+                    <div class="card-face card-back">
+                        <div class="word-sub" id="word-en">family</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-outline" id="prev-btn" onclick="prevCard()">← Poprzednia</button>
+                <button class="btn" id="next-btn" onclick="nextCard()">Następna →</button>
+            </div>
+        </div>
+
+        <div class="completion-screen" id="completion-screen">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+            <h2>Świetnie! Poznałeś wszystkie 28 słów!</h2>
+            <p style="color: var(--text-muted); margin: 1rem 0 2rem;">Pozostałe etapy Modułu 2 zostały odblokowane.</p>
+            <a href="module-2-vocab.html" class="btn" style="width: 100%;">Przejdź do listy etapów</a>
+        </div>
+    </div>
+
+    <script>
+        const words = [
+            { pl: "rodzina", en: "family" }, { pl: "mama", en: "mum / mother" },
+            { pl: "tata", en: "dad / father" }, { pl: "żona", en: "wife" },
+            { pl: "mąż", en: "husband" }, { pl: "syn", en: "son" },
+            { pl: "córka", en: "daughter" }, { pl: "brat", en: "brother" },
+            { pl: "siostra", en: "sister" }, { pl: "babcia", en: "grandmother" },
+            { pl: "dziadek", en: "grandfather" }, { pl: "ciocia", en: "aunt" },
+            { pl: "wujek", en: "uncle" }, { pl: "kuzyn", en: "cousin (male)" },
+            { pl: "kuzynka", en: "cousin (female)" }, { pl: "dziecko", en: "child" },
+            { pl: "rodzice", en: "parents" }, { pl: "przyjaciel", en: "friend (male)" },
+            { pl: "przyjaciółka", en: "friend (female)" }, { pl: "kolega", en: "colleague / male friend" },
+            { pl: "koleżanka", en: "colleague / female friend" }, { pl: "sąsiad", en: "neighbour (male)" },
+            { pl: "sąsiadka", en: "neighbour (female)" }, { pl: "pomagać", en: "to help" },
+            { pl: "odwiedzać", en: "to visit" }, { pl: "mieszkać", en: "to live" },
+            { pl: "rozmawiać", en: "to talk" }, { pl: "razem", en: "together" }
+        ];
+
+        let currentIdx = 0;
+        let isFlipped = false;
+
+        function updateCard() {
+            isFlipped = false;
+            document.getElementById('flashcard').classList.remove('flipped');
+            document.getElementById('word-pl').textContent = words[currentIdx].pl;
+            document.getElementById('word-en').textContent = words[currentIdx].en;
+            document.getElementById('card-counter').textContent = `Fiszka ${currentIdx + 1} / ${words.length}`;
+            document.getElementById('progress-bar').style.width = `${((currentIdx + 1) / words.length) * 100}%`;
+            document.getElementById('prev-btn').style.visibility = currentIdx === 0 ? 'hidden' : 'visible';
+        }
+
+        function flipCard() {
+            isFlipped = !isFlipped;
+            document.getElementById('flashcard').classList.toggle('flipped');
+        }
+
+        function prevCard() {
+            if (currentIdx > 0) { currentIdx--; updateCard(); }
+        }
+
+        function nextCard() {
+            if (currentIdx < words.length - 1) {
+                currentIdx++;
+                updateCard();
+            } else {
+                finishStage();
+            }
+        }
+
+        function finishStage() {
+            let progress = JSON.parse(localStorage.getItem('m2_progress') || '{}');
+            progress.stage1 = true;
+            localStorage.setItem('m2_progress', JSON.stringify(progress));
+            document.getElementById('quiz-area').style.display = 'none';
+            document.getElementById('completion-screen').style.display = 'block';
+        }
+
+        updateCard();
+    </script>
+</body>
+</html>

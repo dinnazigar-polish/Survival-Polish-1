@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 2 – Etap 4: Gramatyka</title>
+    <style>
+        :root {
+            --primary-salmon: #f49c96;
+            --primary-salmon-hover: #e0857f;
+            --badge-salmon-bg: #fdf0ef;
+            --badge-salmon-text: #d96b63;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-light: #e2e8f0;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--text-dark); padding: 2rem 1rem; }
+        .container { max-width: 650px; margin: 0 auto; }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .back-link { color: var(--text-muted); text-decoration: none; font-weight: 600; }
+        .back-link:hover { color: var(--primary-salmon); }
+        .counter-badge { background-color: var(--badge-salmon-bg); color: var(--badge-salmon-text); font-weight: 700; padding: 0.4rem 1rem; border-radius: 20px; }
+
+        .card { background: var(--card-bg); border-radius: 24px; padding: 2rem; border: 2px solid var(--border-light); }
+        .question { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; }
+
+        .options { display: flex; flex-direction: column; gap: 0.8rem; }
+        .opt-btn {
+            background: var(--card-bg); border: 2px solid var(--border-light); border-radius: 12px;
+            padding: 0.9rem; text-align: left; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        .opt-btn:hover { border-color: var(--primary-salmon); }
+        .opt-btn.correct { border-color: #2ecc71; background-color: #e8f8f0; color: #27ae60; }
+        .opt-btn.wrong { border-color: #e74c3c; background-color: #fadbd8; color: #e74c3c; }
+
+        .explanation { display: none; background: var(--badge-salmon-bg); color: var(--badge-salmon-text); padding: 1rem; border-radius: 12px; margin-top: 1rem; font-size: 0.95rem; }
+
+        .btn { background-color: var(--primary-salmon); color: white; font-weight: 700; padding: 0.9rem 1.8rem; border-radius: 30px; border: none; cursor: pointer; text-decoration: none; display: inline-block; width: 100%; margin-top: 1.5rem; }
+        .btn:hover { background-color: var(--primary-salmon-hover); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-nav">
+            <a href="module-2-vocab.html" class="back-link">← Powrót do Modułu 2</a>
+            <span class="counter-badge" id="counter">Pytanie 1 / 5</span>
+        </div>
+
+        <div class="card" id="quiz-card">
+            <div class="question" id="q-text">Mój ______ mieszka w Krakowie.</div>
+            <div class="options" id="opts-container"></div>
+            <div class="explanation" id="exp-box"></div>
+            <button class="btn" id="next-btn" style="display: none;" onclick="nextQ()">Dalej →</button>
+        </div>
+
+        <div class="card" id="comp-card" style="display: none; text-align: center;">
+            <h2>🎉 Etap Gramatyka Ukończony!</h2>
+            <p style="color: var(--text-muted); margin: 1rem 0 2rem;">Świetnie opanowałeś zasady gramatyczne z Modułu 2.</p>
+            <a href="module-2-vocab.html" class="btn">Powrót do menu modułu</a>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "Mój ______ mieszka w Warszawie.",
+                opts: ["brat", "bratem", "brata"],
+                correct: 0,
+                exp: "W Mianowniku (kto? co?) używamy formy podstawowej: 'brat'."
+            },
+            {
+                q: "Często rozmawiam z moim ______.",
+                opts: ["przyjaciel", "przyjacielem", "przyjaciela"],
+                correct: 1,
+                exp: "Przyimki 'z / ze' wymagają Narzędnika (z kim?): przyjaciel -> przyjacielem."
+            },
+            {
+                q: "Lubię ______ mojej babci.",
+                opts: ["pomagać", "pomaga", "pomagam"],
+                correct: 0,
+                exp: "Po czasowniku 'lubię' używamy bezokolicznika: 'pomagać'."
+            },
+            {
+                q: "Jutro będę ______ mojeą ciocię.",
+                opts: ["odwiedzać", "odwiedzam", "odwiedza"],
+                correct: 0,
+                exp: "W czasie przyszłym złożonym używamy bezokolicznika: 'odwiedzać'."
+            },
+            {
+                q: "Moja ______ ma na imię Anna.",
+                opts: ["siostra", "siostrą", "siostrę"],
+                correct: 0,
+                exp: "Podmiot w zdaniu występuje w Mianowniku: 'siostra'."
+            }
+        ];
+
+        let curIdx = 0;
+
+        function loadQ() {
+            const q = questions[curIdx];
+            document.getElementById('counter').textContent = `Pytanie ${curIdx + 1} / ${questions.length}`;
+            document.getElementById('q-text').textContent = q.q;
+            document.getElementById('exp-box').style.display = 'none';
+            document.getElementById('next-btn').style.display = 'none';
+
+            const container = document.getElementById('opts-container');
+            container.innerHTML = '';
+            q.opts.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'opt-btn';
+                btn.textContent = opt;
+                btn.onclick = () => check(idx);
+                container.appendChild(btn);
+            });
+        }
+
+        function check(idx) {
+            const q = questions[curIdx];
+            const btns = document.querySelectorAll('.opt-btn');
+            btns.forEach(b => b.disabled = true);
+
+            if (idx === q.correct) {
+                btns[idx].classList.add('correct');
+            } else {
+                btns[idx].classList.add('wrong');
+                btns[q.correct].classList.add('correct');
+            }
+
+            const exp = document.getElementById('exp-box');
+            exp.textContent = q.exp;
+            exp.style.display = 'block';
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        function nextQ() {
+            curIdx++;
+            if (curIdx < questions.length) {
+                loadQ();
+            } else {
+                finishStage();
+            }
+        }
+
+        function finishStage() {
+            let progress = JSON.parse(localStorage.getItem('m2_progress') || '{}');
+            progress.stage4 = true;
+            localStorage.setItem('m2_progress', JSON.stringify(progress));
+            document.getElementById('quiz-card').style.display = 'none';
+            document.getElementById('comp-card').style.display = 'block';
+        }
+
+        loadQ();
+    </script>
+</body>
+</html>
