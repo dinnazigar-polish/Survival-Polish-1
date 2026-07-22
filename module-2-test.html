@@ -3,117 +3,646 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moduł 2 – Etap 7: Test końcowy</title>
+    <title>Moduł 2 – Etap 7: Test Końcowy</title>
     <style>
         :root {
             --primary-salmon: #f49c96;
             --primary-salmon-hover: #e0857f;
-            --badge-salmon-bg: #fdf0ef;
-            --badge-salmon-text: #d96b63;
             --bg-color: #f8f9fa;
             --card-bg: #ffffff;
             --text-dark: #2c3e50;
             --text-muted: #7f8c8d;
             --border-light: #e2e8f0;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--text-dark); padding: 2rem 1rem; }
-        .container { max-width: 650px; margin: 0 auto; }
-        .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .back-link { color: var(--text-muted); text-decoration: none; font-weight: 600; }
-        .back-link:hover { color: var(--primary-salmon); }
-        .counter-badge { background-color: var(--badge-salmon-bg); color: var(--badge-salmon-text); font-weight: 700; padding: 0.4rem 1rem; border-radius: 20px; }
 
-        .card { background: var(--card-bg); border-radius: 24px; padding: 2rem; border: 2px solid var(--border-light); }
-        .question { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.2rem; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-        .opt-btn { background: var(--card-bg); border: 2px solid var(--border-light); border-radius: 12px; padding: 0.9rem; font-weight: 600; cursor: pointer; text-align: left; margin-bottom: 0.6rem; width: 100%; }
-        .opt-btn:hover { border-color: var(--primary-salmon); }
-        .opt-btn.selected { border-color: var(--primary-salmon); background-color: var(--badge-salmon-bg); }
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
 
-        .btn { background-color: var(--primary-salmon); color: white; font-weight: 700; padding: 0.9rem 1.8rem; border-radius: 30px; border: none; cursor: pointer; text-decoration: none; display: inline-block; width: 100%; text-align: center; margin-top: 1rem; }
-        .btn:hover { background-color: var(--primary-salmon-hover); }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-salmon);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background-color: var(--border-light);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-salmon);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .test-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            background-color: #fdf0ef;
+            color: #d96b63;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .option-btn {
+            background-color: #ffffff;
+            border: 2px solid var(--border-light);
+            padding: 1rem 1.2rem;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary-salmon);
+            background-color: #fffaf9;
+        }
+
+        .option-btn.correct {
+            border-color: var(--success-color);
+            background-color: #eafaf1;
+            color: var(--success-color);
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--error-color);
+            background-color: #fdf2f2;
+            color: var(--error-color);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        /* Sekcja budowania zdania z klocków */
+        .sentence-builder {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .drop-zone {
+            min-height: 54px;
+            border: 2px dashed var(--primary-salmon);
+            border-radius: 12px;
+            padding: 0.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+            background-color: #fffaf9;
+        }
+
+        .word-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .word-chip {
+            background-color: #ffffff;
+            border: 2px solid var(--border-light);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .word-chip:hover {
+            border-color: var(--primary-salmon);
+        }
+
+        .word-chip.used {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .confirm-btn {
+            margin-top: 1.5rem;
+            width: 100%;
+            background-color: var(--primary-salmon);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .confirm-btn:hover {
+            background-color: var(--primary-salmon-hover);
+        }
+
+        .next-btn {
+            margin-top: 1.5rem;
+            width: 100%;
+            background-color: var(--primary-salmon);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: none;
+        }
+
+        .completion-screen {
+            text-align: center;
+            padding: 3rem 1rem;
+            display: none;
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: var(--primary-salmon);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0 auto 1.5rem auto;
+        }
+
+        .btn-finish {
+            display: inline-block;
+            background-color: var(--primary-salmon);
+            color: white;
+            text-decoration: none;
+            padding: 0.9rem 2rem;
+            border-radius: 30px;
+            font-weight: 700;
+            margin-top: 1.5rem;
+        }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <div class="top-nav">
-            <a href="module-2-vocab.html" class="back-link">← Powrót do Modułu 2</a>
-            <span class="counter-badge" id="counter">Pytanie 1 / 5</span>
+        <div class="header">
+            <a href="module-2-vocab.html" class="back-link">← Powrót do modułu</a>
+            <span id="step-counter" style="font-weight: 700; color: var(--text-muted);">Pytanie 1 / 15</span>
         </div>
 
-        <div class="card" id="test-card">
-            <div class="question" id="q-text">Jak przetłumaczysz słowo "parents"?</div>
-            <div id="opts"></div>
-            <button class="btn" onclick="nextQ()">Następne pytanie →</button>
+        <div class="progress-bar-container">
+            <div class="progress-fill" id="progress-bar"></div>
         </div>
 
-        <div class="card" id="comp-card" style="display: none; text-align: center;">
-            <div style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
-            <h2>Gratulacje! Moduł 2 ukończony!</h2>
-            <p style="color: var(--text-muted); margin: 1rem 0 2rem;">Twój wynik: <span id="final-score">5/5</span></p>
-            <a href="index.html" class="btn">Powrót do strony głównej</a>
+        <!-- Główna karta z pytaniem -->
+        <div class="test-card" id="test-card">
+            <span class="type-badge" id="type-badge">Pytanie</span>
+            <div class="question-text" id="question-text">...</div>
+
+            <!-- Kontener dla zwykłego wyboru (ABC / Prawda-Fałsz) -->
+            <div class="options-container" id="options-container"></div>
+
+            <!-- Kontener dla układania zdań z klocków -->
+            <div class="sentence-builder" id="sentence-builder" style="display: none;">
+                <div class="drop-zone" id="drop-zone"></div>
+                <div class="word-pool" id="word-pool"></div>
+                <button class="confirm-btn" id="confirm-sentence-btn" onclick="checkSentenceAnswer()">Sprawdź</button>
+            </div>
+
+            <button class="next-btn" id="next-btn" onclick="nextQuestion()">Kolejne pytanie →</button>
+        </div>
+
+        <!-- Ekran Końcowy -->
+        <div class="completion-screen" id="completion-screen">
+            <div class="score-circle" id="score-circle">0%</div>
+            <h2 id="result-title">Wynik testu</h2>
+            <p id="result-desc">Ukończyłeś Test Końcowy z Modułu 2!</p>
+            <a href="module-2-vocab.html" class="btn-finish" onclick="markStageComplete()">Zapisz wynik i wróć do modułu</a>
         </div>
     </div>
 
     <script>
-        const testQuestions = [
-            { q: "Co oznacza słowo 'rodzice'?", opts: ["parents", "grandparents", "aunts"], correct: 0 },
-            { q: "Jak przetłumaczysz: 'Mój brat mieszka w Krakowie'?", opts: ["My brother lives in Krakow", "My sister lives in Krakow", "My father lives in Krakow"], correct: 0 },
-            { q: "Które słowo oznacza 'to visit'?", opts: ["mieszkać", "odwiedzać", "pomagać"], correct: 1 },
-            { q: "Wybierz poprawne połączenie: 'moja ...'", opts: ["syn", "żona", "mąż"], correct: 1 },
-            { q: "Co oznacza 'razem'?", opts: ["together", "alone", "never"], correct: 0 }
+        // Baza pytań do losowania (różne typy pytań)
+        const allQuestionsBank = [
+            // --- SŁOWNICTWO / TŁUMACZENIA (Zwięzłe formy) ---
+            {
+                type: 'choice',
+                badge: 'Słownictwo',
+                question: 'rodzice',
+                options: [
+                    { text: 'parents', correct: true },
+                    { text: 'grandparents', correct: false },
+                    { text: 'siblings', correct: false }
+                ]
+            },
+            {
+                type: 'choice',
+                badge: 'Słownictwo',
+                question: 'rodzeństwo',
+                options: [
+                    { text: 'siblings', correct: true },
+                    { text: 'relatives', correct: false },
+                    { text: 'children', correct: false }
+                ]
+            },
+            {
+                type: 'choice',
+                badge: 'Tłumaczenie',
+                question: '„Mój brat mieszka w Krakowie.”',
+                options: [
+                    { text: 'My brother lives in Krakow.', correct: true },
+                    { text: 'My brother works in Krakow.', correct: false },
+                    { text: 'My uncle lives in Krakow.', correct: false }
+                ]
+            },
+            {
+                type: 'choice',
+                badge: 'Słownictwo',
+                question: 'to visit',
+                options: [
+                    { text: 'odwiedzać', correct: true },
+                    { text: 'mieszkać', correct: false },
+                    { text: 'pomagać', correct: false }
+                ]
+            },
+            {
+                type: 'choice',
+                badge: 'Słownictwo',
+                question: 'siostrzenica',
+                options: [
+                    { text: 'sister’s daughter', correct: true },
+                    { text: 'brother’s son', correct: false },
+                    { text: 'cousin', correct: false }
+                ]
+            },
+            {
+                type: 'choice',
+                badge: 'Słownictwo',
+                question: 'wujek',
+                options: [
+                    { text: 'uncle', correct: true },
+                    { text: 'grandfather', correct: false },
+                    { text: 'nephew', correct: false }
+                ]
+            },
+
+            // --- PRAWDA / FAŁSZ ---
+            {
+                type: 'choice',
+                badge: 'Prawda czy Fałsz?',
+                question: 'Córka mojej siostry to moja siostrzenica.',
+                options: [
+                    { text: 'Prawda', correct: true },
+                    { text: 'Fałsz', correct: false }
+                ]
+            },
+            {
+                type: 'choice',
+                badge: 'Prawda czy Fałsz?',
+                question: 'Brat mojego ojca to mój dziadek.',
+                options: [
+                    { text: 'Prawda', correct: false },
+                    { text: 'Fałsz', correct: true }
+                ]
+            },
+            {
+                type: 'choice',
+                badge: 'Prawda czy Fałsz?',
+                question: 'Słowo „jedynak” oznacza osobę, która nie ma rodzeństwa.',
+                options: [
+                    { text: 'Prawda', correct: true },
+                    { text: 'Fałsz', correct: false }
+                ]
+            },
+
+            // --- DIALOGI ---
+            {
+                type: 'choice',
+                badge: 'Dokończ dialog',
+                question: '– Kto odbiera dzisiaj dzieci ze szkoły?\n– ... po pracy jedzie po dzieci.',
+                options: [
+                    { text: 'Moja żona', correct: true },
+                    { text: 'Moje dziecko', correct: false },
+                    { text: 'Mój nauczyciel', correct: false }
+                ]
+            },
+            {
+                type: 'choice',
+                badge: 'Dokończ dialog',
+                question: '– Czym zajmuje się Twoja mama?\n– Moja mama jest ... i uczy matematyki.',
+                options: [
+                    { text: 'nauczycielką', correct: true },
+                    { text: 'cukiernikiem', correct: false },
+                    { text: 'emerytem', correct: false }
+                ]
+            },
+            {
+                type: 'choice',
+                badge: 'Dokończ dialog',
+                question: '– Kto upiekł ten pyszny tort?\n– Moja mama, ona pracuje w ...',
+                options: [
+                    { text: 'cukierni', correct: true },
+                    { text: 'szkole', correct: false },
+                    { text: 'szpitalu', correct: false }
+                ]
+            },
+
+            // --- GRAMATYKA / DOPASOWANIE FORMY ---
+            {
+                type: 'choice',
+                badge: 'Gramatyka',
+                question: 'Lubię mojego (starsi / starszego) brata.',
+                options: [
+                    { text: 'starszego', correct: true },
+                    { text: 'starsi', correct: false },
+                    { text: 'starszym', correct: false }
+                ]
+            },
+            {
+                type: 'choice',
+                badge: 'Gramatyka',
+                question: 'Moja babcia urodziła się ... Polsce.',
+                options: [
+                    { text: 'w', correct: true },
+                    { text: 'na', correct: false },
+                    { text: 'do', correct: false }
+                ]
+            },
+
+            // --- UŁÓŻ ZDANIE (UKŁADANKA ZE SŁÓW) ---
+            {
+                type: 'sentence',
+                badge: 'Ułóż zdanie',
+                question: 'Ułóż poprawne zdanie:',
+                correctOrder: ['Moja', 'żona', 'jedzie', 'po', 'dzieci.'],
+                pool: ['jedzie', 'Moja', 'dzieci.', 'po', 'żona', 'mama']
+            },
+            {
+                type: 'sentence',
+                badge: 'Ułóż zdanie',
+                question: 'Ułóż poprawne zdanie:',
+                correctOrder: ['Nasza', 'babcia', 'urodziła', 'się', 'w', 'Polsce.'],
+                pool: ['urodziła', 'w', 'Nasza', 'się', 'Polsce.', 'babcia', 'jest']
+            },
+            {
+                type: 'sentence',
+                badge: 'Ułóż zdanie',
+                question: 'Ułóż poprawne zdanie:',
+                correctOrder: ['Moja', 'mama', 'piecze', 'pyszne', 'ciasta.'],
+                pool: ['piecze', 'pyszne', 'mama', 'Moja', 'ciasta.', 'gotuje']
+            }
         ];
 
-        let curIdx = 0;
-        let selected = null;
+        let selectedQuestions = [];
+        let currentIndex = 0;
         let score = 0;
+        let currentSentenceSelected = [];
 
-        function loadQ() {
-            selected = null;
-            const q = testQuestions[curIdx];
-            document.getElementById('counter').textContent = `Pytanie ${curIdx + 1} / ${testQuestions.length}`;
-            document.getElementById('q-text').textContent = q.q;
+        // Losowanie N pytań z bazy
+        function initTest() {
+            const shuffled = [...allQuestionsBank].sort(() => Math.random() - 0.5);
+            selectedQuestions = shuffled.slice(0, 15); // Losujemy 15 pytań do testu
+            currentIndex = 0;
+            score = 0;
+            renderQuestion();
+        }
 
-            const optsBox = document.getElementById('opts');
-            optsBox.innerHTML = '';
-            q.opts.forEach((opt, idx) => {
-                const btn = document.createElement('button');
-                btn.className = 'opt-btn';
-                btn.textContent = opt;
-                btn.onclick = () => {
-                    document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
-                    btn.classList.add('selected');
-                    selected = idx;
-                };
-                optsBox.appendChild(btn);
+        function renderQuestion() {
+            const current = selectedQuestions[currentIndex];
+            const badge = document.getElementById('type-badge');
+            const qText = document.getElementById('question-text');
+            const optionsContainer = document.getElementById('options-container');
+            const sentenceBuilder = document.getElementById('sentence-builder');
+            const nextBtn = document.getElementById('next-btn');
+
+            badge.textContent = current.badge;
+            qText.innerText = current.question;
+            optionsContainer.innerHTML = '';
+            nextBtn.style.display = 'none';
+
+            if (current.type === 'choice') {
+                optionsContainer.style.display = 'flex';
+                sentenceBuilder.style.display = 'none';
+
+                const shuffledOptions = [...current.options].sort(() => Math.random() - 0.5);
+                shuffledOptions.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.textContent = opt.text;
+                    btn.onclick = () => selectChoiceOption(btn, opt.correct);
+                    optionsContainer.appendChild(btn);
+                });
+            } else if (current.type === 'sentence') {
+                optionsContainer.style.display = 'none';
+                sentenceBuilder.style.display = 'flex';
+
+                currentSentenceSelected = [];
+                renderSentenceBuilder(current);
+            }
+
+            updateProgress();
+        }
+
+        function selectChoiceOption(selectedBtn, isCorrect) {
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(btn => btn.disabled = true);
+
+            if (isCorrect) {
+                selectedBtn.classList.add('correct');
+                score++;
+            } else {
+                selectedBtn.classList.add('incorrect');
+                // Podświetl też poprawną
+                allBtns.forEach(btn => {
+                    const currentQ = selectedQuestions[currentIndex];
+                    const match = currentQ.options.find(o => o.text === btn.textContent);
+                    if (match && match.correct) btn.classList.add('correct');
+                });
+            }
+
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        // --- Obsługa układania zdań z klocków ---
+        function renderSentenceBuilder(questionData) {
+            const dropZone = document.getElementById('drop-zone');
+            const wordPool = document.getElementById('word-pool');
+            const confirmBtn = document.getElementById('confirm-sentence-btn');
+            confirmBtn.disabled = false;
+            confirmBtn.style.display = 'block';
+
+            dropZone.innerHTML = '';
+            wordPool.innerHTML = '';
+
+            // Renderuj wybrane klocki
+            currentSentenceSelected.forEach((word, idx) => {
+                const chip = document.createElement('div');
+                chip.className = 'word-chip';
+                chip.textContent = word;
+                chip.onclick = () => removeWordFromSentence(idx);
+                dropZone.appendChild(chip);
+            });
+
+            // Renderuj pulę klocków
+            questionData.pool.forEach((word) => {
+                const chip = document.createElement('div');
+                chip.className = 'word-chip';
+                chip.textContent = word;
+
+                // Sprawdź ile razy słowo występuje w wybranych
+                const countInSelected = currentSentenceSelected.filter(w => w === word).length;
+                const countInPool = questionData.pool.filter(w => w === word).length;
+
+                if (countInSelected >= countInPool) {
+                    chip.classList.add('used');
+                } else {
+                    chip.onclick = () => addWordToSentence(word);
+                }
+
+                wordPool.appendChild(chip);
             });
         }
 
-        function nextQ() {
-            if (selected === null) return alert("Wybierz odpowiedź!");
-            if (selected === testQuestions[curIdx].correct) score++;
+        function addWordToSentence(word) {
+            currentSentenceSelected.push(word);
+            renderSentenceBuilder(selectedQuestions[currentIndex]);
+        }
 
-            curIdx++;
-            if (curIdx < testQuestions.length) {
-                loadQ();
+        function removeWordFromSentence(index) {
+            currentSentenceSelected.splice(index, 1);
+            renderSentenceBuilder(selectedQuestions[currentIndex]);
+        }
+
+        function checkSentenceAnswer() {
+            const current = selectedQuestions[currentIndex];
+            const confirmBtn = document.getElementById('confirm-sentence-btn');
+            confirmBtn.style.display = 'none';
+
+            const userSentence = currentSentenceSelected.join(' ');
+            const targetSentence = current.correctOrder.join(' ');
+
+            if (userSentence === targetSentence) {
+                score++;
+                document.getElementById('drop-zone').style.borderColor = 'var(--success-color)';
             } else {
-                finishTest();
+                document.getElementById('drop-zone').style.borderColor = 'var(--error-color)';
+            }
+
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < selectedQuestions.length) {
+                renderQuestion();
+            } else {
+                showCompletion();
             }
         }
 
-        function finishTest() {
-            let progress = JSON.parse(localStorage.getItem('m2_progress') || '{}');
-            progress.stage7 = true;
-            localStorage.setItem('m2_progress', JSON.stringify(progress));
-
-            document.getElementById('final-score').textContent = `${score} / ${testQuestions.length}`;
-            document.getElementById('test-card').style.display = 'none';
-            document.getElementById('comp-card').style.display = 'block';
+        function updateProgress() {
+            const total = selectedQuestions.length;
+            const progressPct = (currentIndex / total) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPct}%`;
+            document.getElementById('step-counter').textContent = `Pytanie ${currentIndex + 1} / ${total}`;
         }
 
-        loadQ();
+        function showCompletion() {
+            document.getElementById('test-card').style.display = 'none';
+            document.getElementById('completion-screen').style.display = 'block';
+            document.getElementById('progress-bar').style.width = '100%';
+
+            const total = selectedQuestions.length;
+            const finalPct = Math.round((score / total) * 100);
+
+            document.getElementById('score-circle').textContent = `${finalPct}%`;
+            
+            if (finalPct >= 70) {
+                document.getElementById('result-title').textContent = '🎉 Gratulacje!';
+                document.getElementById('result-desc').textContent = `Zdobyłeś ${score} z ${total} punktów. Test zaliczony!`;
+            } else {
+                document.getElementById('result-title').textContent = 'Spróbuj ponownie';
+                document.getElementById('result-desc').textContent = `Twój wynik to ${score} z ${total} punktów. Potrzebujesz min. 70%, aby zaliczyć.`;
+            }
+        }
+
+        function markStageComplete() {
+            const MODULE_KEY = 'm2_progress';
+            let progress = JSON.parse(localStorage.getItem(MODULE_KEY)) || {};
+            progress.stage7 = true;
+            localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
+        }
+
+        // Start
+        initTest();
     </script>
 </body>
 </html>
