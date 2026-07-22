@@ -122,6 +122,10 @@
             transition: all 0.2s ease;
         }
 
+        .stage-card.locked {
+            opacity: 0.6;
+        }
+
         .stage-card.completed {
             border-color: var(--primary-salmon);
         }
@@ -211,11 +215,18 @@
             white-space: nowrap;
         }
 
-        .btn-stage:hover {
+        .btn-stage:hover:not(.disabled) {
             background-color: var(--primary-salmon-hover);
         }
 
-        .btn-stage:active {
+        .btn-stage.disabled {
+            background-color: #cbd5e1;
+            color: #64748b;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .btn-stage:active:not(.disabled) {
             transform: scale(0.98);
         }
 
@@ -257,7 +268,7 @@
         <!-- List of 7 Stages -->
         <div class="stages-list">
 
-            <!-- Etap 1 -->
+            <!-- Etap 1: Fiszki -->
             <div class="stage-card" id="card-stage1">
                 <div class="stage-left">
                     <div class="stage-icon">🃏</div>
@@ -270,10 +281,10 @@
                         <div class="stage-desc">Poznaj 28 słów ze świata rodziny i opisu osób.</div>
                     </div>
                 </div>
-                <a href="module-2-stage1.html" class="btn-stage" id="btn-stage1">Rozpocznij</a>
+                <a href="module-2-fiszki.html" class="btn-stage" id="btn-stage1">Rozpocznij</a>
             </div>
 
-            <!-- Etap 2 -->
+            <!-- Etap 2: Dopasowywanie -->
             <div class="stage-card" id="card-stage2">
                 <div class="stage-left">
                     <div class="stage-icon">🧩</div>
@@ -286,10 +297,10 @@
                         <div class="stage-desc">Dopasuj obrazki do polskich słów.</div>
                     </div>
                 </div>
-                <a href="module-2-stage2.html" class="btn-stage" id="btn-stage2">Rozpocznij</a>
+                <a href="module-2-dopasowanie.html" class="btn-stage" id="btn-stage2">Rozpocznij</a>
             </div>
 
-            <!-- Etap 3 -->
+            <!-- Etap 3: Pisanie -->
             <div class="stage-card" id="card-stage3">
                 <div class="stage-left">
                     <div class="stage-icon">⌨️</div>
@@ -302,10 +313,10 @@
                         <div class="stage-desc">Spójrz na obrazek i wpisz poprawne polskie słowo.</div>
                     </div>
                 </div>
-                <a href="module-2-stage3.html" class="btn-stage" id="btn-stage3">Rozpocznij</a>
+                <a href="module-2-pisanie.html" class="btn-stage" id="btn-stage3">Rozpocznij</a>
             </div>
 
-            <!-- Etap 4 -->
+            <!-- Etap 4: Gramatyka -->
             <div class="stage-card" id="card-stage4">
                 <div class="stage-left">
                     <div class="stage-icon">✍️</div>
@@ -318,10 +329,10 @@
                         <div class="stage-desc">Ćwiczenia gramatyczne, przypadki i odmiana słów.</div>
                     </div>
                 </div>
-                <a href="module-2-stage4.html" class="btn-stage" id="btn-stage4">Rozpocznij</a>
+                <a href="module-2-gramatyka.html" class="btn-stage" id="btn-stage4">Rozpocznij</a>
             </div>
 
-            <!-- Etap 5 -->
+            <!-- Etap 5: Dialogi -->
             <div class="stage-card" id="card-stage5">
                 <div class="stage-left">
                     <div class="stage-icon">💬</div>
@@ -334,10 +345,10 @@
                         <div class="stage-desc">Rozmowy o rodzinie, przyjaźni i opisywaniu wyglądu.</div>
                     </div>
                 </div>
-                <a href="module-2-stage5.html" class="btn-stage" id="btn-stage5">Rozpocznij</a>
+                <a href="module-2-dialogi.html" class="btn-stage" id="btn-stage5">Rozpocznij</a>
             </div>
 
-            <!-- Etap 6 -->
+            <!-- Etap 6: Mini Gra -->
             <div class="stage-card" id="card-stage6">
                 <div class="stage-left">
                     <div class="stage-icon">🎮</div>
@@ -350,10 +361,10 @@
                         <div class="stage-desc">Szybkie, wymieszane zadania sprawdzające refleks.</div>
                     </div>
                 </div>
-                <a href="module-2-stage6.html" class="btn-stage" id="btn-stage6">Rozpocznij</a>
+                <a href="module-2-gra.html" class="btn-stage" id="btn-stage6">Rozpocznij</a>
             </div>
 
-            <!-- Etap 7 -->
+            <!-- Etap 7: Test końcowy -->
             <div class="stage-card" id="card-stage7">
                 <div class="stage-left">
                     <div class="stage-icon">🏆</div>
@@ -366,7 +377,7 @@
                         <div class="stage-desc">30 pytań sprawdzających całą wiedzę z Modułu 2.</div>
                     </div>
                 </div>
-                <a href="module-2-stage7.html" class="btn-stage" id="btn-stage7">Rozpocznij</a>
+                <a href="module-2-test.html" class="btn-stage" id="btn-stage7">Rozpocznij</a>
             </div>
 
         </div>
@@ -375,7 +386,6 @@
     <script>
         const MODULE_KEY = 'm2_progress';
 
-        // Default progress state
         let progress = {
             stage1: false,
             stage2: false,
@@ -396,6 +406,13 @@
                 }
             }
 
+            // Unlocking logic rules:
+            // 1. Stage 1 is always unlocked.
+            // 2. Stages 2 to 6 are unlocked if Stage 1 is completed.
+            // 3. Stage 7 is unlocked if Stages 1 to 6 are ALL completed.
+            const stages2to6Unlocked = progress.stage1;
+            const stage7Unlocked = progress.stage1 && progress.stage2 && progress.stage3 && progress.stage4 && progress.stage5 && progress.stage6;
+
             let completedCount = 0;
             const totalStages = 7;
 
@@ -404,6 +421,16 @@
                 const card = document.getElementById(`card-stage${i}`);
                 const btn = document.getElementById(`btn-stage${i}`);
 
+                let isUnlocked = false;
+                if (i === 1) {
+                    isUnlocked = true;
+                } else if (i >= 2 && i <= 6) {
+                    isUnlocked = stages2to6Unlocked;
+                } else if (i === 7) {
+                    isUnlocked = stage7Unlocked;
+                }
+
+                // Handle completion status styling
                 if (isCompleted) {
                     completedCount++;
                     card.classList.add('completed');
@@ -411,6 +438,16 @@
                 } else {
                     card.classList.remove('completed');
                     btn.textContent = 'Rozpocznij';
+                }
+
+                // Handle lock/unlock states
+                if (!isUnlocked) {
+                    card.classList.add('locked');
+                    btn.classList.add('disabled');
+                    btn.textContent = 'Zablokowany';
+                } else {
+                    card.classList.remove('locked');
+                    btn.classList.remove('disabled');
                 }
             }
 
