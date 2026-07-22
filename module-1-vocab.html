@@ -377,7 +377,7 @@
                     </div>
                 </div>
                 <div class="stage-right">
-                    <a href="grammar.html" class="btn btn-locked" id="btn-stage4">Rozpocznij</a>
+                    <a href="module-1-gramatyka.html" class="btn btn-locked" id="btn-stage4">Rozpocznij</a>
                 </div>
             </div>
 
@@ -449,7 +449,7 @@
                 { id: 1, key: 'stage1', href: 'module-1-fiszki.html', title: 'Etap 1: Fiszki', btnText: 'Rozpocznij' },
                 { id: 2, key: 'stage2', href: 'module-1-dopasuj.html', title: 'Etap 2: Dopasuj obrazki', btnText: 'Rozpocznij' },
                 { id: 3, key: 'stage3', href: 'module-1-pisanie.html', title: 'Etap 3: Ćwiczenie pisania', btnText: 'Rozpocznij' },
-                { id: 4, key: 'stage4', href: 'grammar.html', title: 'Etap 4: Gramatyka', btnText: 'Rozpocznij' },
+                { id: 4, key: 'stage4', href: 'module-1-gramatyka.html', title: 'Etap 4: Gramatyka', btnText: 'Rozpocznij' },
                 { id: 5, key: 'stage5', href: 'challenge.html', title: 'Etap 5: Mini Wyzwanie', btnText: 'Rozpocznij' },
                 { id: 6, key: 'stage6', href: 'final_quiz.html', title: 'Etap 6: Test Końcowy', btnText: 'Rozpocznij Test' }
             ];
@@ -463,7 +463,19 @@
                 const badge = document.getElementById(`badge-stage${stage.id}`);
 
                 const isDone = progress[stage.key];
-                const isPreviousDone = index === 0 || progress[stages[index - 1].key];
+                
+                // LOGIKA ODBLOKOWANIA:
+                // Etap 1 jest zawsze odblokowany (index === 0).
+                // Etapy 2, 3, 4 odblokowują się równocześnie po wykonaniu Etapu 1 (progress.stage1).
+                // Kolejne etapy (5, 6) wymagają zaliczenia poprzedniego etapu.
+                let isUnlocked = false;
+                if (index === 0) {
+                    isUnlocked = true;
+                } else if (stage.id === 2 || stage.id === 3 || stage.id === 4) {
+                    isUnlocked = progress.stage1;
+                } else {
+                    isUnlocked = progress[stages[index - 1].key];
+                }
 
                 if (isDone) {
                     completedCount++;
@@ -473,7 +485,7 @@
                     btn.href = stage.href;
                     h2.childNodes[0].textContent = stage.title + " ✅ ";
                     badge.style.display = 'inline-block';
-                } else if (isPreviousDone) {
+                } else if (isUnlocked) {
                     card.className = 'stage-card unlocked';
                     btn.className = 'btn';
                     btn.textContent = stage.btnText;
