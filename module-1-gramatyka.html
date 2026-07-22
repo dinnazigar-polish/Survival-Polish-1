@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 1 – Etap 4: Gramatyka</title>
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --primary-green-hover: #27ae60;
+            --badge-green-bg: #e8f8f0;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-light: #e2e8f0;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.1);
+            
+            /* Kolory informacji zwrotnej i gramatyki */
+            --correct-green: #2ecc71;
+            --correct-bg: #e8f8f0;
+            --incorrect-red: #e74c3c;
+            --incorrect-bg: #fde8e8;
+            --grammar-blue: #3498db;
+            --grammar-bg: #ebf5fb;
+
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Nawigacja górna */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-green);
+        }
+
+        .breadcrumb {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        /* Główna karta ćwiczenia */
+        .quiz-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        /* Pasek postępu pytania */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 10px;
+            background-color: var(--border-light);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-green);
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        /* Treść pytania */
+        .question-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin: 1.5rem 0 2rem 0;
+            color: var(--text-dark);
+        }
+
+        .question-title span {
+            display: inline-block;
+            border-bottom: 3px dashed var(--primary-green);
+            padding: 0 10px;
+            color: var(--primary-green);
+        }
+
+        /* Opcje odpowiedzi (Duolingo style) */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .option-btn {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 0 var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary-green);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 var(--border-light);
+        }
+
+        .option-btn:active:not(:disabled) {
+            transform: translateY(2px);
+            box-shadow: 0 0 0 transparent;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        /* Stany odpowiedzi */
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-green);
+            color: var(--correct-green);
+            box-shadow: 0 4px 0 var(--correct-green);
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-red);
+            color: var(--incorrect-red);
+            box-shadow: 0 4px 0 var(--incorrect-red);
+        }
+
+        /* Komunikat o wyniku (Feedback) */
+        .feedback-box {
+            display: none;
+            border-radius: 16px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            animation: slideDown 0.3s ease;
+        }
+
+        .feedback-box.correct {
+            display: block;
+            background-color: var(--correct-bg);
+            color: var(--correct-green);
+            border: 1px solid var(--correct-green);
+        }
+
+        .feedback-box.incorrect {
+            display: block;
+            background-color: var(--incorrect-bg);
+            color: var(--incorrect-red);
+            border: 1px solid var(--incorrect-red);
+        }
+
+        /* Sekcja objaśnienia gramatycznego */
+        .grammar-card {
+            display: none;
+            background-color: var(--grammar-bg);
+            border-left: 5px solid var(--grammar-blue);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+            animation: fadeIn 0.4s ease;
+        }
+
+        .grammar-card.active {
+            display: block;
+        }
+
+        .grammar-card h3 {
+            color: var(--grammar-blue);
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .grammar-card p {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .grammar-card .examples-list {
+            margin-top: 0.5rem;
+            padding-left: 1.2rem;
+            font-size: 0.9rem;
+            color: #2c3e50;
+        }
+
+        .grammar-card .examples-list li {
+            margin-bottom: 0.2rem;
+        }
+
+        /* Przycisk akcji (Dalej) */
+        .action-area {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-next {
+            background-color: var(--primary-green);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 0.9rem 2.5rem;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            display: none;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+        }
+
+        .btn-next:hover {
+            background-color: var(--primary-green-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-next:active {
+            transform: translateY(0);
+        }
+
+        /* Podsumowanie końcowe */
+        .results-card {
+            display: none;
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            box-shadow: var(--shadow-soft);
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .results-card h2 {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .results-card .stars {
+            font-size: 3rem;
+            margin: 1rem 0;
+        }
+
+        .results-card .score-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .btn-finish {
+            background-color: var(--primary-green);
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 0.9rem 2.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-finish:hover {
+            background-color: var(--primary-green-hover);
+        }
+
+        /* Animacje */
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Confetti Canvas */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="container">
+        <!-- Nawigacja górna -->
+        <div class="top-nav">
+            <a href="index.html" class="back-link">← Wróć do modułów</a>
+            <div class="breadcrumb">
+                <a href="index.html">🏠 Strona główna</a> &gt; <strong>Gramatyka</strong>
+            </div>
+        </div>
+
+        <!-- Ekran pytania -->
+        <div class="quiz-card" id="quiz-card">
+            <div class="quiz-header">
+                <span id="question-number">Pytanie 1 / 22</span>
+                <span id="score-live">Punkty: 0</span>
+            </div>
+
+            <div class="progress-track">
+                <div class="progress-fill" id="progress-bar"></div>
+            </div>
+
+            <!-- Tytuł pytania -->
+            <div class="question-title" id="question-text">
+                Piję <span>______</span>.
+            </div>
+
+            <!-- Opcje do wyboru -->
+            <div class="options-grid" id="options-container">
+                <!-- Generowane dynamicznie w JS -->
+            </div>
+
+            <!-- Feedback po wyborze -->
+            <div class="feedback-box" id="feedback-box"></div>
+
+            <!-- Objaśnienie Gramatyczne -->
+            <div class="grammar-card" id="grammar-card">
+                <h3>📘 Gramatyka</h3>
+                <p><strong>Przypadek:</strong> <span id="grammar-case"></span></p>
+                <p id="grammar-rule"></p>
+                <p><strong>Pytanie:</strong> <span id="grammar-question"></span> | <strong>Poprawna forma:</strong> <span id="grammar-correct"></span></p>
+                <div style="margin-top: 0.8rem; font-weight: 700; font-size: 0.85rem; color: var(--grammar-blue); text-transform: uppercase;">Przykłady:</div>
+                <ul class="examples-list" id="grammar-examples"></ul>
+            </div>
+
+            <!-- Przycisk przejścia dalej -->
+            <div class="action-area">
+                <button class="btn-next" id="btn-next" onclick="nextQuestion()">Następne pytanie →</button>
+            </div>
+        </div>
+
+        <!-- Ekran podsumowania na koniec -->
+        <div class="results-card" id="results-card">
+            <h2>Gratulacje! 🎉</h2>
+            <p style="color: var(--text-muted);">Ukończyłeś lekcję gramatyki z Modułu 1.</p>
+            <div class="stars" id="stars-rating">⭐⭐⭐</div>
+            <div class="score-text">Twój wynik: <span id="final-score">0</span> / 22</div>
+            <a href="index.html" class="btn-finish" onclick="completeModuleStage()">Wróć do listy lekcji</a>
+        </div>
+    </div>
+
+    <script>
+        /*
+         * BAZA PYTAŃ GRAMATYCZNYCH (22 pytania)
+         * Wykorzystuje WYŁĄCZNIE dozwolony zasób słownictwa:
+         * dom, mieszkanie, pokój, salon, kuchnia, łazienka, ogród, garaż, okno, drzwi,
+         * stół, krzesło, kanapa, lodówka, kawa, herbata, mleko, woda niegazowana,
+         * truskawki, borówki, owoce, ciasto jabłkowe.
+         */
+        const questionsData = [
+            {
+                sentence: "Piję ",
+                blankTarget: "kawę",
+                sentenceAfter: ".",
+                options: [
+                    { text: "kawa", correct: false },
+                    { text: "kawę", correct: true },
+                    { text: "kawy", correct: false }
+                ],
+                grammar: {
+                    case: "Biernik (Accusative)",
+                    rule: "Używamy Biernika po wielu czasownikach, np.: pić, jeść, widzieć, kupować.",
+                    question: "kogo? co?",
+                    correctForm: "kawę",
+                    examples: ["Piję herbatę.", "Kupuję mleko."]
+                }
+            },
+            {
+                sentence: "Idę do ",
+                blankTarget: "kuchni",
+                sentenceAfter: ".",
+                options: [
+                    { text: "kuchnia", correct: false },
+                    { text: "kuchni", correct: true },
+                    { text: "kuchnię", correct: false }
+                ],
+                grammar: {
+                    case: "Dopełniacz (Genitive)",
+                    rule: "Po przyimku 'do' zawsze używamy Dopełniacza.",
+                    question: "kogo? czego?",
+                    correctForm: "kuchni",
+                    examples: ["Idę do domu.", "Wracam do mieszkania."]
+                }
+            },
+            {
+                sentence: "Jestem w ",
+                blankTarget: "pokoju",
+                sentenceAfter: ".",
+                options: [
+                    { text: "pokój", correct: false },
+                    { text: "pokoju", correct: true },
+                    { text: "pokojem", correct: false }
+                ],
+                grammar: {
+                    case: "Miejscownik (Locative)",
+                    rule: "Po przyimkach 'w' oraz 'na' (gdy mówimy o lokalizacji) używamy Miejscownika.",
+                    question: "o kim? o czym?",
+                    correctForm: "pokoju",
+                    examples: ["Jestem w domu.", "Mieszkam w łazience? Nie, w salonie!"]
+                }
+            },
+            {
+                sentence: "Mam ",
+                blankTarget: "ogród",
+                sentenceAfter: ".",
+                options: [
+                    { text: "ogród", correct: true },
+                    { text: "ogrodu", correct: false },
+                    { text: "ogrodzie", correct: false }
+                ],
+                grammar: {
+                    case: "Biernik (Accusative)",
+                    rule: "Rzeczowniki rodzaju męskiego nieożywionego mają w Bierniku taką samą formę jak w Mianowniku.",
+                    question: "kogo? co?",
+                    correctForm: "ogród",
+                    examples: ["Mam garaż.", "Mam pokój."]
+                }
+            },
+            {
+                sentence: "Nie mam ",
+                blankTarget: "kawy",
+                sentenceAfter: ".",
+                options: [
+                    { text: "kawa", correct: false },
+                    { text: "kawę", correct: false },
+                    { text: "kawy", correct: true }
+                ],
+                grammar: {
+                    case: "Dopełniacz (Genitive)",
+                    rule: "W przeczeniach (po 'nie mam', 'nie piję') używamy Dopełniacza zamiast Biernika.",
+                    question: "kogo? czego?",
+                    correctForm: "kawy",
+                    examples: ["Nie mam herbaty.", "Nie mam wody niegazowanej."]
+                }
+            },
+            {
+                sentence: "Patrzę na ",
+                blankTarget: "okno",
+                sentenceAfter: ".",
+                options: [
+                    { text: "okno", correct: true },
+                    { text: "okna", correct: false },
+                    { text: "oknie", correct: false }
+                ],
+                grammar: {
+                    case: "Biernik (Accusative)",
+                    rule: "Po przyimku 'na' w znaczeniu kierunku/wzroku używamy Biernika. Rodzaj nijaki nie zmienia formy.",
+                    question: "kogo? co?",
+                    correctForm: "okno",
+                    examples: ["Patrzę na stół.", "Patrzę na drzwi."]
+                }
+            },
+            {
+                sentence: "Lubię ",
+                blankTarget: "ciasto jabłkowe",
+                sentenceAfter: ".",
+                options: [
+                    { text: "ciasto jabłkowe", correct: true },
+                    { text: "ciasta jabłkowego", correct: false },
+                    { text: "cieście jabłkowym", correct: false }
+                ],
+                grammar: {
+                    case: "Biernik (Accusative)",
+                    rule: "Po czasowniku 'lubię' używamy Biernika.",
+                    question: "kogo? co?",
+                    correctForm: "ciasto jabłkowe",
+                    examples: ["Lubię kawę.", "Lubię owoce."]
+                }
+            },
+            {
+                sentence: "Kupuję ",
+                blankTarget: "truskawki",
+                sentenceAfter: ".",
+                options: [
+                    { text: "truskawki", correct: true },
+                    { text: "truskawek", correct: false },
+                    { text: "truskawkami", correct: false }
+                ],
+                grammar: {
+                    case: "Biernik (Accusative)",
+                    rule: "Liczba mnoga nieożywiona w Bierniku jest taka sama jak w Mianowniku.",
+                    question: "kogo? co?",
+                    correctForm: "truskawki",
+                    examples: ["Kupuję borówki.", "Kupuję owoce."]
+                }
+            },
+            {
+                sentence: "Szukam ",
+                blankTarget: "lodówki",
+                sentenceAfter: ".",
+                options: [
+                    { text: "lodówka", correct: false },
+                    { text: "lodówki", correct: true },
+                    { text: "lodówkę", correct: false }
+                ],
+                grammar: {
+                    case: "Dopełniacz (Genitive)",
+                    rule: "Czasownik 'szukam' zawsze wymaga Dopełniacza.",
+                    question: "kogo? czego?",
+                    correctForm: "lodówki",
+                    examples: ["Szukam domu.", "Szukam wody niegazowanej."]
+                }
+            },
+            {
+                sentence: "Wracam z ",
+                blankTarget: "ogrodu",
+                sentenceAfter: ".",
+                options: [
+                    { text: "ogród", correct: false },
+                    { text: "ogrodzie", correct: false },
+                    { text: "ogrodu", correct: true }
+                ],
+                grammar: {
+                    case: "Dopełniacz (Genitive)",
+                    rule: "Po przyimku 'z' (skąd?) używamy Dopełniacza.",
+                    question: "kogo? czego?",
+                    correctForm: "ogrodu",
+                    examples: ["Wracam z kuchni.", "Wracam z garażu."]
+                }
+            },
+            {
+                sentence: "Mieszkam w ",
+                blankTarget: "mieszkaniu",
+                sentenceAfter: ".",
+                options: [
+                    { text: "mieszkanie", correct: false },
+                    { text: "mieszkaniu", correct: true },
+                    { text: "mieszkaniem", correct: false }
+                ],
+                grammar: {
+                    case: "Miejscownik (Locative)",
+                    rule: "Czasownik 'mieszkam' połączony z 'w' wymaga Miejscownika.",
+                    question: "o kim? o czym?",
+                    correctForm: "mieszkaniu",
+                    examples: ["Mieszkam w domu.", "Jestem w łazience."]
+                }
+            },
+            {
+                sentence: "Stawiam kawę na ",
+                blankTarget: "stół",
+                sentenceAfter: ".",
+                options: [
+                    { text: "stół", correct: true },
+                    { text: "stole", correct: false },
+                    { text: "stołu", correct: false }
+                ],
+                grammar: {
+                    case: "Biernik (Accusative)",
+                    rule: "Gdy czynność oznacza ruch ('stawiam na...'), używamy Biernika.",
+                    question: "kogo? co?",
+                    correctForm: "stół",
+                    examples: ["Stawiam wodę na kanapę.", "Kładę owoce na stół."]
+                }
+            },
+            {
+                sentence: "Siadam na ",
+                blankTarget: "krzesło",
+                sentenceAfter: ".",
+                options: [
+                    { text: "krzesło", correct: true },
+                    { text: "krześle", correct: false },
+                    { text: "krzesłem", correct: false }
+                ],
+                grammar: {
+                    case: "Biernik (Accusative)",
+                    rule: "Czasownik dynamiki 'siadam na...' wymaga użycia Biernika.",
+                    question: "kogo? co?",
+                    correctForm: "krzesło",
+                    examples: ["Siadam na kanapę.", "Siadam na stół? Nie, na krzesło!"]
+                }
+            },
+            {
+                sentence: "Widzę ",
+                blankTarget: "garaż",
+                sentenceAfter: ".",
+                options: [
+                    { text: "garaż", correct: true },
+                    { text: "garażu", correct: false },
+                    { text: "garażem", correct: false }
+                ],
+                grammar: {
+                    case: "Biernik (Accusative)",
+                    rule: "Czasownik 'widzę' połączony jest z Biernikiem.",
+                    question: "kogo? co?",
+                    correctForm: "garaż",
+                    examples: ["Widzę dom.", "Widzę pokój."]
+                }
+            },
+            {
+                sentence: "Otwieram ",
+                blankTarget: "drzwi",
+                sentenceAfter: ".",
+                options: [
+                    { text: "drzwi", correct: true },
+                    { text: "drzwiami", correct: false },
+                    { text: "drzwiom", correct: false }
+                ],
+                grammar: {
+                    case: "Biernik (Accusative)",
+                    rule: "Rzeczownik 'drzwi' (zawsze liczba mnoga) w Bierniku ma formę 'drzwi'.",
+                    question: "kogo? co?",
+                    correctForm: "drzwi",
+                    examples: ["Otwieram okno.", "Otwieram lodówkę."]
+                }
+            },
+            {
+                sentence: "Zamykam ",
+                blankTarget: "okno",
+                sentenceAfter: ".",
+                options: [
+                    { text: "okno", correct: true },
+                    { text: "okna", correct: false },
+                    { text: "oknie", correct: false }
+                ],
+                grammar: {
+                    case: "Biernik (Accusative)",
+                    rule: "Czasownik 'zamykam' wymaga Biernika.",
+                    question: "kogo? co?",
+                    correctForm: "okno",
+                    examples: ["Zamykam drzwi.", "Zamykam garaż."]
+                }
+            },
+            {
+                sentence: "To jest piękny ",
+                blankTarget: "dom",
+                sentenceAfter: ".",
+                options: [
+                    { text: "dom", correct: true },
+                    { text: "domu", correct: false },
+                    { text: "domem", correct: false }
+                ],
+                grammar: {
+                    case: "Mianownik (Nominative)",
+                    rule: "Mianownik to podstawowa forma słowa. Używamy go określając 'co to jest?'.",
+                    question: "kto? co?",
+                    correctForm: "dom",
+                    examples: ["To jest podłoga.", "To jest pokój."]
+                }
+            },
+            {
+                sentence: "Herbata jest za ",
+                blankTarget: "lodówką",
+                sentenceAfter: ".",
+                options: [
+                    { text: "lodówka", correct: false },
+                    { text: "lodówkę", correct: false },
+                    { text: "lodówką", correct: true }
+                ],
+                grammar: {
+                    case: "Narzędnik (Instrumental)",
+                    rule: "Po przyimkach miejsca takich jak 'za', 'pod', 'przed' używamy Narzędnika.",
+                    question: "z kim? z czym?",
+                    correctForm: "lodówką",
+                    examples: ["Kawa jest za stoiskiem / kanapą.", "Ogród jest za domem."]
+                }
+            },
+            {
+                sentence: "Jem ciasto z ",
+                blankTarget: "herbatą",
+                sentenceAfter: ".",
+                options: [
+                    { text: "herbata", correct: false },
+                    { text: "herbatę", correct: false },
+                    { text: "herbatą", correct: true }
+                ],
+                grammar: {
+                    case: "Narzędnik (Instrumental)",
+                    rule: "Przyimek 'z' łączący rzeczy (np. kawa z mlekiem) wymaga Narzędnika.",
+                    question: "z kim? z czym?",
+                    correctForm: "herbatą",
+                    examples: ["Kawa z mlekiem.", "Woda niegazowana z owocami."]
+                }
+            },
+            {
+                sentence: "Piję wodę z ",
+                blankTarget: "truskawkami",
+                sentenceAfter: ".",
+                options: [
+                    { text: "truskawki", correct: false },
+                    { text: "truskawkami", correct: true },
+                    { text: "truskawek", correct: false }
+                ],
+                grammar: {
+                    case: "Narzędnik (Instrumental)",
+                    rule: "W liczbie mnogiej Narzędnik ma końcówkę '-ami'.",
+                    question: "z kim? z czym?",
+                    correctForm: "truskawkami",
+                    examples: ["Woda z borówkami.", "Ciasto z owocami."]
+                }
+            },
+            {
+                sentence: "To jest słodkie ",
+                blankTarget: "mleko",
+                sentenceAfter: ".",
+                options: [
+                    { text: "mleko", correct: true },
+                    { text: "mleka", correct: false },
+                    { text: "mlekiem", correct: false }
+                ],
+                grammar: {
+                    case: "Mianownik (Nominative)",
+                    rule: "Forma podstawowa rzeczownika (rodzaj nijaki).",
+                    question: "kto? co?",
+                    correctForm: "mleko",
+                    examples: ["To jest ciasto jabłkowe.", "To jest okno."]
+                }
+            },
+            {
+                sentence: "Siedzę na ",
+                blankTarget: "kanapie",
+                sentenceAfter: ".",
+                options: [
+                    { text: "kanapa", correct: false },
+                    { text: "kanapie", correct: true },
+                    { text: "kanapę", correct: false }
+                ],
+                grammar: {
+                    case: "Miejscownik (Locative)",
+                    rule: "Gdy opisujemy stan stacjonarny ('gdzie siedzę? na czym?'), używamy Miejscownika.",
+                    question: "o kim? o czym?",
+                    correctForm: "kanapie",
+                    examples: ["Siedzę na krześle.", "Jestem w garażu."]
+                }
+            }
+        ];
+
+        // Stan aplikacji
+        let currentIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        // Elementy DOM
+        const quizCard = document.getElementById('quiz-card');
+        const resultsCard = document.getElementById('results-card');
+        const questionNumberEl = document.getElementById('question-number');
+        const scoreLiveEl = document.getElementById('score-live');
+        const progressBarEl = document.getElementById('progress-bar');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainerEl = document.getElementById('options-container');
+        const feedbackBoxEl = document.getElementById('feedback-box');
+        const grammarCardEl = document.getElementById('grammar-card');
+        const btnNextEl = document.getElementById('btn-next');
+
+        // Ładowanie pytania
+        function loadQuestion() {
+            answered = false;
+            const currentQ = questionsData[currentIndex];
+
+            // Aktualizacja wskaźników
+            questionNumberEl.textContent = `Pytanie ${currentIndex + 1} / ${questionsData.length}`;
+            scoreLiveEl.textContent = `Punkty: ${score}`;
+            progressBarEl.style.width = `${((currentIndex) / questionsData.length) * 100}%`;
+
+            // Ukrycie poprzednich komunikatów
+            feedbackBoxEl.className = 'feedback-box';
+            feedbackBoxEl.style.display = 'none';
+            grammarCardEl.classList.remove('active');
+            btnNextEl.style.display = 'none';
+
+            // Tekst pytania
+            questionTextEl.innerHTML = `${currentQ.sentence}<span>______</span>${currentQ.sentenceAfter}`;
+
+            // Renderowanie opcji
+            optionsContainerEl.innerHTML = '';
+            currentQ.options.forEach((opt) => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.textContent = opt.text;
+                button.onclick = () => selectOption(button, opt.correct);
+                optionsContainerEl.appendChild(button);
+            });
+        }
+
+        // Obsługa wyboru odpowiedzi
+        function selectOption(selectedBtn, isCorrect) {
+            if (answered) return;
+            answered = true;
+
+            const currentQ = questionsData[currentIndex];
+            const allBtns = optionsContainerEl.querySelectorAll('.option-btn');
+            
+            // Zablokowanie przycisków
+            allBtns.forEach(btn => btn.disabled = true);
+
+            if (isCorrect) {
+                score++;
+                selectedBtn.classList.add('correct');
+                feedbackBoxEl.textContent = "✅ Świetnie! Poprawna odpowiedź!";
+                feedbackBoxEl.className = "feedback-box correct";
+                
+                // Wstawienie prawidłowego słowa do zdania
+                questionTextEl.innerHTML = `${currentQ.sentence}<span style="color: var(--correct-green); border-bottom-color: var(--correct-green);">${currentQ.blankTarget}</span>${currentQ.sentenceAfter}`;
+            } else {
+                selectedBtn.classList.add('incorrect');
+                feedbackBoxEl.textContent = "❌ Spróbuj ponownie następnym razem!";
+                feedbackBoxEl.className = "feedback-box incorrect";
+                
+                // Podświetlenie prawidłowej odpowiedzi
+                allBtns.forEach(btn => {
+                    if (btn.textContent === currentQ.blankTarget) {
+                        btn.classList.add('correct');
+                    }
+                });
+            }
+
+            scoreLiveEl.textContent = `Punkty: ${score}`;
+
+            // Wyświetlenie objaśnienia gramatycznego
+            document.getElementById('grammar-case').textContent = currentQ.grammar.case;
+            document.getElementById('grammar-rule').textContent = currentQ.grammar.rule;
+            document.getElementById('grammar-question').textContent = currentQ.grammar.question;
+            document.getElementById('grammar-correct').textContent = currentQ.grammar.correctForm;
+
+            const examplesListEl = document.getElementById('grammar-examples');
+            examplesListEl.innerHTML = '';
+            currentQ.grammar.examples.forEach(ex => {
+                const li = document.createElement('li');
+                li.textContent = ex;
+                examplesListEl.appendChild(li);
+            });
+
+            grammarCardEl.classList.add('active');
+            btnNextEl.style.display = 'inline-block';
+        }
+
+        // Przejście do następnego pytania
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < questionsData.length) {
+                loadQuestion();
+            } else {
+                showFinalResults();
+            }
+        }
+
+        // Podsumowanie końcowe
+        function showFinalResults() {
+            quizCard.style.display = 'none';
+            resultsCard.style.display = 'block';
+            
+            document.getElementById('final-score').textContent = score;
+            
+            // Gwiazdki na podstawie wyniku
+            const starsEl = document.getElementById('stars-rating');
+            if (score >= 20) {
+                starsEl.textContent = "⭐⭐⭐";
+            } else if (score >= 14) {
+                starsEl.textContent = "⭐⭐";
+            } else {
+                starsEl.textContent = "⭐";
+            }
+
+            runConfetti();
+        }
+
+        // Zapisanie postępu w LocalStorage dla Modułu 1
+        function completeModuleStage() {
+            const MODULE_KEY = 'm1_progress';
+            let progress = { stage1: false, stage2: false, stage3: false, stage4: false, stage5: false, stage6: false };
+            
+            const saved = localStorage.getItem(MODULE_KEY);
+            if (saved) {
+                try {
+                    progress = JSON.parse(saved);
+                } catch(e) {
+                    console.error("Błąd odczytu z localStorage", e);
+                }
+            }
+
+            // Oznaczenie Etapu 4 jako ukończony
+            progress.stage4 = true;
+            localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
+        }
+
+        // Efekt Confetti na koniec
+        function runConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = Array.from({ length: 80 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                size: Math.random() * 8 + 4,
+                color: ['#2ecc71', '#3498db', '#f1c40f', '#e74c3c'][Math.floor(Math.random() * 4)],
+                speed: Math.random() * 3 + 2
+            }));
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.y += p.speed;
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(p.x, p.y, p.size, p.size);
+                });
+                if (particles.some(p => p.y < canvas.height)) {
+                    requestAnimationFrame(draw);
+                }
+            }
+            draw();
+        }
+
+        // Inicjalizacja przy załadowaniu strony
+        document.addEventListener('DOMContentLoaded', loadQuestion);
+    </script>
+</body>
+</html>
