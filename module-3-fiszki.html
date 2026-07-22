@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 3 – Etap 1: Fiszki</title>
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --primary-green-hover: #27ae60;
+            --badge-green-bg: #e8f8f0;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-light: #e2e8f0;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-green);
+        }
+
+        .counter-badge {
+            background-color: var(--badge-green-bg);
+            color: var(--primary-green);
+            font-weight: 700;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.95rem;
+        }
+
+        /* Progress Bar */
+        .progress-track {
+            width: 100%;
+            height: 10px;
+            background-color: var(--border-light);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-green);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Flashcard Container & Flip Effect */
+        .flashcard-wrapper {
+            perspective: 1000px;
+            width: 100%;
+            height: 380px;
+            margin-bottom: 2rem;
+            cursor: pointer;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            border-radius: 24px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 24px;
+            background-color: var(--card-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            border: 2px solid var(--border-light);
+        }
+
+        /* Card Front */
+        .card-front .icon {
+            font-size: 6rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-front .hint {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Card Back */
+        .card-back {
+            transform: rotateY(180deg);
+            justify-content: space-between;
+        }
+
+        .word-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .audio-btn {
+            background-color: var(--badge-green-bg);
+            color: var(--primary-green);
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 1.5rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .audio-btn:hover {
+            background-color: #d1f2e0;
+        }
+
+        .example-sentence {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            font-style: italic;
+            margin-bottom: 0.5rem;
+        }
+
+        .explanation {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            background-color: var(--primary-green);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 0.9rem 2rem;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, opacity 0.2s ease;
+            flex: 1;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-green-hover);
+        }
+
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: #cbd5e1;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Completion Screen */
+        .completion-screen {
+            display: none;
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-light);
+        }
+
+        .completion-screen .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .completion-screen h2 {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .completion-screen p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Navigation Header -->
+        <div class="top-nav">
+            <a href="module3.html" class="back-link">
+                ← Powrót do Modułu 3
+            </a>
+            <span class="counter-badge" id="card-counter">1 / 28</span>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-track">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+
+        <!-- Flashcard View -->
+        <div id="flashcard-container">
+            <div class="flashcard-wrapper" onclick="flipCard()">
+                <div class="flashcard" id="card">
+                    <!-- Front -->
+                    <div class="card-face card-front">
+                        <div class="icon" id="card-icon">🥚</div>
+                        <div class="hint">Kliknij, aby zobaczyć słowo</div>
+                    </div>
+                    <!-- Back -->
+                    <div class="card-face card-back">
+                        <div>
+                            <div class="word-title" id="card-word">jajka</div>
+                            <button class="audio-btn" onclick="speakWord(event)">
+                                🔊 Posłuchaj wymowy
+                            </button>
+                        </div>
+                        <div>
+                            <p class="example-sentence" id="card-example">"Kupuję świeże jajka na śniadanie."</p>
+                            <p class="explanation" id="card-explanation">Produkt spożywczy od kury.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <button class="btn btn-secondary" id="prev-btn" onclick="prevCard()" disabled>← Poprzednia</button>
+                <button class="btn" id="next-btn" onclick="nextCard()">Następna →</button>
+            </div>
+        </div>
+
+        <!-- Completion View -->
+        <div class="completion-screen" id="completion-screen">
+            <div class="icon">🎉</div>
+            <h2>Świetnie! Znasz już 28 słów!</h2>
+            <p>Ukończyłeś Etap 1. Możesz teraz przejść do Dopasowywania słów.</p>
+            <a href="module3.html" class="btn">Powrót do menu modułu</a>
+        </div>
+    </div>
+
+    <script>
+        // Exactly 28 vocabulary items for Module 3
+        const vocabulary = [
+            { word: "jajka", icon: "🥚", sentence: "Kupuję świeże jajka na śniadanie.", explanation: "Produkt spożywczy od kury." },
+            { word: "bułki", icon: "🥖", sentence: "Proszę dwie świeże bułki.", explanation: "Małe, okrągłe pieczywo." },
+            { word: "chleb", icon: "🍞", sentence: "Chleb jest bardzo świeży i smaczny.", explanation: "Podstawowe pieczywo." },
+            { word: "pomidor", icon: "🍅", sentence: "Czerwony pomidor jest w koszyku.", explanation: "Czerwone warzywo na kanapkę lub do sałatki." },
+            { word: "ogórek", icon: "🥒", sentence: "Zielony ogórek leży na stole.", explanation: "Podłużne, zielone warzywo." },
+            { word: "sałata", icon: "🥬", sentence: "Świeża sałata jest w lodówce.", explanation: "Zielone warzywo liściaste." },
+            { word: "ser", icon: "🧀", sentence: "Lubię żółty ser na kanapce.", explanation: "Produkt mleczny." },
+            { word: "sok", icon: "🧃", sentence: "Piję sok pomarańczowy.", explanation: "Napój z owoców." },
+            { word: "tort", icon: "🎂", sentence: "Tort urodzinowy jest słodki.", explanation: "Duże, ozdobne ciasto na święta i urodziny." },
+            { word: "ciastko", icon: "🍪", sentence: "Zjem małe ciastko do kawy.", explanation: "Słodka przekąska." },
+            { word: "prezent", icon: "🎁", sentence: "Kupuję prezent dla przyjaciela.", explanation: "Rzecz dawana komuś w darze." },
+            { word: "klocki", icon: "🧱", sentence: "Dzieci kupują klocki w sklepie z zabawkami.", explanation: "Zabawki do budowania." },
+            { word: "mydło", icon: "🧼", sentence: "Mydło pachnie różami.", explanation: "Służy do mycia rąk i ciała." },
+            { word: "szampon", icon: "🧴", sentence: "Ten szampon jest do włosów.", explanation: "Płyn do mycia włosów." },
+            { word: "torba", icon: "🛍️", sentence: "Mam dużą torbę na zakupy.", explanation: "Służy do noszenia rzeczy ze sklepu." },
+            { word: "robić zakupy", icon: "🛒", sentence: "Lubię robić zakupy w piątki.", explanation: "Kupować produkty w sklepie." },
+            { word: "pomagać", icon: "🤝", sentence: "Ekspedientka chce mi pomagać.", explanation: "Udzielać komuś pomocy." },
+            { word: "kasa", icon: "💶", sentence: "Płacimy za towary przy kasie.", explanation: "Miejsce płacenia w sklepie." },
+            { word: "karta płatnicza", icon: "💳", sentence: "Płacę kartą płatniczą za zakupy.", explanation: "Plastikowa karta do płacenia bez gotówki." },
+            { word: "gotówka", icon: "💵", sentence: "Czy masz gotówkę, czy płacisz kartą?", explanation: "Pieniądze papierowe lub monety." },
+            { word: "parking", icon: "🅿️", sentence: "Samochód stoi na parkingu.", explanation: "Miejsce do zostawienia samochodu." },
+            { word: "bilet parkingowy", icon: "🎟️", sentence: "Muszę kupić bilet parkingowy.", explanation: "Dokument potwierdzający opłatę za parking." },
+            { word: "parkometr", icon: "🪙", sentence: "Wrzucam monety do parkometru.", explanation: "Urządzenie do pobierania opłat za parking." },
+            { word: "autobus", icon: "🚌", sentence: "Jadę do sklepu autobusem.", explanation: "Pojazd komunikacji miejskiej." },
+            { word: "tramwaj", icon: "🚃", sentence: "Zółty tramwaj jedzie do centrum.", explanation: "Pojazd szynowy w mieście." },
+            { word: "duży wózek", icon: "🛒", sentence: "Duży wózek jest potrzebny na duże zakupy.", explanation: "Głęboki wózek ze stali w supermarkecie." },
+            { word: "mały wózek", icon: "🧺", sentence: "Biorę mały wózek na kilka rzeczy.", explanation: "Kosz na kółkach lub do ręki." },
+            { word: "paragon", icon: "🧾", sentence: "Oto Twój paragon ze sklepu.", explanation: "Papierowy dowód zakupu z kasy." }
+        ];
+
+        let currentIndex = 0;
+        let isFlipped = false;
+
+        function updateCard() {
+            const item = vocabulary[currentIndex];
+            
+            // Reset Flip Status
+            isFlipped = false;
+            document.getElementById('card').classList.remove('flipped');
+
+            // Set Data
+            document.getElementById('card-icon').textContent = item.icon;
+            document.getElementById('card-word').textContent = item.word;
+            document.getElementById('card-example').textContent = `"${item.sentence}"`;
+            document.getElementById('card-explanation').textContent = item.explanation;
+
+            // Update Counter & Progress
+            document.getElementById('card-counter').textContent = `${currentIndex + 1} / ${vocabulary.length}`;
+            const progressPercent = ((currentIndex + 1) / vocabulary.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+            // Navigation Buttons
+            document.getElementById('prev-btn').disabled = currentIndex === 0;
+            
+            if (currentIndex === vocabulary.length - 1) {
+                document.getElementById('next-btn').textContent = "Zakończ fiszki 🏆";
+            } else {
+                document.getElementById('next-btn').textContent = "Następna →";
+            }
+        }
+
+        function flipCard() {
+            isFlipped = !isFlipped;
+            document.getElementById('card').classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            if (currentIndex < vocabulary.length - 1) {
+                currentIndex++;
+                updateCard();
+            } else {
+                completeStage();
+            }
+        }
+
+        function prevCard() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCard();
+            }
+        }
+
+        function speakWord(event) {
+            event.stopPropagation(); // Prevents flipping card when clicking audio
+            const word = vocabulary[currentIndex].word;
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.lang = 'pl-PL';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function completeStage() {
+            // Save Progress in LocalStorage
+            const MODULE_KEY = 'm3_progress';
+            let progress = { stage1: false, stage2: false, stage3: false, stage4: false, stage5: false, stage6: false, stage7: false };
+            
+            const saved = localStorage.getItem(MODULE_KEY);
+            if (saved) {
+                try { progress = JSON.parse(saved); } catch(e) {}
+            }
+
+            progress.stage1 = true; // Unlock Stage 1 & enable Stage 2
+            localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
+
+            // Show Completion View
+            document.getElementById('flashcard-container').style.display = 'none';
+            document.getElementById('completion-screen').style.display = 'block';
+        }
+
+        // Initialize Card View
+        updateCard();
+    </script>
+</body>
+</html>
