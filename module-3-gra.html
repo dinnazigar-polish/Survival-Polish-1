@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 3 – Etap 6: Mini Gra</title>
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --primary-green-hover: #27ae60;
+            --badge-green-bg: #e8f8f0;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-light: #e2e8f0;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --error-red: #e74c3c;
+            --error-bg: #fadbd8;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-green);
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .stat-badge {
+            background-color: var(--badge-green-bg);
+            color: var(--primary-green);
+            font-weight: 700;
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.95rem;
+        }
+
+        /* Start Screen */
+        .start-card {
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-light);
+        }
+
+        .start-card .icon {
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .start-card h2 {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 0.8rem;
+        }
+
+        .start-card p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+        }
+
+        /* Game Arena */
+        .game-card {
+            display: none;
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-light);
+        }
+
+        .game-prompt-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .game-prompt-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .game-opt-btn {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            padding: 1.2rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .game-opt-btn:hover {
+            border-color: var(--primary-green);
+            background-color: var(--badge-green-bg);
+            transform: translateY(-2px);
+        }
+
+        .game-opt-btn.correct {
+            background-color: var(--primary-green) !important;
+            color: #ffffff !important;
+            border-color: var(--primary-green) !important;
+        }
+
+        .game-opt-btn.wrong {
+            background-color: var(--error-red) !important;
+            color: #ffffff !important;
+            border-color: var(--error-red) !important;
+            animation: shake 0.3s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: var(--primary-green);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 1rem 2.5rem;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-green-hover);
+        }
+
+        /* Completion View */
+        .completion-screen {
+            display: none;
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-light);
+        }
+
+        .completion-screen .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .completion-screen h2 {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .completion-screen p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 480px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Navigation Header -->
+        <div class="top-nav">
+            <a href="module3.html" class="back-link">
+                ← Powrót do Modułu 3
+            </a>
+            <div class="stats-bar">
+                <span class="stat-badge" id="time-badge">⏱️ 60s</span>
+                <span class="stat-badge" id="score-badge">⭐ 0 pkt</span>
+            </div>
+        </div>
+
+        <!-- Start Game View -->
+        <div class="start-card" id="start-screen">
+            <div class="icon">🎮</div>
+            <h2>Szybki Trening Zakupowy!</h2>
+            <p>Masz 60 sekund na zdobycie co najmniej 100 punktów. Odpowiadaj szybko na pytania i wybieraj właściwe słowa!</p>
+            <button class="btn" onclick="startGame()">Start Gry 🚀</button>
+        </div>
+
+        <!-- Game Arena -->
+        <div class="game-card" id="game-screen">
+            <span class="game-prompt-icon" id="prompt-icon">🛒</span>
+            <div class="game-prompt-text" id="prompt-text">Co widzisz na obrazku?</div>
+            <div class="options-grid" id="options-grid"></div>
+        </div>
+
+        <!-- Completion View -->
+        <div class="completion-screen" id="completion-screen">
+            <div class="icon" id="result-icon">🏆</div>
+            <h2 id="result-title">Brawo! Trening ukończony!</h2>
+            <p id="result-desc">Zdobyłeś wymagane punkty i odblokowałeś finałowy Test!</p>
+            <a href="module3.html" class="btn">Powrót do menu modułu</a>
+        </div>
+    </div>
+
+    <script>
+        const gameItems = [
+            { icon: "🥖", word: "bułki", options: ["bułki", "chleb", "jajka", "sałata"] },
+            { icon: "🍞", word: "chleb", options: ["chleb", "bułki", "ciastko", "tort"] },
+            { icon: "🥚", word: "jajka", options: ["jajka", "ser", "sok", "mydło"] },
+            { icon: "🍅", word: "pomidor", options: ["pomidor", "ogórek", "sałata", "szampon"] },
+            { icon: "🥒", word: "ogórek", options: ["ogórek", "pomidor", "chleb", "klocki"] },
+            { icon: "🥬", word: "sałata", options: ["sałata", "ogórek", "torba", "paragon"] },
+            { icon: "🧀", word: "ser", options: ["ser", "jajka", "sok", "gotówka"] },
+            { icon: "🧃", word: "sok", options: ["sok", "ser", "autobus", "kasa"] },
+            { icon: "🎂", word: "tort", options: ["tort", "ciastko", "prezent", "parking"] },
+            { icon: "🍪", word: "ciastko", options: ["ciastko", "tort", "klocki", "tramwaj"] },
+            { icon: "🎁", word: "prezent", options: ["prezent", "torba", "paragon", "parkometr"] },
+            { icon: "🧱", word: "klocki", options: ["klocki", "mydło", "szampon", "wózek"] },
+            { icon: "🧼", word: "mydło", options: ["mydło", "szampon", "ser", "gotówka"] },
+            { icon: "🧴", word: "szampon", options: ["szampon", "mydło", "sok", "karta płatnicza"] },
+            { icon: "🛍️", word: "torba", options: ["torba", "duży wózek", "mały wózek", "paragon"] },
+            { icon: "🛒", word: "duży wózek", options: ["duży wózek", "mały wózek", "autobus", "parking"] },
+            { icon: "🧺", word: "mały wózek", options: ["mały wózek", "duży wózek", "torba", "klocki"] },
+            { icon: "💶", word: "kasa", options: ["kasa", "gotówka", "paragon", "parkometr"] },
+            { icon: "💳", word: "karta płatnicza", options: ["karta płatnicza", "bilet parkingowy", "gotówka", "paragon"] },
+            { icon: "💵", word: "gotówka", options: ["gotówka", "karta płatnicza", "kasa", "sok"] },
+            { icon: "🅿️", word: "parking", options: ["parking", "parkometr", "autobus", "tramwaj"] },
+            { icon: "🎟️", word: "bilet parkingowy", options: ["bilet parkingowy", "paragon", "karta płatnicza", "torba"] },
+            { icon: "🪙", word: "parkometr", options: ["parkometr", "parking", "bilet parkingowy", "kasa"] },
+            { icon: "🚌", word: "autobus", options: ["autobus", "tramwaj", "duży wózek", "parking"] },
+            { icon: "🚃", word: "tramwaj", options: ["tramwaj", "autobus", "parkometr", "klocki"] },
+            { icon: "🧾", word: "paragon", options: ["paragon", "bilet parkingowy", "gotówka", "torba"] }
+        ];
+
+        let score = 0;
+        let timeLeft = 60;
+        let timerInterval = null;
+        let currentItem = null;
+        let isAnswering = false;
+
+        function shuffle(array) {
+            return [...array].sort(() => Math.random() - 0.5);
+        }
+
+        function startGame() {
+            score = 0;
+            timeLeft = 60;
+            
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+
+            updateStats();
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateStats();
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+
+            nextTurn();
+        }
+
+        function updateStats() {
+            document.getElementById('time-badge').textContent = `⏱️ ${timeLeft}s`;
+            document.getElementById('score-badge').textContent = `⭐ ${score} pkt`;
+        }
+
+        function nextTurn() {
+            isAnswering = false;
+            currentItem = gameItems[Math.floor(Math.random() * gameItems.length)];
+
+            document.getElementById('prompt-icon').textContent = currentItem.icon;
+            
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+
+            const shuffledOpts = shuffle(currentItem.options);
+
+            shuffledOpts.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'game-opt-btn';
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(opt, btn);
+                grid.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedOpt, btnElement) {
+            if (isAnswering) return;
+            isAnswering = true;
+
+            if (selectedOpt === currentItem.word) {
+                btnElement.classList.add('correct');
+                score += 10;
+                timeLeft += 2; // Bonus time
+            } else {
+                btnElement.classList.add('wrong');
+                score = Math.max(0, score - 5);
+            }
+
+            updateStats();
+
+            setTimeout(() => {
+                if (timeLeft > 0) {
+                    nextTurn();
+                }
+            }, 400);
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('completion-screen').style.display = 'block';
+
+            if (score >= 100) {
+                completeStage();
+            } else {
+                document.getElementById('result-icon').textContent = '⚡';
+                document.getElementById('result-title').textContent = 'Blisko, spróbuj jeszcze raz!';
+                document.getElementById('result-desc').textContent = `Zdobyłeś ${score} punktów. Aby zaliczyć etap, potrzebujesz 100 punktów.`;
+            }
+        }
+
+        function completeStage() {
+            const MODULE_KEY = 'm3_progress';
+            let progress = { stage1: true, stage2: true, stage3: true, stage4: true, stage5: true, stage6: false, stage7: false };
+            
+            const saved = localStorage.getItem(MODULE_KEY);
+            if (saved) {
+                try { progress = JSON.parse(saved); } catch(e) {}
+            }
+
+            progress.stage6 = true;
+            localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
+
+            document.getElementById('result-icon').textContent = '🏆';
+            document.getElementById('result-title').textContent = 'Świetny wynik!';
+            document.getElementById('result-desc').textContent = `Zdobyłeś ${score} punktów! Etap 6 zaliczony. Odblokowałeś Test Końcowy!`;
+        }
+    </script>
+</body>
+</html>

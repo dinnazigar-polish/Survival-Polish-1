@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 3 – Etap 3: Pisanie</title>
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --primary-green-hover: #27ae60;
+            --badge-green-bg: #e8f8f0;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-light: #e2e8f0;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --error-red: #e74c3c;
+            --error-bg: #fadbd8;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-green);
+        }
+
+        .counter-badge {
+            background-color: var(--badge-green-bg);
+            color: var(--primary-green);
+            font-weight: 700;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.95rem;
+        }
+
+        /* Progress Bar */
+        .progress-track {
+            width: 100%;
+            height: 10px;
+            background-color: var(--border-light);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-green);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Typing Card */
+        .typing-card {
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .icon-display {
+            font-size: 5.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .instructions {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .input-field {
+            width: 100%;
+            max-width: 380px;
+            padding: 0.9rem 1.2rem;
+            font-size: 1.2rem;
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            text-align: center;
+            font-weight: 600;
+            outline: none;
+            transition: border-color 0.2s ease;
+            font-family: inherit;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary-green);
+        }
+
+        .input-field.wrong {
+            border-color: var(--error-red);
+            background-color: var(--error-bg);
+            animation: shake 0.3s ease;
+        }
+
+        .hint-box {
+            display: none;
+            background-color: #fff8e1;
+            color: #b78103;
+            border: 1px solid #ffe082;
+            padding: 0.6rem 1.2rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .feedback-msg {
+            font-weight: 700;
+            font-size: 1.1rem;
+            min-height: 1.6rem;
+            margin-top: 0.5rem;
+        }
+
+        .feedback-msg.correct {
+            color: var(--primary-green);
+        }
+
+        .feedback-msg.incorrect {
+            color: var(--error-red);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        /* Button */
+        .btn {
+            background-color: var(--primary-green);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 0.9rem 2.2rem;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+            width: 100%;
+            max-width: 380px;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-green-hover);
+        }
+
+        /* Completion Screen */
+        .completion-screen {
+            display: none;
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-light);
+        }
+
+        .completion-screen .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .completion-screen h2 {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .completion-screen p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Navigation Header -->
+        <div class="top-nav">
+            <a href="module3.html" class="back-link">
+                ← Powrót do Modułu 3
+            </a>
+            <span class="counter-badge" id="word-counter">1 / 28</span>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-track">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+
+        <!-- Typing Exercise Area -->
+        <div id="exercise-container">
+            <div class="typing-card">
+                <span class="icon-display" id="icon-display">🥚</span>
+                <p class="instructions">Napisz po polsku, co widzisz na obrazku:</p>
+
+                <form onsubmit="handleCheck(event)" class="input-group">
+                    <input 
+                        type="text" 
+                        id="word-input" 
+                        class="input-field" 
+                        placeholder="Wpisz słowo..." 
+                        autocomplete="off" 
+                        autofocus
+                    >
+                    
+                    <div class="hint-box" id="hint-box"></div>
+                    <div class="feedback-msg" id="feedback-msg"></div>
+
+                    <button type="submit" class="btn" id="submit-btn">Sprawdź answer ✅</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Completion View -->
+        <div class="completion-screen" id="completion-screen">
+            <div class="icon">⌨️</div>
+            <h2>Wspaniale! Twoja pisownia jest bezbłędna!</h2>
+            <p>Ukończyłeś Etap 3. Czas na ćwiczenia z gramatyki!</p>
+            <a href="module3.html" class="btn">Powrót do menu modułu</a>
+        </div>
+    </div>
+
+    <script>
+        // Exact 28 vocabulary items
+        const vocabulary = [
+            { word: "jajka", icon: "🥚" }, { word: "bułki", icon: "🥖" },
+            { word: "chleb", icon: "🍞" }, { word: "pomidor", icon: "🍅" },
+            { word: "ogórek", icon: "🥒" }, { word: "sałata", icon: "🥬" },
+            { word: "ser", icon: "🧀" }, { word: "sok", icon: "🧃" },
+            { word: "tort", icon: "🎂" }, { word: "ciastko", icon: "🍪" },
+            { word: "prezent", icon: "🎁" }, { word: "klocki", icon: "🧱" },
+            { word: "mydło", icon: "🧼" }, { word: "szampon", icon: "🧴" },
+            { word: "torba", icon: "🛍️" }, { word: "robić zakupy", icon: "🛒" },
+            { word: "pomagać", icon: "🤝" }, { word: "kasa", icon: "💶" },
+            { word: "karta płatnicza", icon: "💳" }, { word: "gotówka", icon: "💵" },
+            { word: "parking", icon: "🅿️" }, { word: "bilet parkingowy", icon: "🎟️" },
+            { word: "parkometr", icon: "🪙" }, { word: "autobus", icon: "🚌" },
+            { word: "tramwaj", icon: "🚃" }, { word: "duży wózek", icon: "🛒" },
+            { word: "mały wózek", icon: "🧺" }, { word: "paragon", icon: "🧾" }
+        ];
+
+        let currentIndex = 0;
+        let incorrectAttempts = 0;
+
+        function loadQuestion() {
+            incorrectAttempts = 0;
+            const item = vocabulary[currentIndex];
+
+            document.getElementById('icon-display').textContent = item.icon;
+            document.getElementById('word-counter').textContent = `${currentIndex + 1} / ${vocabulary.length}`;
+            
+            const progressPercent = (currentIndex / vocabulary.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+            const input = document.getElementById('word-input');
+            input.value = '';
+            input.className = 'input-field';
+            input.disabled = false;
+            input.focus();
+
+            document.getElementById('hint-box').style.display = 'none';
+            document.getElementById('feedback-msg').textContent = '';
+            document.getElementById('feedback-msg').className = 'feedback-msg';
+
+            const btn = document.getElementById('submit-btn');
+            btn.textContent = "Sprawdź answer ✅";
+            btn.onclick = null; // Revert to form submit
+        }
+
+        function handleCheck(e) {
+            e.preventDefault();
+            
+            const input = document.getElementById('word-input');
+            const feedback = document.getElementById('feedback-msg');
+            const targetWord = vocabulary[currentIndex].word.trim().toLowerCase();
+            const userWord = input.value.trim().toLowerCase();
+
+            if (userWord === targetWord) {
+                // Correct
+                input.className = 'input-field';
+                feedback.textContent = '✅ Świetnie! Poprawna odpowiedź.';
+                feedback.className = 'feedback-msg correct';
+                input.disabled = true;
+
+                setTimeout(() => {
+                    currentIndex++;
+                    if (currentIndex < vocabulary.length) {
+                        loadQuestion();
+                    } else {
+                        completeStage();
+                    }
+                }, 1000);
+
+            } else {
+                // Incorrect
+                incorrectAttempts++;
+                input.classList.add('wrong');
+                feedback.textContent = '❌ Spróbuj jeszcze raz!';
+                feedback.className = 'feedback-msg incorrect';
+
+                setTimeout(() => {
+                    input.classList.remove('wrong');
+                }, 500);
+
+                // Show hint after 2 wrong attempts
+                if (incorrectAttempts >= 2) {
+                    const hintBox = document.getElementById('hint-box');
+                    const firstLetter = targetWord.charAt(0).toUpperCase();
+                    const length = targetWord.length;
+                    
+                    hintBox.textContent = `💡 Podpowiedź: Zaczyna się na "${firstLetter}" (liczba liter: ${length})`;
+                    hintBox.style.display = 'block';
+                }
+            }
+        }
+
+        function completeStage() {
+            const MODULE_KEY = 'm3_progress';
+            let progress = { stage1: true, stage2: true, stage3: false, stage4: false, stage5: false, stage6: false, stage7: false };
+            
+            const saved = localStorage.getItem(MODULE_KEY);
+            if (saved) {
+                try { progress = JSON.parse(saved); } catch(e) {}
+            }
+
+            progress.stage3 = true;
+            localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
+
+            document.getElementById('progress-bar').style.width = '100%';
+            document.getElementById('exercise-container').style.display = 'none';
+            document.getElementById('completion-screen').style.display = 'block';
+        }
+
+        // Initialize stage
+        loadQuestion();
+    </script>
+</body>
+</html>

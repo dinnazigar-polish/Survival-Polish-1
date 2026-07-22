@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 3 – Etap 4: Gramatyka</title>
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --primary-green-hover: #27ae60;
+            --badge-green-bg: #e8f8f0;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-light: #e2e8f0;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --error-red: #e74c3c;
+            --error-bg: #fadbd8;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-green);
+        }
+
+        .counter-badge {
+            background-color: var(--badge-green-bg);
+            color: var(--primary-green);
+            font-weight: 700;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.95rem;
+        }
+
+        /* Progress Bar */
+        .progress-track {
+            width: 100%;
+            height: 10px;
+            background-color: var(--border-light);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-green);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Exercise Card */
+        .grammar-card {
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 2.5rem 2rem;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .exercise-type {
+            display: inline-block;
+            background-color: var(--badge-green-bg);
+            color: var(--primary-green);
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Options Grid */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .option-btn {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            padding: 1rem 1.2rem;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary-green);
+            background-color: var(--badge-green-bg);
+        }
+
+        .option-btn.correct {
+            border-color: var(--primary-green);
+            background-color: var(--badge-green-bg);
+            color: var(--primary-green);
+            font-weight: 700;
+        }
+
+        .option-btn.wrong {
+            border-color: var(--error-red);
+            background-color: var(--error-bg);
+            color: var(--error-red);
+        }
+
+        /* Words Unscramble Area */
+        .unscramble-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+            min-height: 50px;
+            padding: 0.8rem;
+            border: 2px dashed var(--border-light);
+            border-radius: 16px;
+            background-color: var(--bg-color);
+        }
+
+        .word-chip {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-light);
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .word-chip:hover {
+            border-color: var(--primary-green);
+        }
+
+        /* Explanation Box */
+        .explanation-card {
+            display: none;
+            background-color: #f0fdf4;
+            border: 2px solid #bbf7d0;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .explanation-card h4 {
+            color: var(--primary-green-hover);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .explanation-card p {
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .explanation-card ul {
+            margin-left: 1.2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Action Buttons */
+        .btn {
+            background-color: var(--primary-green);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 0.9rem 2.2rem;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-green-hover);
+        }
+
+        /* Completion Screen */
+        .completion-screen {
+            display: none;
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-light);
+        }
+
+        .completion-screen .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .completion-screen h2 {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .completion-screen p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Navigation Header -->
+        <div class="top-nav">
+            <a href="module3.html" class="back-link">
+                ← Powrót do Modułu 3
+            </a>
+            <span class="counter-badge" id="question-counter">Pytanie 1 / 6</span>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-track">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+
+        <!-- Exercise Area -->
+        <div id="exercise-container">
+            <div class="grammar-card">
+                <span class="exercise-type" id="exercise-type">Wybierz poprawną formę</span>
+                <div class="question-text" id="question-text">Kupuję (ser) ... w sklepie.</div>
+
+                <div class="options-grid" id="options-container"></div>
+
+                <div class="explanation-card" id="explanation-card">
+                    <h4 id="explanation-status">✅ Poprawnie!</h4>
+                    <p><strong>Przypadek:</strong> <span id="exp-case">Biernik (Biernik = Kogo? Co?)</span></p>
+                    <p><strong>Zasada:</strong> <span id="exp-rule">Rzeczowniki męskie nieożywione mają w Bierniku taką samą formę jak w Mianowniku (ser -> ser).</span></p>
+                    <p><strong>Dodatkowe przykłady:</strong></p>
+                    <ul id="exp-examples">
+                        <li>Kupuję chleb.</li>
+                        <li>Kupuję sok.</li>
+                    </ul>
+                </div>
+
+                <button class="btn" id="next-btn" style="display: none;" onclick="nextQuestion()">Kolejne ćwiczenie →</button>
+            </div>
+        </div>
+
+        <!-- Completion View -->
+        <div class="completion-screen" id="completion-screen">
+            <div class="icon">✍</div>
+            <h2>Wspaniale! Gramatyka opanowana!</h2>
+            <p>Ukończyłeś Etap 4. Czas poćwiczyć praktyczne dialogi w sklepie.</p>
+            <a href="module3.html" class="btn">Powrót do menu modułu</a>
+        </div>
+    </div>
+
+    <script>
+        const exercises = [
+            {
+                type: "Wybierz poprawną formę",
+                question: "Kupuję świeży ______ (chleb) na śniadanie.",
+                options: ["chleb", "chleba", "chlebem"],
+                correct: 0,
+                caseName: "Biernik (Biernik = Kogo? Co?)",
+                rule: "Dla rzeczowników męskich nieożywionych Biernik jest równy Mianownikowi.",
+                examples: ["Kupuję ser.", "Kupuję sok."]
+            },
+            {
+                type: "Uzupełnij lukę",
+                question: "Proszę świeżą ______ (sałata) i duży pomidor.",
+                options: ["sałata", "sałatę", "sałatą"],
+                correct: 1,
+                caseName: "Biernik (Biernik = Kogo? Co?)",
+                rule: "Rzeczowniki żeńskie zakończone na -a w Bierniku otrzymują końcówkę -ę (sałata -> sałatę).",
+                examples: ["Proszę torbę.", "Kupuję gotówkę."]
+            },
+            {
+                type: "Popraw zdanie",
+                question: "Jadę do centrum (autobus) ______.",
+                options: ["autobus", "autobusem", "autobusu"],
+                correct: 1,
+                caseName: "Narzędnik (Narzędnik = Czym? Kim?)",
+                rule: "Środki transportu i narzędzia po pytaniu 'Czym?' przyjmują końcówkę -em dla rodzaju męskiego.",
+                examples: ["Jadę tramwajem.", "Jadę pociągiem."]
+            },
+            {
+                type: "Wybierz poprawną formę",
+                question: "Płacę ______ (karta płatnicza).",
+                options: ["karta płatnicza", "kartę płatniczą", "kartą płatniczą"],
+                correct: 2,
+                caseName: "Narzędnik (Narzędnik = Czym? Kim?)",
+                rule: "Przymiotniki i rzeczowniki żeńskie w Narzędniku kończą się na -ą (karta -> kartą, płatnicza -> płatniczą).",
+                examples: ["Płacę gotówką.", "Napisz torbą."]
+            },
+            {
+                type: "Wybierz poprawną formę",
+                question: "Ekspedientka chce mi ______ (pomagać).",
+                options: ["pomagać", "pomaga", "pomagam"],
+                correct: 0,
+                caseName: "Bezokolicznik (Infinitive)",
+                rule: "Po czasownikach posiłkowych (chcieć, móc, musieć) używamy formy podstawowej (bezokolicznika).",
+                examples: ["Muszę robić zakupy.", "Chcę kupić bilet."]
+            },
+            {
+                type: "Uzupełnij lukę",
+                question: "Czy masz ______ (bilet parkingowy)?",
+                options: ["bilet parkingowy", "biletem parkingowym", "biletów"],
+                correct: 0,
+                caseName: "Biernik (Biernik = Kogo? Co?)",
+                rule: "W pytaniach o posiadanie rzeczy (przypadek Biernik) rzeczownik nieożywiony męski nie zmienia formy.",
+                examples: ["Masz paragon?", "Masz mały wózek?"]
+            }
+        ];
+
+        let currentIdx = 0;
+
+        function loadQuestion() {
+            const ex = exercises[currentIdx];
+            
+            document.getElementById('question-counter').textContent = `Pytanie ${currentIdx + 1} / ${exercises.length}`;
+            document.getElementById('progress-bar').style.width = `${(currentIdx / exercises.length) * 100}%`;
+            
+            document.getElementById('exercise-type').textContent = ex.type;
+            document.getElementById('question-text').textContent = ex.question;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            document.getElementById('explanation-card').style.display = 'none';
+            document.getElementById('next-btn').style.display = 'none';
+
+            ex.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(idx);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIdx) {
+            const ex = exercises[currentIdx];
+            const buttons = document.querySelectorAll('.option-btn');
+
+            buttons.forEach(btn => btn.disabled = true);
+
+            const expCard = document.getElementById('explanation-card');
+            const expStatus = document.getElementById('explanation-status');
+
+            if (selectedIdx === ex.correct) {
+                buttons[selectedIdx].classList.add('correct');
+                expStatus.textContent = '✅ Poprawnie!';
+                expStatus.style.color = '#27ae60';
+            } else {
+                buttons[selectedIdx].classList.add('wrong');
+                buttons[ex.correct].classList.add('correct');
+                expStatus.textContent = '❌ Niepoprawnie';
+                expStatus.style.color = '#e74c3c';
+            }
+
+            document.getElementById('exp-case').textContent = ex.caseName;
+            document.getElementById('exp-rule').textContent = ex.rule;
+
+            const examplesList = document.getElementById('exp-examples');
+            examplesList.innerHTML = '';
+            ex.examples.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                examplesList.appendChild(li);
+            });
+
+            expCard.style.display = 'block';
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentIdx++;
+            if (currentIdx < exercises.length) {
+                loadQuestion();
+            } else {
+                completeStage();
+            }
+        }
+
+        function completeStage() {
+            const MODULE_KEY = 'm3_progress';
+            let progress = { stage1: true, stage2: true, stage3: true, stage4: false, stage5: false, stage6: false, stage7: false };
+            
+            const saved = localStorage.getItem(MODULE_KEY);
+            if (saved) {
+                try { progress = JSON.parse(saved); } catch(e) {}
+            }
+
+            progress.stage4 = true;
+            localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
+
+            document.getElementById('progress-bar').style.width = '100%';
+            document.getElementById('exercise-container').style.display = 'none';
+            document.getElementById('completion-screen').style.display = 'block';
+        }
+
+        // Load first exercise
+        loadQuestion();
+    </script>
+</body>
+</html>

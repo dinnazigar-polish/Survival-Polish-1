@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 3 – Etap 5: Dialogi</title>
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --primary-green-hover: #27ae60;
+            --badge-green-bg: #e8f8f0;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-light: #e2e8f0;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --error-red: #e74c3c;
+            --error-bg: #fadbd8;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-green);
+        }
+
+        .counter-badge {
+            background-color: var(--badge-green-bg);
+            color: var(--primary-green);
+            font-weight: 700;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.95rem;
+        }
+
+        /* Progress Bar */
+        .progress-track {
+            width: 100%;
+            height: 10px;
+            background-color: var(--border-light);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-green);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Dialogue Box */
+        .dialogue-card {
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .dialogue-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        .dialogue-header .icon {
+            font-size: 2rem;
+        }
+
+        .dialogue-header h3 {
+            font-size: 1.25rem;
+            color: var(--text-dark);
+        }
+
+        .chat-bubble {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1rem;
+            max-width: 85%;
+        }
+
+        .chat-bubble.left {
+            align-self: flex-start;
+        }
+
+        .chat-bubble.right {
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .speaker-name {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 0.2rem;
+        }
+
+        .bubble-content {
+            padding: 0.8rem 1.2rem;
+            border-radius: 18px;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .chat-bubble.left .bubble-content {
+            background-color: #f1f5f9;
+            color: var(--text-dark);
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-bubble.right .bubble-content {
+            background-color: var(--primary-green);
+            color: #ffffff;
+            border-bottom-right-radius: 4px;
+        }
+
+        /* Interactive Question Section */
+        .question-box {
+            background-color: var(--badge-green-bg);
+            border-radius: 16px;
+            padding: 1.2rem;
+            margin-top: 1.5rem;
+            border: 2px dashed var(--primary-green);
+        }
+
+        .question-title {
+            font-weight: 700;
+            color: var(--primary-green-hover);
+            margin-bottom: 0.8rem;
+            font-size: 1.05rem;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .option-btn {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-light);
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary-green);
+        }
+
+        .option-btn.correct {
+            border-color: var(--primary-green);
+            background-color: var(--badge-green-bg);
+            color: var(--primary-green);
+        }
+
+        .option-btn.wrong {
+            border-color: var(--error-red);
+            background-color: var(--error-bg);
+            color: var(--error-red);
+        }
+
+        .btn {
+            background-color: var(--primary-green);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 0.9rem 2.2rem;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+            width: 100%;
+            margin-top: 1.5rem;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-green-hover);
+        }
+
+        /* Completion View */
+        .completion-screen {
+            display: none;
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-light);
+        }
+
+        .completion-screen .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .completion-screen h2 {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .completion-screen p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Navigation Header -->
+        <div class="top-nav">
+            <a href="module3.html" class="back-link">
+                ← Powrót do Modułu 3
+            </a>
+            <span class="counter-badge" id="scene-counter">Scenka 1 / 3</span>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-track">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+
+        <!-- Dialogue Exercise Area -->
+        <div id="exercise-container">
+            <div class="dialogue-card">
+                <div class="dialogue-header">
+                    <span class="icon" id="scene-icon">🛒</span>
+                    <h3 id="scene-title">W sklepie spożywczym</h3>
+                </div>
+
+                <div id="chat-stream"></div>
+
+                <div class="question-box" id="question-box">
+                    <div class="question-title" id="question-text">Uzupełnij brakującą odpowiedź:</div>
+                    <div class="options-list" id="options-container"></div>
+                </div>
+
+                <button class="btn" id="next-btn" style="display: none;" onclick="nextScene()">Kolejna scenka →</button>
+            </div>
+        </div>
+
+        <!-- Completion View -->
+        <div class="completion-screen" id="completion-screen">
+            <div class="icon">💬</div>
+            <h2>Świetnie! Potrafisz rozmawiać w sklepie!</h2>
+            <p>Ukończyłeś Etap 5. Czas na szybki trening w Mini Grze!</p>
+            <a href="module3.html" class="btn">Powrót do menu modułu</a>
+        </div>
+    </div>
+
+    <script>
+        const dialogues = [
+            {
+                title: "W sklepie – kupowanie żywności",
+                icon: "🥖",
+                messages: [
+                    { speaker: "Ekspedientka", text: "Dzień dobry! W czym mogę pomóc?", side: "left" },
+                    { speaker: "Klient", text: "Dzień dobry! Proszę chleb, świeże bułki i sześć jajek.", side: "right" },
+                    { speaker: "Ekspedientka", text: "Czy dodać też pomidor i ogórek?", side: "left" }
+                ],
+                question: "Co odpowiada Klient?",
+                options: [
+                    "Tak, proszę jeszcze jeden pomidor i świeży ogórek.",
+                    "Nie, płacę kartą płatniczą.",
+                    "Gdzie jest autobus?"
+                ],
+                correct: 0
+            },
+            {
+                title: "Przy kasie – płatność",
+                icon: "💳",
+                messages: [
+                    { speaker: "Kasjerka", text: "Dzień dobry. Czy ma Pan duży wózek czy mały wózek?", side: "left" },
+                    { speaker: "Klient", text: "Mam mały wózek. Oto moje zakupy.", side: "right" },
+                    { speaker: "Kasjerka", text: "Razem 45 złotych. Płatność kartą czy gotówką?", side: "left" }
+                ],
+                question: "Jak odpowie Klient?",
+                options: [
+                    "To jest bilet parkingowy.",
+                    "Płacę kartą płatniczą. Czy mogę dostać paragon?",
+                    "Kupuję szampon i mydło."
+                ],
+                correct: 1
+            },
+            {
+                title: "Na parkingu przy centrum handlowym",
+                icon: "🅿️",
+                messages: [
+                    { speaker: "Kierowca", text: "Przepraszam, gdzie jest parkometr?", side: "left" },
+                    { speaker: "Przechodzień", text: "Parkometr jest tam, obok przystanku autobusowego.", side: "right" },
+                    { speaker: "Kierowca", text: "Dziękuję! A czy tutaj jest płatny parking?", side: "left" }
+                ],
+                question: "Jak odpowie Przechodzień?",
+                options: [
+                    "Tak, musisz wziąć bilet parkingowy.",
+                    "Nie, to jest świeży sok.",
+                    "Proszę tort i ciastko."
+                ],
+                correct: 0
+            }
+        ];
+
+        let currentIdx = 0;
+
+        function loadScene() {
+            const scene = dialogues[currentIdx];
+
+            document.getElementById('scene-counter').textContent = `Scenka ${currentIdx + 1} / ${dialogues.length}`;
+            document.getElementById('progress-bar').style.width = `${(currentIdx / dialogues.length) * 100}%`;
+
+            document.getElementById('scene-title').textContent = scene.title;
+            document.getElementById('scene-icon').textContent = scene.icon;
+
+            const chatStream = document.getElementById('chat-stream');
+            chatStream.innerHTML = '';
+
+            scene.messages.forEach(msg => {
+                const bubble = document.createElement('div');
+                bubble.className = `chat-bubble ${msg.side}`;
+                bubble.innerHTML = `
+                    <span class="speaker-name">${msg.speaker}</span>
+                    <div class="bubble-content">${msg.text}</div>
+                `;
+                chatStream.appendChild(bubble);
+            });
+
+            document.getElementById('question-text').textContent = scene.question;
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            document.getElementById('question-box').style.display = 'block';
+            document.getElementById('next-btn').style.display = 'none';
+
+            scene.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(idx);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIdx) {
+            const scene = dialogues[currentIdx];
+            const buttons = document.querySelectorAll('.option-btn');
+
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (selectedIdx === scene.correct) {
+                buttons[selectedIdx].classList.add('correct');
+                
+                // Add answered message to chat
+                const chatStream = document.getElementById('chat-stream');
+                const bubble = document.createElement('div');
+                bubble.className = 'chat-bubble right';
+                bubble.innerHTML = `
+                    <span class="speaker-name">Twoja odpowiedź</span>
+                    <div class="bubble-content">${scene.options[selectedIdx]}</div>
+                `;
+                chatStream.appendChild(bubble);
+            } else {
+                buttons[selectedIdx].classList.add('wrong');
+                buttons[scene.correct].classList.add('correct');
+            }
+
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        function nextScene() {
+            currentIdx++;
+            if (currentIdx < dialogues.length) {
+                loadScene();
+            } else {
+                completeStage();
+            }
+        }
+
+        function completeStage() {
+            const MODULE_KEY = 'm3_progress';
+            let progress = { stage1: true, stage2: true, stage3: true, stage4: true, stage5: false, stage6: false, stage7: false };
+            
+            const saved = localStorage.getItem(MODULE_KEY);
+            if (saved) {
+                try { progress = JSON.parse(saved); } catch(e) {}
+            }
+
+            progress.stage5 = true;
+            localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
+
+            document.getElementById('progress-bar').style.width = '100%';
+            document.getElementById('exercise-container').style.display = 'none';
+            document.getElementById('completion-screen').style.display = 'block';
+        }
+
+        // Initialize stage
+        loadScene();
+    </script>
+</body>
+</html>

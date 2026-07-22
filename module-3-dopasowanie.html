@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 3 – Etap 2: Dopasowywanie</title>
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --primary-green-hover: #27ae60;
+            --badge-green-bg: #e8f8f0;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-light: #e2e8f0;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --error-red: #e74c3c;
+            --error-bg: #fadbd8;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-green);
+        }
+
+        .counter-badge {
+            background-color: var(--badge-green-bg);
+            color: var(--primary-green);
+            font-weight: 700;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.95rem;
+        }
+
+        /* Progress Bar */
+        .progress-track {
+            width: 100%;
+            height: 10px;
+            background-color: var(--border-light);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-green);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .instructions {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        /* Matching Grid */
+        .matching-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .match-card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.2s ease;
+            user-select: none;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .match-card:hover {
+            border-color: var(--primary-green);
+            transform: translateY(-2px);
+        }
+
+        .match-card.selected {
+            border-color: var(--primary-green);
+            background-color: var(--badge-green-bg);
+            color: var(--primary-green);
+        }
+
+        .match-card.matched {
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .match-card.wrong {
+            border-color: var(--error-red);
+            background-color: var(--error-bg);
+            color: var(--error-red);
+            animation: shake 0.3s ease;
+        }
+
+        .match-card .icon-text {
+            font-size: 2.2rem;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        /* Completion View */
+        .completion-screen {
+            display: none;
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-light);
+        }
+
+        .completion-screen .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .completion-screen h2 {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .completion-screen p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            background-color: var(--primary-green);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 0.9rem 2rem;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-green-hover);
+        }
+
+        @media (max-width: 500px) {
+            .matching-grid {
+                gap: 0.8rem;
+            }
+            .match-card {
+                font-size: 0.95rem;
+                padding: 0.8rem;
+            }
+            .match-card .icon-text {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Navigation Header -->
+        <div class="top-nav">
+            <a href="module3.html" class="back-link">
+                ← Powrót do Modułu 3
+            </a>
+            <span class="counter-badge" id="round-counter">Runda 1 / 7</span>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-track">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+
+        <!-- Exercise View -->
+        <div id="game-container">
+            <p class="instructions">Zaznacz polskie słowo, a następnie dopasuj do niego odpowiedni obrazek.</p>
+            
+            <div class="matching-grid">
+                <div class="column" id="words-column"></div>
+                <div class="column" id="icons-column"></div>
+            </div>
+        </div>
+
+        <!-- Completion View -->
+        <div class="completion-screen" id="completion-screen">
+            <div class="icon">🧩</div>
+            <h2>Doskonale! Wszystkie słowa dopasowane!</h2>
+            <p>Ukończyłeś Etap 2. Odblokowałeś ćwiczenie pisania.</p>
+            <a href="module3.html" class="btn">Powrót do menu modułu</a>
+        </div>
+    </div>
+
+    <script>
+        // Full vocabulary array (28 words split into 7 rounds of 4 items)
+        const vocabulary = [
+            { word: "jajka", icon: "🥚" }, { word: "bułki", icon: "🥖" },
+            { word: "chleb", icon: "🍞" }, { word: "pomidor", icon: "🍅" },
+            { word: "ogórek", icon: "🥒" }, { word: "sałata", icon: "🥬" },
+            { word: "ser", icon: "🧀" }, { word: "sok", icon: "🧃" },
+            { word: "tort", icon: "🎂" }, { word: "ciastko", icon: "🍪" },
+            { word: "prezent", icon: "🎁" }, { word: "klocki", icon: "🧱" },
+            { word: "mydło", icon: "🧼" }, { word: "szampon", icon: "🧴" },
+            { word: "torba", icon: "🛍️" }, { word: "robić zakupy", icon: "🛒" },
+            { word: "pomagać", icon: "🤝" }, { word: "kasa", icon: "💶" },
+            { word: "karta płatnicza", icon: "💳" }, { word: "gotówka", icon: "💵" },
+            { word: "parking", icon: "🅿️" }, { word: "bilet parkingowy", icon: "🎟️" },
+            { word: "parkometr", icon: "🪙" }, { word: "autobus", icon: "🚌" },
+            { word: "tramwaj", icon: "🚃" }, { word: "duży wózek", icon: "🛒" },
+            { word: "mały wózek", icon: "🧺" }, { word: "paragon", icon: "🧾" }
+        ];
+
+        const PAIRS_PER_ROUND = 4;
+        const TOTAL_ROUNDS = Math.ceil(vocabulary.length / PAIRS_PER_ROUND);
+        
+        let currentRound = 0;
+        let selectedWordCard = null;
+        let selectedIconCard = null;
+        let matchedCountInRound = 0;
+
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function loadRound() {
+            matchedCountInRound = 0;
+            selectedWordCard = null;
+            selectedIconCard = null;
+
+            document.getElementById('round-counter').textContent = `Runda ${currentRound + 1} / ${TOTAL_ROUNDS}`;
+            const progressPercent = (currentRound / TOTAL_ROUNDS) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+            const startIdx = currentRound * PAIRS_PER_ROUND;
+            const roundItems = vocabulary.slice(startIdx, startIdx + PAIRS_PER_ROUND);
+
+            const wordsColumn = document.getElementById('words-column');
+            const iconsColumn = document.getElementById('icons-column');
+
+            wordsColumn.innerHTML = '';
+            iconsColumn.innerHTML = '';
+
+            const shuffledWords = shuffleArray(roundItems);
+            const shuffledIcons = shuffleArray(roundItems);
+
+            shuffledWords.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'match-card';
+                card.textContent = item.word;
+                card.dataset.word = item.word;
+                card.onclick = () => selectWord(card);
+                wordsColumn.appendChild(card);
+            });
+
+            shuffledIcons.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'match-card';
+                card.innerHTML = `<span class="icon-text">${item.icon}</span>`;
+                card.dataset.word = item.word;
+                card.onclick = () => selectIcon(card);
+                iconsColumn.appendChild(card);
+            });
+        }
+
+        function selectWord(card) {
+            if (card.classList.contains('matched')) return;
+            if (selectedWordCard) selectedWordCard.classList.remove('selected');
+            selectedWordCard = card;
+            selectedWordCard.classList.add('selected');
+            checkPair();
+        }
+
+        function selectIcon(card) {
+            if (card.classList.contains('matched')) return;
+            if (selectedIconCard) selectedIconCard.classList.remove('selected');
+            selectedIconCard = card;
+            selectedIconCard.classList.add('selected');
+            checkPair();
+        }
+
+        function checkPair() {
+            if (selectedWordCard && selectedIconCard) {
+                const word1 = selectedWordCard.dataset.word;
+                const word2 = selectedIconCard.dataset.word;
+
+                if (word1 === word2) {
+                    const wCard = selectedWordCard;
+                    const iCard = selectedIconCard;
+                    
+                    wCard.classList.remove('selected');
+                    iCard.classList.remove('selected');
+                    wCard.classList.add('matched');
+                    iCard.classList.add('matched');
+
+                    selectedWordCard = null;
+                    selectedIconCard = null;
+                    matchedCountInRound++;
+
+                    if (matchedCountInRound === PAIRS_PER_ROUND) {
+                        setTimeout(() => {
+                            currentRound++;
+                            if (currentRound < TOTAL_ROUNDS) {
+                                loadRound();
+                            } else {
+                                completeStage();
+                            }
+                        }, 500);
+                    }
+                } else {
+                    const wCard = selectedWordCard;
+                    const iCard = selectedIconCard;
+
+                    wCard.classList.add('wrong');
+                    iCard.classList.add('wrong');
+
+                    setTimeout(() => {
+                        wCard.classList.remove('wrong', 'selected');
+                        iCard.classList.remove('wrong', 'selected');
+                        selectedWordCard = null;
+                        selectedIconCard = null;
+                    }, 600);
+                }
+            }
+        }
+
+        function completeStage() {
+            const MODULE_KEY = 'm3_progress';
+            let progress = { stage1: true, stage2: false, stage3: false, stage4: false, stage5: false, stage6: false, stage7: false };
+            
+            const saved = localStorage.getItem(MODULE_KEY);
+            if (saved) {
+                try { progress = JSON.parse(saved); } catch(e) {}
+            }
+
+            progress.stage2 = true;
+            localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
+
+            document.getElementById('progress-bar').style.width = '100%';
+            document.getElementById('game-container').style.display = 'none';
+            document.getElementById('completion-screen').style.display = 'block';
+        }
+
+        // Start Stage 2
+        loadRound();
+    </script>
+</body>
+</html>
