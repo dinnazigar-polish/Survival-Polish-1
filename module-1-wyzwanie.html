@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etap 5: Mini Wyzwanie – Moduł 1</title>
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --primary-green-hover: #27ae60;
+            --danger-red: #e74c3c;
+            --info-blue: #3498db;
+            --info-blue-bg: #ebf5fb;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-light: #e2e8f0;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem 1rem;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 680px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: var(--shadow-soft);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Top Bar & Progress */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .close-btn {
+            text-decoration: none;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: var(--danger-red);
+        }
+
+        .progress-track {
+            flex-grow: 1;
+            height: 14px;
+            background-color: var(--border-light);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-green);
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        .question-counter {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        /* Question Cards */
+        .question-card {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .type-badge {
+            align-self: flex-start;
+            background-color: #e8f8f0;
+            color: var(--primary-green);
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 0.3rem 0.8rem;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        .question-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            line-height: 1.4;
+            color: var(--text-dark);
+        }
+
+        /* Interactive Elements */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .btn-option {
+            background-color: #ffffff;
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            padding: 1rem 1.2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 0 var(--border-light);
+            width: 100%;
+        }
+
+        .btn-option:hover:not(:disabled) {
+            border-color: var(--primary-green);
+            background-color: #f4fbf7;
+        }
+
+        .btn-option:active:not(:disabled) {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        .btn-option.selected {
+            border-color: var(--primary-green);
+            background-color: #e8f8f0;
+        }
+
+        .btn-option.correct {
+            border-color: var(--primary-green) !important;
+            background-color: var(--primary-green) !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 0 #27ae60 !important;
+        }
+
+        .btn-option.incorrect {
+            border-color: var(--danger-red) !important;
+            background-color: var(--danger-red) !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 0 #c0392b !important;
+        }
+
+        /* Word Order Tiles Area */
+        .word-bank, .sentence-builder {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            min-height: 60px;
+            padding: 0.8rem;
+            border-radius: 16px;
+        }
+
+        .sentence-builder {
+            border: 2px dashed var(--border-light);
+            background-color: #fafafa;
+            align-items: center;
+        }
+
+        .tile {
+            background-color: #ffffff;
+            border: 2px solid var(--border-light);
+            box-shadow: 0 3px 0 var(--border-light);
+            padding: 0.6rem 1rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.15s ease;
+        }
+
+        .tile:active {
+            transform: translateY(3px);
+            box-shadow: none;
+        }
+
+        /* Grammar Explanation Box */
+        .explanation-box {
+            background-color: var(--info-blue-bg);
+            border-left: 5px solid var(--info-blue);
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            color: #1b4f72;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .explanation-box strong {
+            display: block;
+            margin-bottom: 0.3rem;
+            color: var(--info-blue);
+        }
+
+        /* Action Footer */
+        .action-footer {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--border-light);
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-action {
+            background-color: var(--primary-green);
+            color: #ffffff;
+            border: none;
+            border-radius: 30px;
+            padding: 0.9rem 2.2rem;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #27ae60;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .btn-action:hover:not(:disabled) {
+            background-color: var(--primary-green-hover);
+        }
+
+        .btn-action:active:not(:disabled) {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        .btn-action:disabled {
+            background-color: #bdc3c7;
+            box-shadow: 0 4px 0 #95a5a6;
+            cursor: not-allowed;
+        }
+
+        /* Completion Screen */
+        .completion-screen {
+            text-align: center;
+            padding: 2rem 1rem;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .completion-title {
+            font-size: 2.2rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+        }
+
+        .completion-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .score-box {
+            background-color: #f4fbf7;
+            border: 2px solid var(--primary-green);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .score-text {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--primary-green);
+        }
+
+        .stars-container {
+            font-size: 2.5rem;
+            margin-top: 0.5rem;
+            letter-spacing: 5px;
+        }
+
+        /* Highlights */
+        .hl-green { color: var(--primary-green); font-weight: 700; }
+        .hl-red { color: var(--danger-red); font-weight: 700; }
+        .hl-blue { color: var(--info-blue); font-weight: 700; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Header -->
+        <div class="top-bar">
+            <a href="module-1-vocab.html" class="close-btn" title="Wyjdź">✕</a>
+            <div class="progress-track">
+                <div class="progress-fill" id="progress-bar"></div>
+            </div>
+            <div class="question-counter" id="question-counter">Pytanie 1 / 10</div>
+        </div>
+
+        <!-- Question View -->
+        <div id="quiz-view">
+            <div class="question-card">
+                <span class="type-badge" id="type-badge">Wybierz poprawną formę</span>
+                <h2 class="question-title" id="question-text">Pytanie ładowanie...</h2>
+
+                <!-- Container for Multiple Choice / Fill blank / Sentence correction -->
+                <div class="options-grid" id="options-container"></div>
+
+                <!-- Container for Word Order Tiles -->
+                <div id="word-order-container" style="display: none;">
+                    <div class="sentence-builder" id="sentence-builder"></div>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.4rem;">Klikaj słowa, aby ułożyć zdanie:</p>
+                    <div class="word-bank" id="word-bank" style="margin-top: 0.5rem;"></div>
+                </div>
+
+                <!-- Explanation Box -->
+                <div class="explanation-box" id="explanation-box">
+                    <strong>💡 Wyjaśnienie gramatyczne:</strong>
+                    <span id="explanation-text"></span>
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <div class="action-footer">
+                <button class="btn-action" id="btn-submit" disabled>SPRAWDŹ</button>
+            </div>
+        </div>
+
+        <!-- Completion View -->
+        <div class="completion-screen" id="completion-screen">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+            <h1 class="completion-title">Gratulacje!</h1>
+            <p class="completion-subtitle">Ukończyłeś Etap 5: Mini Wyzwanie!</p>
+
+            <div class="score-box">
+                <div>Twój wynik:</div>
+                <div class="score-text" id="final-score">0 / 0</div>
+                <div class="stars-container" id="stars-display">⭐⭐⭐</div>
+            </div>
+
+            <button class="btn-action" id="btn-finish">WRÓĆ DO LISTY MODUŁÓW</button>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================================================
+           1. Zbiór Pytań (Słownictwo z Etapu 1 + Zdania z Etapów 3 i 4)
+           ========================================================================== */
+        const quizData = [
+            {
+                type: 'choice',
+                badge: 'Wybierz poprawną formę',
+                title: 'Mam nową __________ w salonie.',
+                options: ['kanapa', 'kanapę', 'kanapie'],
+                correct: 1,
+                explanation: 'Czasownik <span class="hl-blue">Mam...</span> wymaga Biernika (Accusative). Dla rzeczowników żeńskich końcówka **-a** zmienia się w **-ę** (kanapa ➔ kanapę).'
+            },
+            {
+                type: 'choice',
+                badge: 'Wybierz poprawną formę',
+                title: 'Nie mam dzisiaj __________. Muszę kupić w sklepie.',
+                options: ['mleko', 'mleka', 'mlekiem'],
+                correct: 1,
+                explanation: 'Negacja <span class="hl-blue">Nie mam...</span> zawsze wymaga Dopełniacza (Genitive). Rzeczowniki nijakie w Dopełniaczu mają końcówkę **-a** (mleko ➔ mleka).'
+            },
+            {
+                type: 'fill',
+                badge: 'Uzupełnij lukę',
+                title: 'Jutro idę do nowej __________. (kuchnia)',
+                options: ['kuchnia', 'kuchni', 'kuchnię'],
+                correct: 1,
+                explanation: 'Konstrukcja <span class="hl-blue">Idę do...</span> (kierunek/cel) wymaga Dopełniacza (Genitive). Dla słów na -ia końcówka zmienia się na **-i** (kuchnia ➔ kuchni).'
+            },
+            {
+                type: 'choice',
+                badge: 'Wybierz poprawną formę',
+                title: 'Teraz jestem w dużym __________. (pokój)',
+                options: ['pokój', 'pokojem', 'pokoju'],
+                correct: 2,
+                explanation: 'Konstrukcja <span class="hl-blue">Jestem w...</span> (lokalizacja) wymaga Miejscownika (Locative). Słowo pokój zmienia się na **pokoju**.'
+            },
+            {
+                type: 'order',
+                badge: 'Ułóż słowa w poprawnej kolejności',
+                title: 'Ułóż poprawne zdanie:',
+                words: ['Lubię', 'pijać', 'poranną', 'kawę', 'w', 'kuchni.'],
+                correctOrder: ['Lubię', 'pijać', 'poranną', 'kawę', 'w', 'kuchni.'],
+                explanation: 'Styl zdania: <span class="hl-blue">Lubię...</span> + Biernik (poranną kawę) + Miejscownik (w kuchni).'
+            },
+            {
+                type: 'correct_sentence',
+                badge: 'Popraw błędne zdanie',
+                title: 'Które zdanie jest w 100% poprawne?',
+                options: [
+                    'Szukam czerwona truskawka w lodówce.',
+                    'Szukam czerwonej truskawki w lodówce.',
+                    'Szukam czerwoną truskawkę w lodówce.'
+                ],
+                correct: 1,
+                explanation: 'Czasownik <span class="hl-blue">Szukam...</span> wymusza Dopełniacz (Genitive): czerwonej truskawki.'
+            },
+            {
+                type: 'choice',
+                badge: 'Wybierz poprawną formę',
+                title: 'Właśnie wracam z małego __________. (ogród)',
+                options: ['ogród', 'ogrodu', 'ogrodem'],
+                correct: 1,
+                explanation: 'Pochodzenie <span class="hl-blue">Wracam z...</span> wymaga Dopełniacza (Genitive) z końcówką **-u** dla rodzajów męskich.'
+            },
+            {
+                type: 'fill',
+                badge: 'Uzupełnij lukę',
+                title: 'Mieszkam w ładnym __________. (mieszkanie)',
+                options: ['mieszkaniu', 'mieszkanie', 'mieszkania'],
+                correct: 0,
+                explanation: 'Struktura <span class="hl-blue">Mieszkam w...</span> wymaga Miejscownika (Locative). Słowa na -ie przyjmują końcówkę **-iu**.'
+            },
+            {
+                type: 'choice',
+                badge: 'Wybierz poprawną formę',
+                title: 'Otwieram stare __________ w pokoju.',
+                options: ['okno', 'okna', 'oknie'],
+                correct: 0,
+                explanation: 'Czasownik <span class="hl-blue">Otwieram...</span> używa Biernika (Accusative). Rzeczowniki nijakie w Bierniku wyglądają dokładnie tak samo jak w Mianowniku (okno ➔ okno).'
+            },
+            {
+                type: 'order',
+                badge: 'Ułóż słowa w poprawnej kolejności',
+                title: 'Ułóż zdanie:',
+                words: ['Stawiam', 'gorącą', 'herbatę', 'na', 'stół.'],
+                correctOrder: ['Stawiam', 'gorącą', 'herbatę', 'na', 'stół.'],
+                explanation: 'Ruch na powierzchnię: <span class="hl-blue">Stawiam na...</span> + Biernik (gorącą herbatę na stół).'
+            }
+        ];
+
+        /* ==========================================================================
+           2. Stan Aplikacji (State)
+           ========================================================================== */
+        let currentIndex = 0;
+        let score = 0;
+        let selectedOption = null;
+        let userOrderedWords = [];
+        let isAnswered = false;
+
+        /* ==========================================================================
+           3. Elementy DOM
+           ========================================================================== */
+        const progressBar = document.getElementById('progress-bar');
+        const questionCounter = document.getElementById('question-counter');
+        const typeBadge = document.getElementById('type-badge');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const wordOrderContainer = document.getElementById('word-order-container');
+        const sentenceBuilder = document.getElementById('sentence-builder');
+        const wordBank = document.getElementById('word-bank');
+        const explanationBox = document.getElementById('explanation-box');
+        const explanationText = document.getElementById('explanation-text');
+        const btnSubmit = document.getElementById('btn-submit');
+        const quizView = document.getElementById('quiz-view');
+        const completionScreen = document.getElementById('completion-screen');
+
+        /* ==========================================================================
+           4. Inicjalizacja i Ładowanie Pytania
+           ========================================================================== */
+        function loadQuestion() {
+            isAnswered = false;
+            selectedOption = null;
+            userOrderedWords = [];
+            
+            btnSubmit.disabled = true;
+            btnSubmit.textContent = 'SPRAWDŹ';
+            explanationBox.style.display = 'none';
+
+            const current = quizData[currentIndex];
+
+            // Progress bar & Counter
+            const progressPercent = ((currentIndex) / quizData.length) * 100;
+            progressBar.style.width = progressPercent + '%';
+            questionCounter.textContent = `Pytanie ${currentIndex + 1} / ${quizData.length}`;
+
+            // Header info
+            typeBadge.textContent = current.badge;
+            questionText.textContent = current.title;
+
+            // Clear containers
+            optionsContainer.innerHTML = '';
+            sentenceBuilder.innerHTML = '';
+            wordBank.innerHTML = '';
+
+            if (current.type === 'order') {
+                optionsContainer.style.display = 'none';
+                wordOrderContainer.style.display = 'block';
+                setupWordOrderTask(current);
+            } else {
+                optionsContainer.style.display = 'flex';
+                wordOrderContainer.style.display = 'none';
+                setupChoiceTask(current);
+            }
+        }
+
+        /* --- Opcje Wyboru / Luki / Poprawy --- */
+        function setupChoiceTask(q) {
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-option';
+                btn.textContent = opt;
+                btn.onclick = () => selectOption(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectOption(index, btnElement) {
+            if (isAnswered) return;
+            selectedOption = index;
+
+            // Highlight selected button
+            const buttons = optionsContainer.querySelectorAll('.btn-option');
+            buttons.forEach(b => b.classList.remove('selected'));
+            btnElement.classList.add('selected');
+
+            btnSubmit.disabled = false;
+        }
+
+        /* --- Układanie Słów --- */
+        function setupWordOrderTask(q) {
+            // Shuffle initial words
+            const shuffled = [...q.words].sort(() => Math.random() - 0.5);
+
+            shuffled.forEach(word => {
+                const tile = document.createElement('div');
+                tile.className = 'tile';
+                tile.textContent = word;
+                tile.onclick = () => moveTileToBuilder(tile, word);
+                wordBank.appendChild(tile);
+            });
+        }
+
+        function moveTileToBuilder(tile, word) {
+            if (isAnswered) return;
+
+            wordBank.removeChild(tile);
+            userOrderedWords.push(word);
+
+            const activeTile = document.createElement('div');
+            activeTile.className = 'tile';
+            activeTile.textContent = word;
+            activeTile.onclick = () => moveTileToBank(activeTile, word);
+            sentenceBuilder.appendChild(activeTile);
+
+            btnSubmit.disabled = userOrderedWords.length === 0;
+        }
+
+        function moveTileToBank(activeTile, word) {
+            if (isAnswered) return;
+
+            sentenceBuilder.removeChild(activeTile);
+            const idx = userOrderedWords.indexOf(word);
+            if (idx > -1) userOrderedWords.splice(idx, 1);
+
+            const bankTile = document.createElement('div');
+            bankTile.className = 'tile';
+            bankTile.textContent = word;
+            bankTile.onclick = () => moveTileToBuilder(bankTile, word);
+            wordBank.appendChild(bankTile);
+
+            btnSubmit.disabled = userOrderedWords.length === 0;
+        }
+
+        /* ==========================================================================
+           5. Weryfikacja Odpowiedzi
+           ========================================================================== */
+        btnSubmit.onclick = () => {
+            if (isAnswered) {
+                // Next Question
+                currentIndex++;
+                if (currentIndex < quizData.length) {
+                    loadQuestion();
+                } else {
+                    finishQuiz();
+                }
+                return;
+            }
+
+            isAnswered = true;
+            const current = quizData[currentIndex];
+            let isCorrect = false;
+
+            if (current.type === 'order') {
+                isCorrect = JSON.stringify(userOrderedWords) === JSON.stringify(current.correctOrder);
+            } else {
+                isCorrect = selectedOption === current.correct;
+            }
+
+            // Visual Feedback
+            if (current.type !== 'order') {
+                const buttons = optionsContainer.querySelectorAll('.btn-option');
+                buttons.forEach((btn, idx) => {
+                    btn.disabled = true;
+                    if (idx === current.correct) {
+                        btn.classList.add('correct');
+                    } else if (idx === selectedOption && !isCorrect) {
+                        btn.classList.add('incorrect');
+                    }
+                });
+            }
+
+            if (isCorrect) {
+                score++;
+                playAudioFeedback(true);
+            } else {
+                playAudioFeedback(false);
+            }
+
+            // Show explanation
+            explanationText.innerHTML = current.explanation;
+            explanationBox.style.display = 'block';
+
+            // Change submit button to Next
+            btnSubmit.textContent = 'NASTĘPNE PYTANIE →';
+            btnSubmit.disabled = false;
+        };
+
+        /* ==========================================================================
+           6. Zakończenie i Zapis Postępu
+           ========================================================================== */
+        function finishQuiz() {
+            quizView.style.display = 'none';
+            completionScreen.style.display = 'block';
+            progressBar.style.width = '100%';
+
+            // Calculate Score and Stars
+            const finalScoreElem = document.getElementById('final-score');
+            const starsDisplay = document.getElementById('stars-display');
+            finalScoreElem.textContent = `${score} / ${quizData.length}`;
+
+            let stars = '⭐☆☆';
+            if (score >= quizData.length * 0.9) {
+                stars = '⭐⭐⭐';
+            } else if (score >= quizData.length * 0.6) {
+                stars = '⭐⭐☆';
+            }
+            starsDisplay.textContent = stars;
+
+            // ZAPIS POSTĘPU W LOCALSTORAGE (Etap 5 ukończony)
+            try {
+                const MODULE_KEY = 'm1_progress';
+                let progress = JSON.parse(localStorage.getItem(MODULE_KEY)) || {};
+                progress.stage5 = true;
+                localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
+            } catch (e) {
+                console.error("Błąd zapisu postępu w LocalStorage:", e);
+            }
+        }
+
+        // Redirect to module-1-vocab.html
+        document.getElementById('btn-finish').onclick = () => {
+            window.location.href = 'module-1-vocab.html';
+        };
+
+        /* ==========================================================================
+           7. Dźwiękowe Sprzężenie Zwrotne (Web Audio API - Czysty JS)
+           ========================================================================== */
+        function playAudioFeedback(isSuccess) {
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (!AudioCtx) return;
+                const ctx = new AudioCtx();
+
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (isSuccess) {
+                    osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); // E5
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.3);
+                } else {
+                    osc.frequency.setValueAtTime(220, ctx.currentTime); // A3
+                    osc.frequency.setValueAtTime(196, ctx.currentTime + 0.15); // G3
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.3);
+                }
+            } catch (e) {
+                // W przypadku braku wsparcia dla Audio API
+            }
+        }
+
+        // Run app
+        document.addEventListener('DOMContentLoaded', loadQuestion);
+    </script>
+</body>
+</html>
