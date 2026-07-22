@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moduł 3 – Etap 3: Pisanie</title>
+    <title>Moduł 3 – Pisanie i Łączenie Wyrażeń</title>
     <style>
         :root {
             --primary-green: #2ecc71;
@@ -35,7 +35,7 @@
         }
 
         .container {
-            max-width: 650px;
+            max-width: 700px;
             margin: 0 auto;
         }
 
@@ -88,28 +88,27 @@
             transition: width 0.3s ease;
         }
 
-        /* Typing Card */
-        .typing-card {
+        /* Common Card Style */
+        .card {
             background-color: var(--card-bg);
             border-radius: 24px;
             padding: 2.5rem 2rem;
-            text-align: center;
             box-shadow: var(--shadow-soft);
             border: 2px solid var(--border-light);
             margin-bottom: 1.5rem;
         }
 
-        .icon-display {
-            font-size: 5.5rem;
-            margin-bottom: 1rem;
-            display: block;
+        /* Part 1 Styles */
+        .typing-box {
+            text-align: center;
         }
 
-        .instructions {
-            color: var(--text-muted);
-            font-size: 1rem;
+        .english-word-display {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-dark);
             margin-bottom: 1.5rem;
-            font-weight: 500;
+            text-transform: lowercase;
         }
 
         .input-group {
@@ -129,7 +128,7 @@
             text-align: center;
             font-weight: 600;
             outline: none;
-            transition: border-color 0.2s ease;
+            transition: all 0.2s ease;
             font-family: inherit;
         }
 
@@ -143,6 +142,11 @@
             animation: shake 0.3s ease;
         }
 
+        .input-field.correct {
+            border-color: var(--primary-green);
+            background-color: var(--badge-green-bg);
+        }
+
         .hint-box {
             display: none;
             background-color: #fff8e1;
@@ -152,23 +156,16 @@
             border-radius: 12px;
             font-size: 0.95rem;
             font-weight: 600;
-            margin-top: 0.5rem;
         }
 
         .feedback-msg {
             font-weight: 700;
             font-size: 1.1rem;
             min-height: 1.6rem;
-            margin-top: 0.5rem;
         }
 
-        .feedback-msg.correct {
-            color: var(--primary-green);
-        }
-
-        .feedback-msg.incorrect {
-            color: var(--error-red);
-        }
+        .feedback-msg.correct { color: var(--primary-green); }
+        .feedback-msg.incorrect { color: var(--error-red); }
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
@@ -176,7 +173,100 @@
             40%, 80% { transform: translateX(6px); }
         }
 
-        /* Button */
+        /* Part 2 Styles - Matching */
+        .matching-title {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .matching-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .match-column {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .match-btn {
+            background-color: #ffffff;
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            padding: 0.9rem 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+            user-select: none;
+            touch-action: manipulation;
+        }
+
+        .match-btn:hover {
+            border-color: var(--primary-green);
+            background-color: #f0fdf4;
+        }
+
+        .match-btn.selected {
+            border-color: var(--primary-green);
+            background-color: var(--badge-green-bg);
+            box-shadow: 0 0 0 2px var(--primary-green);
+        }
+
+        .match-btn.matched {
+            background-color: var(--badge-green-bg);
+            border-color: var(--primary-green);
+            color: var(--primary-green-hover);
+            cursor: default;
+            opacity: 0.8;
+        }
+
+        .match-btn.wrong-flash {
+            border-color: var(--error-red);
+            background-color: var(--error-bg);
+            animation: shake 0.3s ease;
+        }
+
+        .edu-explanation {
+            display: none;
+            background-color: #f1f5f9;
+            border-left: 4px solid var(--primary-green);
+            padding: 1rem 1.2rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .edu-explanation h4 {
+            font-size: 1.1rem;
+            color: var(--primary-green-hover);
+            margin-bottom: 0.2rem;
+        }
+
+        .edu-explanation p {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+        }
+
+        .edu-explanation .example {
+            font-style: italic;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Buttons */
         .btn {
             background-color: var(--primary-green);
             color: #ffffff;
@@ -192,50 +282,51 @@
             justify-content: center;
             transition: background-color 0.2s ease;
             width: 100%;
-            max-width: 380px;
         }
 
         .btn:hover {
             background-color: var(--primary-green-hover);
         }
 
-        /* Completion Screen */
-        .completion-screen {
-            display: none;
-            background-color: var(--card-bg);
-            border-radius: 24px;
-            padding: 3rem 2rem;
-            text-align: center;
-            box-shadow: var(--shadow-soft);
-            border: 2px solid var(--border-light);
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
         }
 
-        .completion-screen .icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
+        /* Screens */
+        .hidden { display: none !important; }
+
+        .completion-screen {
+            text-align: center;
         }
 
         .completion-screen h2 {
             font-size: 2rem;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
 
         .completion-screen p {
             color: var(--text-muted);
             margin-bottom: 2rem;
         }
+
+        /* Responsive layout for grid */
+        @media (max-width: 500px) {
+            .matching-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Navigation Header -->
+        <!-- Top Navigation -->
         <div class="top-nav">
-            <a href="module3.html" class="back-link">
-                ← Powrót do Modułu 3
+            <a href="module-3-pisanie.html" class="back-link">
+                ← Powrót
             </a>
-            <span class="counter-badge" id="word-counter">1 / 28</span>
+            <span class="counter-badge" id="counter-badge">1 / 28</span>
         </div>
 
         <!-- Progress Bar -->
@@ -243,71 +334,152 @@
             <div class="progress-fill" id="progress-bar"></div>
         </div>
 
-        <!-- Typing Exercise Area -->
-        <div id="exercise-container">
-            <div class="typing-card">
-                <span class="icon-display" id="icon-display">🥚</span>
-                <p class="instructions">Napisz po polsku, co widzisz na obrazku:</p>
+        <!-- PART 1: TYPING EXERCISE -->
+        <div id="part1-container" class="card typing-box">
+            <h2 style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 1rem;">✍️ Napisz słowo po polsku</h2>
+            
+            <div class="english-word-display" id="english-word">bread</div>
 
-                <form onsubmit="handleCheck(event)" class="input-group">
-                    <input 
-                        type="text" 
-                        id="word-input" 
-                        class="input-field" 
-                        placeholder="Wpisz słowo..." 
-                        autocomplete="off" 
-                        autofocus
-                    >
-                    
-                    <div class="hint-box" id="hint-box"></div>
-                    <div class="feedback-msg" id="feedback-msg"></div>
+            <form onsubmit="handleTypingSubmit(event)" class="input-group">
+                <input 
+                    type="text" 
+                    id="word-input" 
+                    class="input-field" 
+                    placeholder="Wpisz po polsku..." 
+                    autocomplete="off" 
+                    autofocus
+                >
+                
+                <div class="hint-box" id="hint-box"></div>
+                <div class="feedback-msg" id="feedback-msg"></div>
 
-                    <button type="submit" class="btn" id="submit-btn">Sprawdź answer ✅</button>
-                </form>
-            </div>
+                <button type="submit" class="btn" id="check-btn">Sprawdź</button>
+                <button type="button" class="btn hidden" id="next-word-btn" onclick="nextTypingWord()">Następne słowo ➡️</button>
+            </form>
         </div>
 
-        <!-- Completion View -->
-        <div class="completion-screen" id="completion-screen">
-            <div class="icon">⌨️</div>
-            <h2>Wspaniale! Twoja pisownia jest bezbłędna!</h2>
-            <p>Ukończyłeś Etap 3. Czas na ćwiczenia z gramatyki!</p>
-            <a href="module3.html" class="btn">Powrót do menu modułu</a>
+        <!-- PART 2: MATCHING EXERCISE -->
+        <div id="part2-container" class="card hidden">
+            <h2 class="matching-title">🔗 Połącz wyrażenia</h2>
+
+            <div class="matching-grid">
+                <div class="match-column" id="left-column"></div>
+                <div class="match-column" id="right-column"></div>
+            </div>
+
+            <div class="edu-explanation" id="edu-explanation">
+                <h4 id="edu-pair">robić zakupy</h4>
+                <p id="edu-translation">English: to do shopping</p>
+                <p class="example" id="edu-example">Robię zakupy w supermarkecie.</p>
+            </div>
+
+            <button class="btn hidden" id="part2-next-btn" onclick="completeModule()">Przejdź dalej 🎉</button>
+        </div>
+
+        <!-- COMPLETION SCREEN -->
+        <div id="completion-screen" class="card completion-screen hidden">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+            <h2>Świetnie! Gratulacje!</h2>
+            <p>Ukończyłeś ćwiczenia z pisania oraz łączenia wyrażeń.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <a href="module-3-pisanie.html" class="btn" style="width: auto;">⬅ Powrót</a>
+                <a href="module-3-pisanie.html" class="btn" style="width: auto;">➡ Następny etap</a>
+            </div>
         </div>
     </div>
 
     <script>
-        // Exact 28 vocabulary items
-        const vocabulary = [
-            { word: "jajka", icon: "🥚" }, { word: "bułki", icon: "🥖" },
-            { word: "chleb", icon: "🍞" }, { word: "pomidor", icon: "🍅" },
-            { word: "ogórek", icon: "🥒" }, { word: "sałata", icon: "🥬" },
-            { word: "ser", icon: "🧀" }, { word: "sok", icon: "🧃" },
-            { word: "tort", icon: "🎂" }, { word: "ciastko", icon: "🍪" },
-            { word: "prezent", icon: "🎁" }, { word: "klocki", icon: "🧱" },
-            { word: "mydło", icon: "🧼" }, { word: "szampon", icon: "🧴" },
-            { word: "torba", icon: "🛍️" }, { word: "robić zakupy", icon: "🛒" },
-            { word: "pomagać", icon: "🤝" }, { word: "kasa", icon: "💶" },
-            { word: "karta płatnicza", icon: "💳" }, { word: "gotówka", icon: "💵" },
-            { word: "parking", icon: "🅿️" }, { word: "bilet parkingowy", icon: "🎟️" },
-            { word: "parkometr", icon: "🪙" }, { word: "autobus", icon: "🚌" },
-            { word: "tramwaj", icon: "🚃" }, { word: "duży wózek", icon: "🛒" },
-            { word: "mały wózek", icon: "🧺" }, { word: "paragon", icon: "🧾" }
+        /* --- VOCABULARY DATA (PART 1) --- */
+        const vocabularyData = [
+            { en: "eggs", pl: "jajka" },
+            { en: "bread rolls", pl: "bułki" },
+            { en: "bread", pl: "chleb" },
+            { en: "tomato", pl: "pomidor" },
+            { en: "cucumber", pl: "ogórek" },
+            { en: "lettuce / salad", pl: "sałata" },
+            { en: "cheese", pl: "ser" },
+            { en: "juice", pl: "sok" },
+            { en: "cake / birthday cake", pl: "tort" },
+            { en: "cookie / biscuit", pl: "ciastko" },
+            { en: "gift / present", pl: "prezent" },
+            { en: "building blocks", pl: "klocki" },
+            { en: "soap", pl: "mydło" },
+            { en: "shampoo", pl: "szampon" },
+            { en: "bag / shopping bag", pl: "torba" },
+            { en: "to do shopping", pl: "robić zakupy" },
+            { en: "to help", pl: "pomagać" },
+            { en: "cash desk / checkout", pl: "kasa" },
+            { en: "payment card", pl: "karta płatnicza" },
+            { en: "cash", pl: "gotówka" },
+            { en: "car park / parking", pl: "parking" },
+            { en: "parking ticket", pl: "bilet parkingowy" },
+            { en: "parking meter", pl: "parkometr" },
+            { en: "bus", pl: "autobus" },
+            { en: "tram", pl: "tramwaj" },
+            { en: "big trolley", pl: "duży wózek" },
+            { en: "small trolley / basket", pl: "mały wózek" },
+            { en: "receipt", pl: "paragon" }
         ];
 
-        let currentIndex = 0;
-        let incorrectAttempts = 0;
+        /* --- COLLOCATIONS DATA (PART 2) --- */
+        const collocationsData = [
+            { left: "płacić", right: "kartą płatniczą", en: "to pay by payment card", example: "Płacę kartą płatniczą." },
+            { left: "robić", right: "zakupy", en: "to do shopping", example: "Robię zakupy w supermarkecie." },
+            { left: "pakować", right: "zakupy", en: "to pack groceries", example: "Pakuję zakupy w torbę." },
+            { left: "wydrukować", right: "paragon", en: "to print a receipt", example: "Proszę wydrukować paragon." },
+            { left: "duży", right: "wózek", en: "big trolley", example: "Biorę duży wózek na zakupy." },
+            { left: "mały", right: "wózek", en: "small trolley", example: "Mały wózek jest wygodny." },
+            { left: "żółty", right: "ser", en: "yellow cheese", example: "Kupuję świeży żółty ser." },
+            { left: "czekoladowe", right: "ciastko", en: "chocolate cookie", example: "Zjem słodkie czekoladowe ciastko." },
+            { left: "urodzinowy", right: "tort", en: "birthday cake", example: "To jest piękny urodzinowy tort." },
+            { left: "drogi", right: "prezent", en: "expensive gift", example: "To jest bardzo drogi prezent." },
+            { left: "bilet", right: "parkingowy", en: "parking ticket", example: "Opłacam bilet parkingowy." },
+            { left: "autobus", right: "miejski", en: "city bus", example: "Jadę do sklepu autobusem miejskim." },
+            { left: "parking", right: "płatny", en: "paid car park", example: "To jest parking płatny." },
+            { left: "karta", right: "płatnicza", en: "payment card", example: "Moja karta płatnicza jest w portfelu." },
+            { left: "mydło", right: "w kostce", en: "bar of soap", example: "Kupuję naturalne mydło w kostce." },
+            { left: "szampon", right: "do włosów", en: "hair shampoo", example: "Proszę szampon do włosów." },
+            { left: "pomidor", right: "czerwony", en: "red tomato", example: "Ten czerwony pomidor jest słodki." },
+            { left: "ogórek", right: "zielony", en: "green cucumber", example: "Poproszę jeden zielony ogórek." },
+            { left: "sałata", right: "świeża", en: "fresh lettuce", example: "Ta sałata jest bardzo świeża." },
+            { left: "sok", right: "pomarańczowy", en: "orange juice", example: "Piję zimny sok pomarańczowy." }
+        ];
 
-        function loadQuestion() {
-            incorrectAttempts = 0;
-            const item = vocabulary[currentIndex];
+        /* --- STATE VARIABLES --- */
+        let shuffledTypingVocab = [];
+        let currentTypingIdx = 0;
+        let typingAttempts = 0;
 
-            document.getElementById('icon-display').textContent = item.icon;
-            document.getElementById('word-counter').textContent = `${currentIndex + 1} / ${vocabulary.length}`;
+        let selectedLeft = null;
+        let selectedRight = null;
+        let matchedPairsCount = 0;
+
+        /* --- UTILS --- */
+        function shuffle(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        /* --- PART 1 LOGIC --- */
+        function initPart1() {
+            shuffledTypingVocab = shuffle(vocabularyData);
+            currentTypingIdx = 0;
+            loadTypingWord();
+        }
+
+        function loadTypingWord() {
+            typingAttempts = 0;
+            const currentItem = shuffledTypingVocab[currentTypingIdx];
+
+            document.getElementById('counter-badge').textContent = `${currentTypingIdx + 1} / ${shuffledTypingVocab.length}`;
+            document.getElementById('progress-bar').style.width = `${(currentTypingIdx / shuffledTypingVocab.length) * 100}%`;
+
+            document.getElementById('english-word').textContent = currentItem.en;
             
-            const progressPercent = (currentIndex / vocabulary.length) * 100;
-            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
-
             const input = document.getElementById('word-input');
             input.value = '';
             input.className = 'input-field';
@@ -318,77 +490,192 @@
             document.getElementById('feedback-msg').textContent = '';
             document.getElementById('feedback-msg').className = 'feedback-msg';
 
-            const btn = document.getElementById('submit-btn');
-            btn.textContent = "Sprawdź answer ✅";
-            btn.onclick = null; // Revert to form submit
+            document.getElementById('check-btn').classList.remove('hidden');
+            document.getElementById('next-word-btn').classList.add('hidden');
         }
 
-        function handleCheck(e) {
+        function handleTypingSubmit(e) {
             e.preventDefault();
             
             const input = document.getElementById('word-input');
             const feedback = document.getElementById('feedback-msg');
-            const targetWord = vocabulary[currentIndex].word.trim().toLowerCase();
+            const targetWord = shuffledTypingVocab[currentTypingIdx].pl.trim().toLowerCase();
             const userWord = input.value.trim().toLowerCase();
 
             if (userWord === targetWord) {
                 // Correct
-                input.className = 'input-field';
-                feedback.textContent = '✅ Świetnie! Poprawna odpowiedź.';
+                input.className = 'input-field correct';
+                feedback.textContent = '✅ Dobrze!';
                 feedback.className = 'feedback-msg correct';
                 input.disabled = true;
 
-                setTimeout(() => {
-                    currentIndex++;
-                    if (currentIndex < vocabulary.length) {
-                        loadQuestion();
-                    } else {
-                        completeStage();
-                    }
-                }, 1000);
-
+                document.getElementById('check-btn').classList.add('hidden');
+                document.getElementById('next-word-btn').classList.remove('hidden');
+                document.getElementById('next-word-btn').focus();
             } else {
                 // Incorrect
-                incorrectAttempts++;
+                typingAttempts++;
                 input.classList.add('wrong');
-                feedback.textContent = '❌ Spróbuj jeszcze raz!';
+                feedback.textContent = '❌ Spróbuj jeszcze raz.';
                 feedback.className = 'feedback-msg incorrect';
 
                 setTimeout(() => {
                     input.classList.remove('wrong');
-                }, 500);
+                }, 400);
 
-                // Show hint after 2 wrong attempts
-                if (incorrectAttempts >= 2) {
+                // Show first letter after 2 wrong attempts
+                if (typingAttempts === 2) {
                     const hintBox = document.getElementById('hint-box');
                     const firstLetter = targetWord.charAt(0).toUpperCase();
-                    const length = targetWord.length;
-                    
-                    hintBox.textContent = `💡 Podpowiedź: Zaczyna się na "${firstLetter}" (liczba liter: ${length})`;
+                    hintBox.textContent = `💡 Pierwsza litera: "${firstLetter}"`;
                     hintBox.style.display = 'block';
+                }
+
+                // Show answer after 3 wrong attempts
+                if (typingAttempts >= 3) {
+                    input.disabled = true;
+                    feedback.innerHTML = `✅ Poprawna odpowiedź: <strong>${shuffledTypingVocab[currentTypingIdx].pl}</strong>`;
+                    feedback.className = 'feedback-msg correct';
+                    
+                    document.getElementById('check-btn').classList.add('hidden');
+                    document.getElementById('next-word-btn').classList.remove('hidden');
+                    document.getElementById('next-word-btn').focus();
                 }
             }
         }
 
-        function completeStage() {
+        function nextTypingWord() {
+            currentTypingIdx++;
+            if (currentTypingIdx < shuffledTypingVocab.length) {
+                loadTypingWord();
+            } else {
+                startPart2();
+            }
+        }
+
+        /* --- PART 2 LOGIC --- */
+        function startPart2() {
+            document.getElementById('part1-container').classList.add('hidden');
+            document.getElementById('part2-container').classList.remove('hidden');
+
+            document.getElementById('counter-badge').textContent = `Wyrażenia`;
+            document.getElementById('progress-bar').style.width = `0%`;
+
+            matchedPairsCount = 0;
+            selectedLeft = null;
+            selectedRight = null;
+
+            const leftItems = shuffle(collocationsData.map((item, index) => ({ text: item.left, id: index })));
+            const rightItems = shuffle(collocationsData.map((item, index) => ({ text: item.right, id: index })));
+
+            const leftCol = document.getElementById('left-column');
+            const rightCol = document.getElementById('right-column');
+
+            leftCol.innerHTML = '';
+            rightCol.innerHTML = '';
+
+            leftItems.forEach(item => {
+                const btn = document.createElement('button');
+                btn.className = 'match-btn';
+                btn.textContent = item.text;
+                btn.dataset.id = item.id;
+                btn.onclick = () => selectMatchItem(btn, 'left');
+                leftCol.appendChild(btn);
+            });
+
+            rightItems.forEach(item => {
+                const btn = document.createElement('button');
+                btn.className = 'match-btn';
+                btn.textContent = item.text;
+                btn.dataset.id = item.id;
+                btn.onclick = () => selectMatchItem(btn, 'right');
+                rightCol.appendChild(btn);
+            });
+        }
+
+        function selectMatchItem(btn, side) {
+            if (btn.classList.contains('matched')) return;
+
+            if (side === 'left') {
+                if (selectedLeft) selectedLeft.classList.remove('selected');
+                selectedLeft = btn;
+                selectedLeft.classList.add('selected');
+            } else {
+                if (selectedRight) selectedRight.classList.remove('selected');
+                selectedRight = btn;
+                selectedRight.classList.add('selected');
+            }
+
+            if (selectedLeft && selectedRight) {
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            const leftId = selectedLeft.dataset.id;
+            const rightId = selectedRight.dataset.id;
+
+            if (leftId === rightId) {
+                // Correct Match
+                selectedLeft.className = 'match-btn matched';
+                selectedRight.className = 'match-btn matched';
+
+                showEducationalExplanation(collocationsData[leftId]);
+
+                selectedLeft = null;
+                selectedRight = null;
+                matchedPairsCount++;
+
+                const progressPercent = (matchedPairsCount / collocationsData.length) * 100;
+                document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+                if (matchedPairsCount === collocationsData.length) {
+                    document.getElementById('part2-next-btn').classList.remove('hidden');
+                }
+            } else {
+                // Incorrect Match
+                const tempLeft = selectedLeft;
+                const tempRight = selectedRight;
+
+                tempLeft.classList.add('wrong-flash');
+                tempRight.classList.add('wrong-flash');
+
+                selectedLeft = null;
+                selectedRight = null;
+
+                setTimeout(() => {
+                    tempLeft.classList.remove('selected', 'wrong-flash');
+                    tempRight.classList.remove('selected', 'wrong-flash');
+                }, 400);
+            }
+        }
+
+        function showEducationalExplanation(pairData) {
+            const box = document.getElementById('edu-explanation');
+            document.getElementById('edu-pair').textContent = `${pairData.left} ${pairData.right}`;
+            document.getElementById('edu-translation').textContent = `English: ${pairData.en}`;
+            document.getElementById('edu-example').textContent = pairData.example;
+            box.style.display = 'block';
+        }
+
+        function completeModule() {
+            // LocalStorage support
             const MODULE_KEY = 'm3_progress';
-            let progress = { stage1: true, stage2: true, stage3: false, stage4: false, stage5: false, stage6: false, stage7: false };
-            
+            let progress = { stage1: true, stage2: true, stage3: true };
             const saved = localStorage.getItem(MODULE_KEY);
             if (saved) {
                 try { progress = JSON.parse(saved); } catch(e) {}
             }
-
             progress.stage3 = true;
             localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
 
+            document.getElementById('part2-container').classList.add('hidden');
+            document.getElementById('completion-screen').classList.remove('hidden');
             document.getElementById('progress-bar').style.width = '100%';
-            document.getElementById('exercise-container').style.display = 'none';
-            document.getElementById('completion-screen').style.display = 'block';
         }
 
-        // Initialize stage
-        loadQuestion();
+        // Initialize App
+        initPart1();
     </script>
 </body>
 </html>
