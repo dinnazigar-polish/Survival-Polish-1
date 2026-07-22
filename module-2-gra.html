@@ -8,98 +8,488 @@
         :root {
             --primary-salmon: #f49c96;
             --primary-salmon-hover: #e0857f;
-            --badge-salmon-bg: #fdf0ef;
-            --badge-salmon-text: #d96b63;
             --bg-color: #f8f9fa;
             --card-bg: #ffffff;
             --text-dark: #2c3e50;
             --text-muted: #7f8c8d;
             --border-light: #e2e8f0;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--text-dark); padding: 2rem 1rem; }
-        .container { max-width: 600px; margin: 0 auto; }
-        .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-        .back-link { color: var(--text-muted); text-decoration: none; font-weight: 600; }
-        .back-link:hover { color: var(--primary-salmon); }
-        .counter-badge { background-color: var(--badge-salmon-bg); color: var(--badge-salmon-text); font-weight: 700; padding: 0.4rem 1rem; border-radius: 20px; }
 
-        .game-card { background: var(--card-bg); border-radius: 24px; padding: 2rem; border: 2px solid var(--border-light); text-align: center; }
-        .timer { font-size: 2rem; font-weight: 800; color: var(--badge-salmon-text); margin-bottom: 1rem; }
-        
-        .word-display { font-size: 1.8rem; font-weight: 800; margin-bottom: 1.5rem; }
-        .btn-group { display: flex; gap: 1rem; }
-        .btn { background-color: var(--primary-salmon); color: white; font-weight: 700; padding: 0.9rem; border-radius: 30px; border: none; cursor: pointer; text-decoration: none; display: inline-block; flex: 1; text-align: center; }
-        .btn:hover { background-color: var(--primary-salmon-hover); }
-        .btn-wrong { background-color: #e74c3c; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-salmon);
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .timer-badge {
+            background-color: #fdf0ef;
+            color: #d96b63;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 1rem;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background-color: var(--border-light);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-salmon);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .game-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-light);
+            text-align: center;
+            position: relative;
+        }
+
+        .target-word {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Ramka/Okienko na zdanie przykładowe z tłumaczeniem */
+        .example-box {
+            min-height: 70px;
+            margin-bottom: 1.5rem;
+            padding: 0.8rem 1.2rem;
+            background-color: #fffaf9;
+            border-radius: 14px;
+            border: 2px dashed var(--primary-salmon);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .example-box.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .example-pl {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .example-en {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .option-btn {
+            background-color: #ffffff;
+            border: 2px solid var(--border-light);
+            padding: 1.2rem;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary-salmon);
+            transform: translateY(-2px);
+        }
+
+        .option-btn.correct {
+            border-color: var(--success-color);
+            background-color: #eafaf1;
+            color: var(--success-color);
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--error-color);
+            background-color: #fdf2f2;
+            color: var(--error-color);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .next-btn {
+            width: 100%;
+            background-color: var(--primary-salmon);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .next-btn:hover {
+            background-color: var(--primary-salmon-hover);
+        }
+
+        .completion-screen {
+            text-align: center;
+            padding: 3rem 1rem;
+            display: none;
+        }
+
+        .score-badge {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary-salmon);
+            margin-bottom: 1rem;
+        }
+
+        .btn-finish {
+            display: inline-block;
+            background-color: var(--primary-salmon);
+            color: white;
+            text-decoration: none;
+            padding: 0.9rem 2rem;
+            border-radius: 30px;
+            font-weight: 700;
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 500px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <div class="top-nav">
-            <a href="module-2-vocab.html" class="back-link">← Powrót do Modułu 2</a>
-            <span class="counter-badge" id="score">Punkty: 0 / 8</span>
+        <div class="header">
+            <a href="module-2-vocab.html" class="back-link">← Powrót do listy etapów</a>
+            <span id="step-counter" style="font-weight: 700; color: var(--text-muted);">Słowo 1 / 10</span>
         </div>
 
+        <div class="game-header">
+            <span>Punkty: <span id="score-val" style="color: var(--primary-salmon);">0</span></span>
+            <span class="timer-badge">⏱️ <span id="timer-val">10</span>s</span>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+
+        <!-- Karta Gry -->
         <div class="game-card" id="game-card">
-            <div class="timer" id="time">Czysty refleks!</div>
-            <p style="color: var(--text-muted); margin-bottom: 0.5rem;">Czy to tłumaczenie jest poprawne?</p>
-            <div class="word-display" id="pair">mama = mum</div>
-
-            <div class="btn-group">
-                <button class="btn btn-wrong" onclick="answer(false)">❌ FAKSZ</button>
-                <button class="btn" onclick="answer(true)">✅ PRAWDA</button>
+            <div class="target-word" id="target-word">---</div>
+            
+            <!-- Okienko na przykładowe zdanie (PL z odmianą + EN) -->
+            <div class="example-box" id="example-box">
+                <div class="example-pl" id="example-pl"></div>
+                <div class="example-en" id="example-en"></div>
             </div>
+
+            <div class="options-grid" id="options-grid"></div>
+
+            <button class="next-btn" id="next-btn" onclick="nextWord()">Następne słowo →</button>
         </div>
 
-        <div class="game-card" id="comp-card" style="display: none;">
-            <h2>🎮 Gra zakończona!</h2>
-            <p style="color: var(--text-muted); margin: 1rem 0 2rem;">Świetny wynik! Test końcowy z Modułu 2 został odblokowany!</p>
-            <a href="module-2-vocab.html" class="btn">Powrót do menu modułu</a>
+        <!-- Ekran Końcowy -->
+        <div class="completion-screen" id="completion-screen">
+            <h2>🎉 Mini Gra Ukończona!</h2>
+            <div class="score-badge" id="final-score">0 pkt</div>
+            <p id="completion-desc">Świetna robota! Słownictwo z Modułu 2 opanowane doskonale.</p>
+            <a href="module-2-vocab.html" class="btn-finish" onclick="markStageComplete()">Zapisz i wróć do modułu</a>
         </div>
     </div>
 
     <script>
-        const pairs = [
-            { pl: "mama", en: "mum / mother", correct: true },
-            { pl: "dziadek", en: "sister", correct: false },
-            { pl: "mąż", en: "husband", correct: true },
-            { pl: "córka", en: "son", correct: false },
-            { pl: "rozmawiać", en: "to talk", correct: true },
-            { pl: "sąsiad", en: "grandmother", correct: false },
-            { pl: "rodzice", en: "parents", correct: true },
-            { pl: "razem", en: "together", correct: true }
+        // Baza słownictwa ze zdaniami w odmianie (PL) i tłumaczeniem (EN)
+        const gameVocabulary = [
+            { 
+                word: "jedynak", 
+                translation: "only child", 
+                examplePL: "Nie jestem jedynakiem, mam starszą siostrę.", 
+                exampleEN: "I am not an only child, I have an older sister." 
+            },
+            { 
+                word: "rodzeństwo", 
+                translation: "siblings", 
+                examplePL: "Czy masz jakieś rodzeństwo: brata albo siostrę?", 
+                exampleEN: "Do you have any siblings: a brother or a sister?" 
+            },
+            { 
+                word: "siostrzenica", 
+                translation: "sister's daughter (niece)", 
+                examplePL: "Moja siostrzenica ma na imię Ania i uczy się w szkole.", 
+                exampleEN: "My niece's name is Ania and she goes to school." 
+            },
+            { 
+                word: "bratanica", 
+                translation: "brother's daughter (niece)", 
+                examplePL: "Mój brat ma dwie córki, więc to moje bratanice.", 
+                exampleEN: "My brother has two daughters, so they are my nieces." 
+            },
+            { 
+                word: "rodzice", 
+                translation: "parents", 
+                examplePL: "Moi rodzice mieszkają w Warszawie i bardzo lubią ogród.", 
+                exampleEN: "My parents live in Warsaw and really like the garden." 
+            },
+            { 
+                word: "wujek", 
+                translation: "uncle", 
+                examplePL: "Mój wujek Marek często odwiedza nas w niedzielę.", 
+                exampleEN: "My uncle Marek often visits us on Sunday." 
+            },
+            { 
+                word: "ciocia", 
+                translation: "aunt", 
+                examplePL: "Moja ciocia upiekła pyszny tort na urodziny.", 
+                exampleEN: "My aunt baked a delicious cake for the birthday." 
+            },
+            { 
+                word: "dziadkowie", 
+                translation: "grandparents", 
+                examplePL: "Nasi dziadkowie opowiadają nam dawne historie.", 
+                exampleEN: "Our grandparents tell us old stories." 
+            },
+            { 
+                word: "wnuk", 
+                translation: "grandson", 
+                examplePL: "Dziadek jest bardzo dumny ze swojego wnuka.", 
+                exampleEN: "Grandfather is very proud of his grandson." 
+            },
+            { 
+                word: "odwiedzać", 
+                translation: "to visit", 
+                examplePL: "W każdy weekend lubimy odwiedzać naszą babcię.", 
+                exampleEN: "Every weekend we like to visit our grandmother." 
+            },
+            { 
+                word: "pomagać", 
+                translation: "to help", 
+                examplePL: "Dzieci chętnie pomagają rodzicom w gotowaniu obiadów.", 
+                exampleEN: "Children eagerly help parents with cooking dinners." 
+            },
+            { 
+                word: "opiekować się", 
+                translation: "to take care of", 
+                examplePL: "Moja żona opiekuje się naszym małym psem.", 
+                exampleEN: "My wife takes care of our small dog." 
+            }
         ];
 
-        let curIdx = 0;
-        let score = 0;
+        let selectedGamePool = [];
+        let currentIndex = 0;
+        let totalScore = 0;
+        let timer = null;
+        let timeLeft = 10;
 
-        function loadPair() {
-            const p = pairs[curIdx];
-            document.getElementById('pair').textContent = `${p.pl} = ${p.en}`;
-            document.getElementById('score').textContent = `Punkty: ${score} / ${pairs.length}`;
+        function initGame() {
+            // Losujemy 10 słów do gry
+            selectedGamePool = [...gameVocabulary].sort(() => Math.random() - 0.5).slice(0, 10);
+            currentIndex = 0;
+            totalScore = 0;
+            renderWord();
         }
 
-        function answer(userChoice) {
-            if (userChoice === pairs[curIdx].correct) score++;
-            curIdx++;
-            if (curIdx < pairs.length) {
-                loadPair();
+        function renderWord() {
+            clearInterval(timer);
+            const current = selectedGamePool[currentIndex];
+            
+            document.getElementById('target-word').textContent = current.word;
+            
+            // Ukryj okienko ze zdaniem przed wybraniem odpowiedzi
+            const exampleBox = document.getElementById('example-box');
+            exampleBox.classList.remove('visible');
+
+            document.getElementById('next-btn').style.display = 'none';
+
+            // Generowanie opcji odpowiedzi (1 poprawna + 3 błędne z bazy)
+            const optionsGrid = document.getElementById('options-grid');
+            optionsGrid.innerHTML = '';
+
+            const otherTranslations = gameVocabulary
+                .filter(item => item.word !== current.word)
+                .map(item => item.translation);
+
+            const wrongOptions = [...otherTranslations].sort(() => Math.random() - 0.5).slice(0, 3);
+            const allOptions = [current.translation, ...wrongOptions].sort(() => Math.random() - 0.5);
+
+            allOptions.forEach(optText => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = optText;
+                btn.onclick = () => selectOption(btn, optText === current.translation);
+                optionsGrid.appendChild(btn);
+            });
+
+            // Start licznika czasu (10 sekund na słowo)
+            timeLeft = 10;
+            document.getElementById('timer-val').textContent = timeLeft;
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer-val').textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    timeOutAnswer();
+                }
+            }, 1000);
+
+            updateProgress();
+        }
+
+        function selectOption(selectedBtn, isCorrect) {
+            clearInterval(timer);
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(btn => btn.disabled = true);
+
+            const current = selectedGamePool[currentIndex];
+
+            if (isCorrect) {
+                selectedBtn.classList.add('correct');
+                totalScore += (10 + timeLeft * 2); // Punkty za słowo + bonus za czas
+                document.getElementById('score-val').textContent = totalScore;
             } else {
-                finishStage();
+                selectedBtn.classList.add('incorrect');
+                // Pokaż poprawną odpowiedź
+                allBtns.forEach(btn => {
+                    if (btn.textContent === current.translation) {
+                        btn.classList.add('correct');
+                    }
+                });
+            }
+
+            // Wyświetl zdanie w okienku z odmianą i tłumaczeniem
+            showExampleBox(current.examplePL, current.exampleEN);
+
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        function timeOutAnswer() {
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(btn => btn.disabled = true);
+
+            const current = selectedGamePool[currentIndex];
+            allBtns.forEach(btn => {
+                if (btn.textContent === current.translation) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            showExampleBox(current.examplePL, current.exampleEN);
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        function showExampleBox(plText, enText) {
+            const exampleBox = document.getElementById('example-box');
+            document.getElementById('example-pl').textContent = `💡 PL: „${plText}”`;
+            document.getElementById('example-en').textContent = `🇬🇧 EN: "${enText}"`;
+            exampleBox.classList.add('visible');
+        }
+
+        function nextWord() {
+            currentIndex++;
+            if (currentIndex < selectedGamePool.length) {
+                renderWord();
+            } else {
+                showCompletion();
             }
         }
 
-        function finishStage() {
-            let progress = JSON.parse(localStorage.getItem('m2_progress') || '{}');
-            progress.stage6 = true;
-            localStorage.setItem('m2_progress', JSON.stringify(progress));
-            document.getElementById('game-card').style.display = 'none';
-            document.getElementById('comp-card').style.display = 'block';
+        function updateProgress() {
+            const total = selectedGamePool.length;
+            const progressPct = (currentIndex / total) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPct}%`;
+            document.getElementById('step-counter').textContent = `Słowo ${currentIndex + 1} / ${total}`;
         }
 
-        loadPair();
+        function showCompletion() {
+            clearInterval(timer);
+            document.getElementById('game-card').style.display = 'none';
+            document.getElementById('completion-screen').style.display = 'block';
+            document.getElementById('progress-bar').style.width = '100%';
+            document.getElementById('final-score').textContent = `${totalScore} pkt`;
+        }
+
+        function markStageComplete() {
+            const MODULE_KEY = 'm2_progress';
+            let progress = JSON.parse(localStorage.getItem(MODULE_KEY)) || {};
+            progress.stage6 = true;
+            localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
+        }
+
+        // Uruchomienie gry
+        initGame();
     </script>
 </body>
 </html>
