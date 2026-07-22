@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 2 – Lista Etapów</title>
+    <style>
+        :root {
+            /* Pantone 14-1323 TPX Salmon / Łososiowy */
+            --primary-salmon: #f49c96;
+            --primary-salmon-hover: #e0857f;
+            --badge-salmon-bg: #fdf0ef;
+            --badge-salmon-text: #d96b63;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-light: #e2e8f0;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Header Navigation */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-salmon);
+        }
+
+        .module-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Overall Progress Bar */
+        .overall-progress {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            border: 2px solid var(--border-light);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 12px;
+            background-color: var(--border-light);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-salmon);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* Stages List */
+        .stages-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .stage-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 2px solid var(--border-light);
+            box-shadow: var(--shadow-soft);
+            transition: all 0.2s ease;
+        }
+
+        .stage-card.completed {
+            border-color: var(--primary-salmon);
+        }
+
+        .stage-left {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .stage-icon {
+            width: 54px;
+            height: 54px;
+            background-color: #f1f3f5;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .stage-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .stage-header {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        .stage-name {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .check-icon {
+            color: var(--primary-salmon);
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: none;
+        }
+
+        .completed .check-icon {
+            display: inline-block;
+        }
+
+        .status-badge {
+            background-color: var(--badge-salmon-bg);
+            color: var(--badge-salmon-text);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .completed .status-badge {
+            display: inline-block;
+        }
+
+        .stage-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        /* Action Buttons */
+        .btn-stage {
+            background-color: var(--primary-salmon);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 0.75rem 1.8rem;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            white-space: nowrap;
+        }
+
+        .btn-stage:hover {
+            background-color: var(--primary-salmon-hover);
+        }
+
+        .btn-stage:active {
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 600px) {
+            .stage-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .btn-stage {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <a href="index.html" class="back-link">
+                ← Powrót do modułów
+            </a>
+        </div>
+
+        <h1 class="module-title">Moduł 2: W Polskim Domu</h1>
+
+        <!-- Overall Progress -->
+        <div class="overall-progress">
+            <div class="progress-info">
+                <span>Twój postęp w Module 2</span>
+                <span id="progress-text">0 / 7 ukończono</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="overall-progress-bar"></div>
+            </div>
+        </div>
+
+        <!-- List of 7 Stages -->
+        <div class="stages-list">
+
+            <!-- Etap 1 -->
+            <div class="stage-card" id="card-stage1">
+                <div class="stage-left">
+                    <div class="stage-icon">🃏</div>
+                    <div class="stage-details">
+                        <div class="stage-header">
+                            <span class="stage-name">Etap 1: Fiszki</span>
+                            <span class="check-icon">✔</span>
+                            <span class="status-badge">Ukończono</span>
+                        </div>
+                        <div class="stage-desc">Poznaj 28 słów i zwrotów związanych z domem i meblami.</div>
+                    </div>
+                </div>
+                <a href="module-2-stage1.html" class="btn-stage" id="btn-stage1">Rozpocznij</a>
+            </div>
+
+            <!-- Etap 2 -->
+            <div class="stage-card" id="card-stage2">
+                <div class="stage-left">
+                    <div class="stage-icon">🧩</div>
+                    <div class="stage-details">
+                        <div class="stage-header">
+                            <span class="stage-name">Etap 2: Dopasowywanie</span>
+                            <span class="check-icon">✔</span>
+                            <span class="status-badge">Ukończono</span>
+                        </div>
+                        <div class="stage-desc">Dopasuj obrazki do polskich nazw pomieszczeń i przedmiotów.</div>
+                    </div>
+                </div>
+                <a href="module-2-stage2.html" class="btn-stage" id="btn-stage2">Rozpocznij</a>
+            </div>
+
+            <!-- Etap 3 -->
+            <div class="stage-card" id="card-stage3">
+                <div class="stage-left">
+                    <div class="stage-icon">⌨️</div>
+                    <div class="stage-details">
+                        <div class="stage-header">
+                            <span class="stage-name">Etap 3: Pisanie</span>
+                            <span class="check-icon">✔</span>
+                            <span class="status-badge">Ukończono</span>
+                        </div>
+                        <div class="stage-desc">Spójrz na obrazek i wpisz poprawne polskie słowo.</div>
+                    </div>
+                </div>
+                <a href="module-2-stage3.html" class="btn-stage" id="btn-stage3">Rozpocznij</a>
+            </div>
+
+            <!-- Etap 4 -->
+            <div class="stage-card" id="card-stage4">
+                <div class="stage-left">
+                    <div class="stage-icon">✍️</div>
+                    <div class="stage-details">
+                        <div class="stage-header">
+                            <span class="stage-name">Etap 4: Gramatyka</span>
+                            <span class="check-icon">✔</span>
+                            <span class="status-badge">Ukończono</span>
+                        </div>
+                        <div class="stage-desc">Ćwiczenia gramatyczne, Miejscownik i odmiana przymiotników.</div>
+                    </div>
+                </div>
+                <a href="module-2-stage4.html" class="btn-stage" id="btn-stage4">Rozpocznij</a>
+            </div>
+
+            <!-- Etap 5 -->
+            <div class="stage-card" id="card-stage5">
+                <div class="stage-left">
+                    <div class="stage-icon">💬</div>
+                    <div class="stage-details">
+                        <div class="stage-header">
+                            <span class="stage-name">Etap 5: Dialogi</span>
+                            <span class="check-icon">✔</span>
+                            <span class="status-badge">Ukończono</span>
+                        </div>
+                        <div class="stage-desc">Rozmowy o wynajmie mieszkania i opisywaniu swojego pokoju.</div>
+                    </div>
+                </div>
+                <a href="module-2-stage5.html" class="btn-stage" id="btn-stage5">Rozpocznij</a>
+            </div>
+
+            <!-- Etap 6 -->
+            <div class="stage-card" id="card-stage6">
+                <div class="stage-left">
+                    <div class="stage-icon">🎮</div>
+                    <div class="stage-details">
+                        <div class="stage-header">
+                            <span class="stage-name">Etap 6: Mini Gra</span>
+                            <span class="check-icon">✔</span>
+                            <span class="status-badge">Ukończono</span>
+                        </div>
+                        <div class="stage-desc">Szybkie, wymieszane zadania sprawdzające refleks i pamięć.</div>
+                    </div>
+                </div>
+                <a href="module-2-stage6.html" class="btn-stage" id="btn-stage6">Rozpocznij</a>
+            </div>
+
+            <!-- Etap 7 -->
+            <div class="stage-card" id="card-stage7">
+                <div class="stage-left">
+                    <div class="stage-icon">🏆</div>
+                    <div class="stage-details">
+                        <div class="stage-header">
+                            <span class="stage-name">Etap 7: Test końcowy</span>
+                            <span class="check-icon">✔</span>
+                            <span class="status-badge">Ukończono</span>
+                        </div>
+                        <div class="stage-desc">30 pytań sprawdzających całą wiedzę z Modułu 2.</div>
+                    </div>
+                </div>
+                <a href="module-2-stage7.html" class="btn-stage" id="btn-stage7">Rozpocznij</a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const MODULE_KEY = 'm2_progress';
+
+        // Default progress state
+        let progress = {
+            stage1: false,
+            stage2: false,
+            stage3: false,
+            stage4: false,
+            stage5: false,
+            stage6: false,
+            stage7: false
+        };
+
+        function loadProgress() {
+            const saved = localStorage.getItem(MODULE_KEY);
+            if (saved) {
+                try {
+                    progress = { ...progress, ...JSON.parse(saved) };
+                } catch (e) {
+                    console.error("Błąd odczytu postępu", e);
+                }
+            }
+
+            let completedCount = 0;
+            const totalStages = 7;
+
+            for (let i = 1; i <= totalStages; i++) {
+                const isCompleted = progress[`stage${i}`];
+                const card = document.getElementById(`card-stage${i}`);
+                const btn = document.getElementById(`btn-stage${i}`);
+
+                if (isCompleted) {
+                    completedCount++;
+                    card.classList.add('completed');
+                    btn.textContent = 'Powtórz';
+                } else {
+                    card.classList.remove('completed');
+                    btn.textContent = 'Rozpocznij';
+                }
+            }
+
+            // Update overall progress bar
+            const percentage = Math.round((completedCount / totalStages) * 100);
+            document.getElementById('overall-progress-bar').style.width = `${percentage}%`;
+            document.getElementById('progress-text').textContent = `${completedCount} / ${totalStages} ukończono`;
+        }
+
+        // Initialize progress view on page load
+        loadProgress();
+    </script>
+</body>
+</html>
