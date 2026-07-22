@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moduł 3 – Etap 5: Dialogi</title>
+    <title>Etap 5 – Dialogi w sklepie</title>
     <style>
         :root {
             --primary-green: #2ecc71;
@@ -71,6 +71,23 @@
             font-size: 0.95rem;
         }
 
+        /* Header Title */
+        .header-title-box {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-title-box h1 {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 0.3rem;
+        }
+
+        .header-title-box p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
         /* Progress Bar */
         .progress-track {
             width: 100%;
@@ -88,7 +105,7 @@
             transition: width 0.3s ease;
         }
 
-        /* Dialogue Box */
+        /* Dialogue Card */
         .dialogue-card {
             background-color: var(--card-bg);
             border-radius: 24px;
@@ -96,6 +113,28 @@
             box-shadow: var(--shadow-soft);
             border: 2px solid var(--border-light);
             margin-bottom: 1.5rem;
+            transition: transform 0.2s ease;
+        }
+
+        /* Animations for card feedback */
+        .anim-correct {
+            animation: bounceGreen 0.5s ease;
+        }
+
+        .anim-wrong {
+            animation: shakeRed 0.4s ease;
+        }
+
+        @keyframes bounceGreen {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shakeRed {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
         }
 
         .dialogue-header {
@@ -108,7 +147,7 @@
         }
 
         .dialogue-header .icon {
-            font-size: 2rem;
+            font-size: 2.2rem;
         }
 
         .dialogue-header h3 {
@@ -116,10 +155,17 @@
             color: var(--text-dark);
         }
 
+        /* Chat Bubbles */
+        .chat-stream {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
         .chat-bubble {
             display: flex;
             flex-direction: column;
-            margin-bottom: 1rem;
             max-width: 85%;
         }
 
@@ -129,20 +175,19 @@
 
         .chat-bubble.right {
             align-self: flex-end;
-            margin-left: auto;
         }
 
         .speaker-name {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 700;
             color: var(--text-muted);
-            margin-bottom: 0.2rem;
+            margin-bottom: 0.25rem;
         }
 
         .bubble-content {
             padding: 0.8rem 1.2rem;
             border-radius: 18px;
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 500;
         }
 
@@ -158,12 +203,11 @@
             border-bottom-right-radius: 4px;
         }
 
-        /* Interactive Question Section */
+        /* Question Box */
         .question-box {
             background-color: var(--badge-green-bg);
             border-radius: 16px;
             padding: 1.2rem;
-            margin-top: 1.5rem;
             border: 2px dashed var(--primary-green);
         }
 
@@ -184,24 +228,27 @@
             background-color: var(--card-bg);
             border: 2px solid var(--border-light);
             border-radius: 12px;
-            padding: 0.8rem 1rem;
-            font-size: 0.95rem;
+            padding: 1rem;
+            font-size: 1rem;
             font-weight: 600;
             color: var(--text-dark);
             cursor: pointer;
             text-align: left;
             transition: all 0.2s ease;
             font-family: inherit;
+            width: 100%;
         }
 
         .option-btn:hover:not(:disabled) {
             border-color: var(--primary-green);
+            background-color: #f0fdf4;
         }
 
         .option-btn.correct {
             border-color: var(--primary-green);
             background-color: var(--badge-green-bg);
-            color: var(--primary-green);
+            color: var(--primary-green-hover);
+            font-weight: 700;
         }
 
         .option-btn.wrong {
@@ -210,6 +257,29 @@
             color: var(--error-red);
         }
 
+        /* Explanation Box */
+        .explanation-box {
+            display: none;
+            background-color: #ffffff;
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            padding: 1.2rem;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .explanation-box h4 {
+            color: var(--text-dark);
+            margin-bottom: 0.4rem;
+            font-size: 1rem;
+        }
+
+        .explanation-box p {
+            color: var(--text-muted);
+            white-space: pre-line;
+        }
+
+        /* Buttons */
         .btn {
             background-color: var(--primary-green);
             color: #ffffff;
@@ -225,42 +295,136 @@
             justify-content: center;
             transition: background-color 0.2s ease;
             width: 100%;
-            margin-top: 1.5rem;
+            margin-top: 1.2rem;
         }
 
         .btn:hover {
             background-color: var(--primary-green-hover);
         }
 
-        /* Completion View */
+        /* Completion & Bonus Screen */
         .completion-screen {
             display: none;
+        }
+
+        .score-card {
             background-color: var(--card-bg);
             border-radius: 24px;
-            padding: 3rem 2rem;
+            padding: 2.5rem 2rem;
             text-align: center;
             box-shadow: var(--shadow-soft);
             border: 2px solid var(--border-light);
+            margin-bottom: 2rem;
         }
 
-        .completion-screen .icon {
-            font-size: 4rem;
+        .score-card .icon {
+            font-size: 3.5rem;
             margin-bottom: 1rem;
         }
 
-        .completion-screen h2 {
+        .score-card h2 {
             font-size: 2rem;
             color: var(--text-dark);
             margin-bottom: 0.5rem;
         }
 
-        .completion-screen p {
+        .score-card p {
             color: var(--text-muted);
-            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* Flashcards Section */
+        .flashcards-section {
+            margin-top: 2rem;
+        }
+
+        .flashcards-section h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.6rem;
+            color: var(--text-dark);
+        }
+
+        .flashcards-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 600px) {
+            .flashcards-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .flashcard {
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-light);
+            border-radius: 20px;
+            padding: 1.2rem;
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 0.8rem;
+        }
+
+        .flashcard-phrase {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .flashcard-translation {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .flashcard-example {
+            font-size: 0.85rem;
+            background-color: var(--bg-color);
+            padding: 0.5rem 0.8rem;
+            border-radius: 10px;
+            color: var(--text-dark);
+        }
+
+        .audio-btn {
+            align-self: flex-start;
+            background-color: var(--badge-green-bg);
+            color: var(--primary-green);
+            border: none;
+            border-radius: 20px;
+            padding: 0.4rem 0.9rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
+        }
+
+        .audio-btn:hover {
+            background-color: var(--primary-green);
+            color: #ffffff;
+        }
+
+        /* Canvas Confetti Container */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 999;
         }
     </style>
 </head>
 <body>
+
+    <canvas id="confetti-canvas"></canvas>
 
     <div class="container">
         <!-- Navigation Header -->
@@ -268,7 +432,13 @@
             <a href="module-3-vocab.html" class="back-link">
                 ← Powrót do Modułu 3
             </a>
-            <span class="counter-badge" id="scene-counter">Scenka 1 / 3</span>
+            <span class="counter-badge" id="question-counter">Pytanie 1 / 10</span>
+        </div>
+
+        <!-- Header Title -->
+        <div class="header-title-box">
+            <h1>Etap 5</h1>
+            <p>Wybierz najbardziej naturalną odpowiedź, jaką usłyszysz lub powiesz w polskim sklepie.</p>
         </div>
 
         <!-- Progress Bar -->
@@ -276,101 +446,246 @@
             <div class="progress-fill" id="progress-bar"></div>
         </div>
 
-        <!-- Dialogue Exercise Area -->
+        <!-- Interactive Exercise Area -->
         <div id="exercise-container">
-            <div class="dialogue-card">
+            <div class="dialogue-card" id="main-card">
                 <div class="dialogue-header">
-                    <span class="icon" id="scene-icon">🛒</span>
-                    <h3 id="scene-title">W sklepie spożywczym</h3>
+                    <span class="icon" id="card-emoji">🛒</span>
+                    <h3 id="card-title">Dialog w sklepie</h3>
                 </div>
 
-                <div id="chat-stream"></div>
+                <div class="chat-stream" id="chat-stream"></div>
 
-                <div class="question-box" id="question-box">
-                    <div class="question-title" id="question-text">Uzupełnij brakującą odpowiedź:</div>
+                <div class="question-box">
+                    <div class="question-title" id="question-text">Jak odpowie klient?</div>
                     <div class="options-list" id="options-container"></div>
                 </div>
 
-                <button class="btn" id="next-btn" style="display: none;" onclick="nextScene()">Kolejna scenka →</button>
+                <div class="explanation-box" id="explanation-box">
+                    <h4>English explanation:</h4>
+                    <p id="explanation-text"></p>
+                </div>
+
+                <button class="btn" id="next-btn" style="display: none;" onclick="nextQuestion()">Następne pytanie →</button>
             </div>
         </div>
 
-        <!-- Completion View -->
+        <!-- Completion View & Bonus Flashcards -->
         <div class="completion-screen" id="completion-screen">
-            <div class="icon">💬</div>
-            <h2>Świetnie! Potrafisz rozmawiać w sklepie!</h2>
-            <p>Ukończyłeś Etap 5. Czas na szybki trening w Mini Grze!</p>
-            <a href="module-3-vocab.html" class="btn">Powrót do menu modułu</a>
+            <div class="score-card">
+                <div class="icon">🎉</div>
+                <h2>Świetnie! Dialogi opanowane!</h2>
+                <p>Twój wynik: <strong id="final-score">10/10</strong></p>
+                <a href="module-3-vocab.html" class="btn" style="max-width: 300px; margin: 1.5rem auto 0 auto;">Powrót do menu modułu</a>
+            </div>
+
+            <!-- Bonus Section -->
+            <div class="flashcards-section">
+                <h2>Co możesz usłyszeć w polskim sklepie?</h2>
+                <div class="flashcards-grid" id="flashcards-container"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        const dialogues = [
+        // Database of 10 Dialogues
+        const dialogueData = [
             {
-                title: "W sklepie – kupowanie żywności",
-                icon: "🥖",
+                emoji: "💳",
+                title: "Płatność w kasie",
                 messages: [
-                    { speaker: "Ekspedientka", text: "Dzień dobry! W czym mogę pomóc?", side: "left" },
-                    { speaker: "Klient", text: "Dzień dobry! Proszę chleb, świeże bułki i sześć jajek.", side: "right" },
-                    { speaker: "Ekspedientka", text: "Czy dodać też pomidor i ogórek?", side: "left" }
+                    { speaker: "👩 Kasjerka", text: "Dzień dobry.", side: "left" },
+                    { speaker: "🙂 Klient", text: "Dzień dobry.", side: "right" },
+                    { speaker: "👩 Kasjerka", text: "Razem 45 złotych. Płatność kartą czy gotówką?", side: "left" }
                 ],
-                question: "Co odpowiada Klient?",
+                question: "Jak odpowie klient?",
                 options: [
-                    "Tak, proszę jeszcze jeden pomidor i świeży ogórek.",
-                    "Nie, płacę kartą płatniczą.",
-                    "Gdzie jest autobus?"
+                    { text: "Płacę kartą. Poproszę paragon.", correct: true },
+                    { text: "Torbę poproszę.", correct: false },
+                    { text: "Tak, poproszę.", correct: false }
                 ],
-                correct: 0
+                explanation: 'Correct answer:\n"Płacę kartą. Poproszę paragon."\nThis is the natural response when the cashier asks how you want to pay. The other answers do not answer the cashier\'s question.'
             },
             {
-                title: "Przy kasie – płatność",
-                icon: "💳",
+                emoji: "💵",
+                title: "Forma płatności",
                 messages: [
-                    { speaker: "Kasjerka", text: "Dzień dobry. Czy ma Pan duży wózek czy mały wózek?", side: "left" },
-                    { speaker: "Klient", text: "Mam mały wózek. Oto moje zakupy.", side: "right" },
-                    { speaker: "Kasjerka", text: "Razem 45 złotych. Płatność kartą czy gotówką?", side: "left" }
+                    { speaker: "👩 Kasjerka", text: "Razem 28 złotych.", side: "left" }
                 ],
-                question: "Jak odpowie Klient?",
+                question: "Jak odpowie klient?",
                 options: [
-                    "To jest bilet parkingowy.",
-                    "Płacę kartą płatniczą. Czy mogę dostać paragon?",
-                    "Kupuję szampon i mydło."
+                    { text: "Płacę gotówką.", correct: true },
+                    { text: "Poproszę fakturę.", correct: false },
+                    { text: "Poproszę potwierdzenie transakcji.", correct: false }
                 ],
-                correct: 1
+                explanation: 'The cashier expects information about the payment method. The customer should answer:\n"Płacę gotówką."'
             },
             {
-                title: "Na parkingu przy centrum handlowym",
-                icon: "🅿️",
+                emoji: "🛍️",
+                title: "Pytanie o torbę",
                 messages: [
-                    { speaker: "Kierowca", text: "Przepraszam, gdzie jest parkometr?", side: "left" },
-                    { speaker: "Przechodzień", text: "Parkometr jest tam, obok przystanku autobusowego.", side: "right" },
-                    { speaker: "Kierowca", text: "Dziękuję! A czy tutaj jest płatny parking?", side: "left" }
+                    { speaker: "👩 Kasjerka", text: "Czy potrzebuje Pan torby?", side: "left" }
                 ],
-                question: "Jak odpowie Przechodzień?",
+                question: "Jak odpowie klient?",
                 options: [
-                    "Tak, musisz wziąć bilet parkingowy.",
-                    "Nie, to jest świeży sok.",
-                    "Proszę tort i ciastko."
+                    { text: "Tak, poproszę dwie.", correct: true },
+                    { text: "Nie.", correct: false },
+                    { text: "Mam.", correct: false }
                 ],
-                correct: 0
+                explanation: 'Although "Nie" and "Mam" are grammatically correct, they sound too direct in Polish. A more polite answer is:\n"Nie, dziękuję." or "Już mam, dziękuję."\nPolish people usually add "dziękuję" to sound polite.'
+            },
+            {
+                emoji: "🧾",
+                title: "Potwierdzenie transakcji",
+                messages: [
+                    { speaker: "👩 Kasjerka", text: "Czy wydrukować potwierdzenie?", side: "left" }
+                ],
+                question: "Jak odpowie klient?",
+                options: [
+                    { text: "Tak, poproszę.", correct: true },
+                    { text: "Mam bilet.", correct: false },
+                    { text: "Mam parking.", correct: false }
+                ],
+                explanation: 'The cashier asks whether you would like the receipt/confirmation. The polite answer is:\n"Tak, poproszę."'
+            },
+            {
+                emoji: "📲",
+                title: "Płatność zbliżeniowa",
+                messages: [
+                    { speaker: "👩 Kasjerka", text: "Proszę przyłożyć kartę.", side: "left" }
+                ],
+                question: "Jak odpowie klient?",
+                options: [
+                    { text: "Proszę bardzo.", correct: true },
+                    { text: "Poproszę.", correct: false },
+                    { text: "Mam bilet parkingowy.", correct: false }
+                ],
+                explanation: '"Proszę bardzo." is a natural polite response when completing an action requested by the cashier.'
+            },
+            {
+                emoji: "🛒",
+                title: "Koniec zakupu",
+                messages: [
+                    { speaker: "👩 Kasjerka", text: "Czy to wszystko?", side: "left" }
+                ],
+                question: "Jak odpowie klient?",
+                options: [
+                    { text: "Tak, dziękuję.", correct: true },
+                    { text: "Mam duży wózek.", correct: false },
+                    { text: "Kupuję tramwaj.", correct: false }
+                ],
+                explanation: 'This is a very common phrase in Polish shops. The natural answer is:\n"Tak, dziękuję."'
+            },
+            {
+                emoji: "🥖",
+                title: "Pytanie o artykuł",
+                messages: [
+                    { speaker: "🙂 Klient", text: "Przepraszam, gdzie jest chleb?", side: "left" }
+                ],
+                question: "Jak odpowie sprzedawca?",
+                options: [
+                    { text: "Chleb jest w alei numer trzy.", correct: true },
+                    { text: "Płacę za chleb.", correct: false },
+                    { text: "Mamy chleb.", correct: false }
+                ],
+                explanation: 'The customer asks for the location of the bread. Only answer "Chleb jest w alei numer trzy." gives directions.'
+            },
+            {
+                emoji: "🧀",
+                title: "Pytanie o cenę",
+                messages: [
+                    { speaker: "🙂 Klient", text: "Ile kosztuje ten ser?", side: "left" }
+                ],
+                question: "Jak odpowie sprzedawca?",
+                options: [
+                    { text: "Kosztuje 18 złotych za 500 gramów.", correct: true },
+                    { text: "To jest żółty ser.", correct: false },
+                    { text: "Mam gotówkę.", correct: false }
+                ],
+                explanation: 'The customer asks about the price. The answer should include the price.'
+            },
+            {
+                emoji: "🅿️",
+                title: "Bilet parkingowy",
+                messages: [
+                    { speaker: "🙂 Klient", text: "Gdzie mogę kupić bilet parkingowy?", side: "left" }
+                ],
+                question: "Jak odpowie pracownik?",
+                options: [
+                    { text: "W parkometrze przed sklepem.", correct: true },
+                    { text: "Na kasie.", correct: false },
+                    { text: "Kupuję jajka.", correct: false }
+                ],
+                explanation: 'The employee explains where the parking ticket machine is located ("W parkometrze przed sklepem.").'
+            },
+            {
+                emoji: "🤝",
+                title: "Prośba o pomoc",
+                messages: [
+                    { speaker: "🙂 Klient", text: "Przepraszam, czy może mi Pan pomóc?", side: "left" }
+                ],
+                question: "Jak odpowie pracownik?",
+                options: [
+                    { text: "Oczywiście. W czym mogę pomóc?", correct: true },
+                    { text: "Kupuję chleb.", correct: false },
+                    { text: "Jaki problem?", correct: false }
+                ],
+                explanation: '"Jaki problem?" sounds too direct and may seem rude. Polish shop assistants usually say:\n"Oczywiście. W czym mogę pomóc?"'
             }
         ];
 
+        // Bonus Flashcards Data
+        const flashcardsData = [
+            { phrase: "Czy ma Pan aplikację?", trans: "Do you have our loyalty app?", ex: "Czy ma Pan aplikację naszego sklepu?" },
+            { phrase: "Zbiera Pan punkty?", trans: "Do you collect points?", ex: "Czy zbiera Pan punkty na kartę?" },
+            { phrase: "Paragon czy faktura?", trans: "Receipt or invoice?", ex: "Dla Pana paragon czy faktura?" },
+            { phrase: "Płatność kartą czy gotówką?", trans: "Payment by card or cash?", ex: "Dzień dobry, płatność kartą czy gotówką?" },
+            { phrase: "Czy potrzebuje Pan torby?", trans: "Do you need a bag?", ex: "Czy potrzebuje Pan torby na zakupy?" },
+            { phrase: "Proszę przyłożyć kartę.", trans: "Please tap your card.", ex: "Terminal gotowy. Proszę przyłożyć kartę." },
+            { phrase: "Czy to wszystko?", trans: "Is that all?", ex: "Czy to wszystko, czy coś jeszcze?" },
+            { phrase: "Dziękujemy za zakupy.", trans: "Thank you for shopping with us.", ex: "Dziękujemy za zakupy i miłego dnia!" },
+            { phrase: "Zapraszamy ponownie.", trans: "We welcome you again / See you soon.", ex: "Do widzenia, zapraszamy ponownie!" }
+        ];
+
+        let questions = [];
         let currentIdx = 0;
+        let score = 0;
 
-        function loadScene() {
-            const scene = dialogues[currentIdx];
+        // Shuffle Array Utility
+        function shuffle(array) {
+            let cur = array.length, rand;
+            let arr = [...array];
+            while (cur !== 0) {
+                rand = Math.floor(Math.random() * cur);
+                cur--;
+                [arr[cur], arr[rand]] = [arr[rand], arr[cur]];
+            }
+            return arr;
+        }
 
-            document.getElementById('scene-counter').textContent = `Scenka ${currentIdx + 1} / ${dialogues.length}`;
-            document.getElementById('progress-bar').style.width = `${(currentIdx / dialogues.length) * 100}%`;
+        // Initialize Exercise
+        function initExercise() {
+            questions = shuffle(dialogueData);
+            currentIdx = 0;
+            score = 0;
+            loadQuestion();
+        }
 
-            document.getElementById('scene-title').textContent = scene.title;
-            document.getElementById('scene-icon').textContent = scene.icon;
+        function loadQuestion() {
+            const q = questions[currentIdx];
+            
+            // Header & Progress
+            document.getElementById('question-counter').textContent = `Pytanie ${currentIdx + 1} / ${questions.length}`;
+            document.getElementById('progress-bar').style.width = `${((currentIdx) / questions.length) * 100}%`;
+            
+            document.getElementById('card-emoji').textContent = q.emoji;
+            document.getElementById('card-title').textContent = q.title;
+            document.getElementById('question-text').textContent = q.question;
 
+            // Chat stream
             const chatStream = document.getElementById('chat-stream');
             chatStream.innerHTML = '';
-
-            scene.messages.forEach(msg => {
+            q.messages.forEach(msg => {
                 const bubble = document.createElement('div');
                 bubble.className = `chat-bubble ${msg.side}`;
                 bubble.innerHTML = `
@@ -380,76 +695,177 @@
                 chatStream.appendChild(bubble);
             });
 
-            document.getElementById('question-text').textContent = scene.question;
+            // Options
             const optionsContainer = document.getElementById('options-container');
             optionsContainer.innerHTML = '';
+            
+            // Shuffle options for variation
+            const shuffledOptions = shuffle(q.options);
+            const labels = ['A', 'B', 'C'];
 
-            document.getElementById('question-box').style.display = 'block';
-            document.getElementById('next-btn').style.display = 'none';
-
-            scene.options.forEach((opt, idx) => {
+            shuffledOptions.forEach((opt, idx) => {
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
-                btn.textContent = opt;
-                btn.onclick = () => checkAnswer(idx);
+                btn.textContent = `${labels[idx]}. ${opt.text}`;
+                btn.onclick = () => selectOption(btn, opt, q);
                 optionsContainer.appendChild(btn);
             });
+
+            // Hide explanation & next button
+            document.getElementById('explanation-box').style.display = 'none';
+            document.getElementById('next-btn').style.display = 'none';
+
+            // Reset Card Animation
+            const mainCard = document.getElementById('main-card');
+            mainCard.classList.remove('anim-correct', 'anim-wrong');
         }
 
-        function checkAnswer(selectedIdx) {
-            const scene = dialogues[currentIdx];
+        function selectOption(selectedBtn, selectedOption, currentQuestion) {
             const buttons = document.querySelectorAll('.option-btn');
-
             buttons.forEach(btn => btn.disabled = true);
 
-            if (selectedIdx === scene.correct) {
-                buttons[selectedIdx].classList.add('correct');
-                
-                // Add answered message to chat
-                const chatStream = document.getElementById('chat-stream');
-                const bubble = document.createElement('div');
-                bubble.className = 'chat-bubble right';
-                bubble.innerHTML = `
-                    <span class="speaker-name">Twoja odpowiedź</span>
-                    <div class="bubble-content">${scene.options[selectedIdx]}</div>
-                `;
-                chatStream.appendChild(bubble);
+            const mainCard = document.getElementById('main-card');
+
+            if (selectedOption.correct) {
+                selectedBtn.classList.add('correct');
+                mainCard.classList.add('anim-correct');
+                score++;
             } else {
-                buttons[selectedIdx].classList.add('wrong');
-                buttons[scene.correct].classList.add('correct');
+                selectedBtn.classList.add('wrong');
+                mainCard.classList.add('anim-wrong');
+
+                // Highlight correct option
+                buttons.forEach(btn => {
+                    if (btn.textContent.includes(currentQuestion.options.find(o => o.correct).text)) {
+                        btn.classList.add('correct');
+                    }
+                });
             }
+
+            // Show English explanation
+            const expBox = document.getElementById('explanation-box');
+            document.getElementById('explanation-text').textContent = currentQuestion.explanation;
+            expBox.style.display = 'block';
 
             document.getElementById('next-btn').style.display = 'block';
         }
 
-        function nextScene() {
+        function nextQuestion() {
             currentIdx++;
-            if (currentIdx < dialogues.length) {
-                loadScene();
+            if (currentIdx < questions.length) {
+                loadQuestion();
             } else {
-                completeStage();
+                finishExercise();
             }
         }
 
-        function completeStage() {
+        function finishExercise() {
+            // Save Progress in Local Storage
             const MODULE_KEY = 'm3_progress';
-            let progress = { stage1: true, stage2: true, stage3: true, stage4: true, stage5: false, stage6: false, stage7: false };
-            
+            let progress = { stage1: true, stage2: true, stage3: true, stage4: true, stage5: false };
             const saved = localStorage.getItem(MODULE_KEY);
             if (saved) {
                 try { progress = JSON.parse(saved); } catch(e) {}
             }
-
             progress.stage5 = true;
             localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
 
+            // Hide exercise, show completion screen
             document.getElementById('progress-bar').style.width = '100%';
             document.getElementById('exercise-container').style.display = 'none';
             document.getElementById('completion-screen').style.display = 'block';
+            document.getElementById('final-score').textContent = `${score} / ${questions.length}`;
+
+            // Trigger Confetti
+            launchConfetti();
+
+            // Render Flashcards
+            renderFlashcards();
         }
 
-        // Initialize stage
-        loadScene();
+        // Render Bonus Flashcards
+        function renderFlashcards() {
+            const container = document.getElementById('flashcards-container');
+            container.innerHTML = '';
+
+            flashcardsData.forEach(card => {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'flashcard';
+                cardEl.innerHTML = `
+                    <div>
+                        <div class="flashcard-phrase">${card.phrase}</div>
+                        <div class="flashcard-translation">${card.trans}</div>
+                    </div>
+                    <div class="flashcard-example"><strong>Przykłady:</strong> ${card.ex}</div>
+                    <button class="audio-btn" onclick="speakText('${card.phrase.replace(/'/g, "\\'")}')">
+                        🔊 Wymowa
+                    </button>
+                `;
+                container.appendChild(cardEl);
+            });
+        }
+
+        // Text To Speech (Offline Fallback using SpeechSynthesis)
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'pl-PL';
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert("Audio not supported on this browser.");
+            }
+        }
+
+        // Confetti Animation Engine (No External Library)
+        function launchConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const colors = ['#2ecc71', '#3498db', '#f1c40f', '#e74c3c', '#9b59b6'];
+
+            for (let i = 0; i < 80; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    size: Math.random() * 8 + 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    speedY: Math.random() * 3 + 2,
+                    speedX: Math.random() * 2 - 1,
+                    rotation: Math.random() * 360
+                });
+            }
+
+            let animationFrame;
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.y += p.speedY;
+                    p.x += p.speedX;
+                    p.rotation += 2;
+
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate((p.rotation * Math.PI) / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                    ctx.restore();
+                });
+
+                if (particles.some(p => p.y < canvas.height)) {
+                    animationFrame = requestAnimationFrame(animate);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+            animate();
+        }
+
+        // Start
+        initExercise();
     </script>
 </body>
 </html>
