@@ -45,6 +45,14 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .back-link {
@@ -54,12 +62,31 @@
             color: var(--text-muted);
             text-decoration: none;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: color 0.2s ease;
         }
 
         .back-link:hover {
             color: var(--primary-green);
+        }
+
+        .breadcrumbs {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .breadcrumbs a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .breadcrumbs a:hover {
+            color: var(--primary-green);
+        }
+
+        .breadcrumbs strong {
+            color: var(--text-dark);
         }
 
         .counter-badge {
@@ -310,7 +337,6 @@
             margin-bottom: 2rem;
         }
 
-        /* Responsive layout for grid */
         @media (max-width: 500px) {
             .matching-grid {
                 grid-template-columns: 1fr;
@@ -323,9 +349,16 @@
     <div class="container">
         <!-- Top Navigation -->
         <div class="top-nav">
-            <a href="module-3-pisanie.html" class="back-link">
-                ← Powrót
-            </a>
+            <div class="nav-left">
+                <a href="module3.html" class="back-link">
+                    ← Powrót do Modułu 3
+                </a>
+            </div>
+            
+            <div class="breadcrumbs">
+                🏠 <a href="index.html">Strona główna</a> &gt; <strong>Moduł 3</strong>
+            </div>
+
             <span class="counter-badge" id="counter-badge">1 / 28</span>
         </div>
 
@@ -381,15 +414,13 @@
             <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
             <h2>Świetnie! Gratulacje!</h2>
             <p>Ukończyłeś ćwiczenia z pisania oraz łączenia wyrażeń.</p>
-            <div style="display: flex; gap: 1rem; justify-content: center;">
-                <a href="module-3-pisanie.html" class="btn" style="width: auto;">⬅ Powrót</a>
-                <a href="module-3-pisanie.html" class="btn" style="width: auto;">➡ Następny etap</a>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="module3.html" class="btn" style="width: auto;">⬅ Powrót do Modułu 3</a>
             </div>
         </div>
     </div>
 
     <script>
-        /* --- VOCABULARY DATA (PART 1) --- */
         const vocabularyData = [
             { en: "eggs", pl: "jajka" },
             { en: "bread rolls", pl: "bułki" },
@@ -421,7 +452,6 @@
             { en: "receipt", pl: "paragon" }
         ];
 
-        /* --- COLLOCATIONS DATA (PART 2) --- */
         const collocationsData = [
             { left: "płacić", right: "kartą płatniczą", en: "to pay by payment card", example: "Płacę kartą płatniczą." },
             { left: "robić", right: "zakupy", en: "to do shopping", example: "Robię zakupy w supermarkecie." },
@@ -445,7 +475,6 @@
             { left: "sok", right: "pomarańczowy", en: "orange juice", example: "Piję zimny sok pomarańczowy." }
         ];
 
-        /* --- STATE VARIABLES --- */
         let shuffledTypingVocab = [];
         let currentTypingIdx = 0;
         let typingAttempts = 0;
@@ -454,7 +483,6 @@
         let selectedRight = null;
         let matchedPairsCount = 0;
 
-        /* --- UTILS --- */
         function shuffle(array) {
             let arr = [...array];
             for (let i = arr.length - 1; i > 0; i--) {
@@ -464,7 +492,6 @@
             return arr;
         }
 
-        /* --- PART 1 LOGIC --- */
         function initPart1() {
             shuffledTypingVocab = shuffle(vocabularyData);
             currentTypingIdx = 0;
@@ -503,7 +530,6 @@
             const userWord = input.value.trim().toLowerCase();
 
             if (userWord === targetWord) {
-                // Correct
                 input.className = 'input-field correct';
                 feedback.textContent = '✅ Dobrze!';
                 feedback.className = 'feedback-msg correct';
@@ -513,7 +539,6 @@
                 document.getElementById('next-word-btn').classList.remove('hidden');
                 document.getElementById('next-word-btn').focus();
             } else {
-                // Incorrect
                 typingAttempts++;
                 input.classList.add('wrong');
                 feedback.textContent = '❌ Spróbuj jeszcze raz.';
@@ -523,7 +548,6 @@
                     input.classList.remove('wrong');
                 }, 400);
 
-                // Show first letter after 2 wrong attempts
                 if (typingAttempts === 2) {
                     const hintBox = document.getElementById('hint-box');
                     const firstLetter = targetWord.charAt(0).toUpperCase();
@@ -531,7 +555,6 @@
                     hintBox.style.display = 'block';
                 }
 
-                // Show answer after 3 wrong attempts
                 if (typingAttempts >= 3) {
                     input.disabled = true;
                     feedback.innerHTML = `✅ Poprawna odpowiedź: <strong>${shuffledTypingVocab[currentTypingIdx].pl}</strong>`;
@@ -553,7 +576,6 @@
             }
         }
 
-        /* --- PART 2 LOGIC --- */
         function startPart2() {
             document.getElementById('part1-container').classList.add('hidden');
             document.getElementById('part2-container').classList.remove('hidden');
@@ -616,7 +638,6 @@
             const rightId = selectedRight.dataset.id;
 
             if (leftId === rightId) {
-                // Correct Match
                 selectedLeft.className = 'match-btn matched';
                 selectedRight.className = 'match-btn matched';
 
@@ -633,7 +654,6 @@
                     document.getElementById('part2-next-btn').classList.remove('hidden');
                 }
             } else {
-                // Incorrect Match
                 const tempLeft = selectedLeft;
                 const tempRight = selectedRight;
 
@@ -659,7 +679,6 @@
         }
 
         function completeModule() {
-            // LocalStorage support
             const MODULE_KEY = 'm3_progress';
             let progress = { stage1: true, stage2: true, stage3: true };
             const saved = localStorage.getItem(MODULE_KEY);
@@ -674,7 +693,6 @@
             document.getElementById('progress-bar').style.width = '100%';
         }
 
-        // Initialize App
         initPart1();
     </script>
 </body>
