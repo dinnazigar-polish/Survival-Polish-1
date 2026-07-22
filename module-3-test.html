@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ćwiczenia Sklepowe – Uzupełnianie Luk</title>
+    <title>Dialogi w Sklepie – Uzupełnij Luki</title>
     <style>
         :root {
             --primary-green: #2ecc71;
@@ -133,15 +133,17 @@
             border-radius: 16px;
             padding: 1.5rem;
             font-size: 1.1rem;
-            line-height: 1.8;
+            line-height: 2;
             margin-bottom: 1.5rem;
             color: var(--text-dark);
+            white-space: pre-line;
         }
 
         .drop-target {
             display: inline-block;
             min-width: 110px;
-            padding: 0.2rem 0.6rem;
+            height: 34px;
+            padding: 0 0.6rem;
             margin: 0 0.2rem;
             border: 2px dashed var(--primary-green);
             border-radius: 8px;
@@ -150,6 +152,7 @@
             font-weight: 700;
             color: var(--primary-green-hover);
             vertical-align: middle;
+            line-height: 30px;
         }
 
         .drop-target.filled {
@@ -285,8 +288,8 @@
         </div>
 
         <div class="header-title-box">
-            <h1>Uzupełnij luki</h1>
-            <p>Wybierz właściwe słowa z podanej puli, aby stworzyć poprawny tekst.</p>
+            <h1>Dialogi w sklepie</h1>
+            <p>Wybierz 3 właściwe słowa, aby uzupełnić dialog.</p>
         </div>
 
         <div class="progress-track">
@@ -296,19 +299,19 @@
         <div id="exercise-container">
             <div class="exercise-card">
                 <div class="exercise-header">
-                    <span class="icon" id="card-emoji">🛒</span>
-                    <h3 id="card-title">Tytuł ćwiczenia</h3>
+                    <span class="icon" id="card-emoji">💬</span>
+                    <h3 id="card-title">Dialog</h3>
                 </div>
 
                 <div class="text-box" id="text-template"></div>
 
                 <div class="word-bank-box">
-                    <div class="word-bank-title">Dostępne słowa (wybierz 3 pasujące):</div>
+                    <div class="word-bank-title">Wybierz słowa (3 właściwe):</div>
                     <div class="words-flex" id="words-container"></div>
                 </div>
 
                 <button class="btn" id="check-btn" onclick="checkAnswers()">Sprawdź odpowiedź</button>
-                <button class="btn" id="next-btn" style="display: none;" onclick="nextQuestion()">Następne zadanie →</button>
+                <button class="btn" id="next-btn" style="display: none;" onclick="nextQuestion()">Następny dialog →</button>
 
                 <div class="feedback-message" id="feedback"></div>
             </div>
@@ -316,8 +319,8 @@
 
         <div class="completion-screen" id="completion-screen">
             <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
-            <h2>Wspaniale! Wszystkie zadania ukończone!</h2>
-            <p>Świetnie opanowałeś słownictwo i gramatykę sklepową.</p>
+            <h2>Świetnie! Wszystkie dialogi opanowane!</h2>
+            <p>Ukończyłeś wszystkie 20 ćwiczeń konwersacyjnych.</p>
             <a href="module-3-vocab.html" class="btn" style="display: inline-block; width: auto; margin-top: 2rem; text-decoration: none;">Powrót do menu</a>
         </div>
     </div>
@@ -325,144 +328,144 @@
     <script>
         const exercisesData = [
             {
+                emoji: "💰",
+                title: "Pytanie o cenę",
+                template: "— Przepraszam, ile <span class='drop-target' data-blank='0'></span> ten ser?\n— 28 złotych.\n— A ile kosztuje ten chleb?\n— 8 złotych.\n— Rozumiem, dziękuję. Poproszę ser i <span class='drop-target' data-blank='1'></span>. Czy mogę zapłacić <span class='drop-target' data-blank='2'></span>?\n— Tak, oczywiście.",
+                correct: ["kosztuje", "chleb", "kartą"],
+                words: ["kosztuje", "chleb", "kartą", "autobusem", "parkometrem", "wózek"]
+            },
+            {
                 emoji: "🛒",
-                title: "Gdzie wkładamy zakupy?",
-                template: "Kiedy wchodzę do sklepu, biorę duży <span class='drop-target' data-blank='0'></span>. Wkładam do niego wszystkie zakupy. Przed wyjściem idę do <span class='drop-target' data-blank='1'></span>, a po zapłaceniu pakuję wszystko w <span class='drop-target' data-blank='2'></span>.",
-                correct: ["wózek", "kasy", "torbę"],
-                words: ["wózek", "kasy", "torbę", "parkometr", "tramwaj", "bilet"]
+                title: "Wózek i torba",
+                template: "— Przepraszam, gdzie są wózki?\n— <span class='drop-target' data-blank='0'></span> stoją przy wejściu do sklepu.\n— Dziękuję. Biorę jeden <span class='drop-target' data-blank='1'></span> i idę po zakupy.\n— Proszę bardzo. Zakupy może Pan potem spakować w <span class='drop-target' data-blank='2'></span>.",
+                correct: ["Wózki", "wózek", "torbę"],
+                words: ["Wózki", "wózek", "torbę", "półkę", "bilet", "szlaban"]
             },
             {
                 emoji: "🚌",
                 title: "Dojazd na zakupy",
-                template: "Czym jeździmy na zakupy? Często wybieramy <span class='drop-target' data-blank='0'></span> lub tramwaj. Jeśli zakupy są bardzo duże, jedziemy własnym <span class='drop-target' data-blank='1'></span> i zostawiamy go na <span class='drop-target' data-blank='2'></span>.",
-                correct: ["autobus", "samochodem", "parkingu"],
-                words: ["autobus", "samochodem", "parkingu", "wózku", "stole", "półce"]
+                template: "— Czym jedziesz dzisiaj na zakupy?\n— Jadę <span class='drop-target' data-blank='0'></span> numer 10, a Ty?\n— Ja jadę <span class='drop-target' data-blank='1'></span>, bo mam bardzo duże zakupy.\n— Super, to spotkamy się na <span class='drop-target' data-blank='2'></span> przed sklepem!",
+                correct: ["autobusem", "samochodem", "parkingu"],
+                words: ["autobusem", "samochodem", "parkingu", "serem", "kartą", "koszykiem"]
             },
             {
                 emoji: "🥗",
-                title: "Zamówienie na stoisku",
-                template: "Dzień dobry! Dzisiaj na obiad kupuję <span class='drop-target' data-blank='0'></span> oraz świeże warzywa. Proszę też świeży <span class='drop-target' data-blank='1'></span>. Czy mogę zapłacić <span class='drop-target' data-blank='2'></span>?",
-                correct: ["sałatę", "chleb", "kartą"],
-                words: ["sałatę", "chleb", "kartą", "parkometrem", "autobusem", "półką"]
+                title: "Kupujemy warzywa",
+                template: "— Dzień dobry! Co dzisiaj kupujesz?\n— Dzień dobry! Kupuję pomidory i świeżą <span class='drop-target' data-blank='0'></span>.\n— A chcesz też chrupki <span class='drop-target' data-blank='1'></span>?\n— Tak, poproszę. Płacę dzisiaj <span class='drop-target' data-blank='2'></span>.",
+                correct: ["sałatę", "chleb", "gotówką"],
+                words: ["sałatę", "chleb", "gotówką", "autem", "tramwajem", "szlaban"]
             },
             {
-                emoji: "💬",
-                title: "Pytanie o cenę",
-                template: "Przepraszam, nie widzę ceny. Kiedy mówimy '<span class='drop-target' data-blank='0'></span>, ile to kosztuje?'? Wtedy, gdy chcemy poznać cenę produktu. Ekspedientka odpowiada, że towar <span class='drop-target' data-blank='1'></span> dziesięć złotych, więc wyciągam <span class='drop-target' data-blank='2'></span>.",
-                correct: ["Przepraszam", "kosztuje", "gotówkę"],
-                words: ["Przepraszam", "kosztuje", "gotówkę", "wózek", "pomidor", "fakturę"]
-            },
-            {
-                emoji: "🅿️",
-                title: "Wyjazd z parkingu",
-                template: "Co robimy przed wyjazdem z parkingu? Najpierw musimy <span class='drop-target' data-blank='0'></span> bilet w opłatomacie. Potem wkładamy go przy <span class='drop-target' data-blank='1'></span>, żeby szlaban się podniósł i wyjeżdżamy <span class='drop-target' data-blank='2'></span>.",
-                correct: ["scalić/opłacić", "wyjeździe", "autem"],
-                words: ["opłacić", "wyjeździe", "autem", "zjeść", "napisać", "kupić"]
-            },
-            {
-                emoji: "🥛",
-                title: "Szybkie zakupy",
-                template: "Wchodzę do sklepu i biorę mały <span class='drop-target' data-blank='0'></span>. Kupuję zimne <span class='drop-target' data-blank='1'></span> oraz dwa dojrzałe pomidory. Podchodzę do kasy i proszę o <span class='drop-target' data-blank='2'></span>.",
-                correct: ["koszyk", "mleko", "paragon"],
-                words: ["koszyk", "mleko", "paragon", "auto", "przystanek", "ser"]
-            },
-            {
-                emoji: "🧀",
-                title: "Stoisko z nabiałem",
-                template: "Proszę podać mi ten świeży <span class='drop-target' data-blank='0'></span> żółty. Poproszę też cztery <span class='drop-target' data-blank='1'></span> wiejskie. Ile razem <span class='drop-target' data-blank='2'></span>?",
-                correct: ["ser", "jajka", "płacę"],
-                words: ["ser", "jajka", "płacę", "chleb", "wózek", "jeżdżę"]
+                emoji: "💳",
+                title: "Płatność przy kasie",
+                template: "— Dzień dobry. Razem 45 złotych. Płatność kartą czy <span class='drop-target' data-blank='0'></span>?\n— Płacę kartą. Czy mogę prosić o <span class='drop-target' data-blank='1'></span>?\n— Tak, proszę przyłożyć kartę do <span class='drop-target' data-blank='2'></span>.",
+                correct: ["gotówką", "paragon", "terminala"],
+                words: ["gotówką", "paragon", "terminala", "wózka", "tramwaju", "mleka"]
             },
             {
                 emoji: "🥖",
                 title: "W piekarni",
-                template: "Dzień dobry! Proszę świeży <span class='drop-target' data-blank='0'></span> oraz dwie słodkie bułki. Kupuję też ziarnistą <span class='drop-target' data-blank='1'></span>. Czy płatność <span class='drop-target' data-blank='2'></span> jest możliwa?",
-                correct: ["chleb", "bułkę", "gotówką"],
-                words: ["chleb", "bułkę", "gotówką", "autobusem", "sałatę", "parkometrem"]
+                template: "— Dzień dobry! Proszę świeży <span class='drop-target' data-blank='0'></span>.\n— Proszę bardzo. Coś jeszcze?\n— Poproszę też dwie <span class='drop-target' data-blank='1'></span>. Czy można zapłacić <span class='drop-target' data-blank='2'></span>?\n— Tak, jak najbardziej.",
+                correct: ["chleb", "bułki", "kartą"],
+                words: ["chleb", "bułki", "kartą", "parkometrem", "samochodem", "wodą"]
             },
             {
-                emoji: "🍏",
-                title: "Owoce i warzywa",
-                template: "Dzisiaj kupuję zieloną <span class='drop-target' data-blank='0'></span> i słodkie jabłka. Gdzie wkładamy zakupy w sklepie? Wszystkie produkty układam w <span class='drop-target' data-blank='1'></span>. Na koniec ważę owoce na <span class='drop-target' data-blank='2'></span>.",
-                correct: ["sałatę", "wózku", "wadze"],
-                words: ["sałatę", "wózku", "wadze", "fakturze", "samochodzie", "tramwaju"]
+                emoji: "🧀",
+                title: "Stoisko z serem i jajkami",
+                template: "— Dzień dobry, czy jest świeży <span class='drop-target' data-blank='0'></span> żółty?\n— Tak, jest. Ile podać?\n— Poproszę 200 gramów i dziesięć <span class='drop-target' data-blank='1'></span>. Ile <span class='drop-target' data-blank='2'></span>?\n— Razem 22 złote.",
+                correct: ["ser", "jajek", "płacę"],
+                words: ["ser", "jajek", "płacę", "jedziemy", "bilet", "auto"]
             },
             {
-                emoji: "💳",
-                title: "Dialog przy kasie",
-                template: "— Czy płaci Pan kartą czy <span class='drop-target' data-blank='0'></span>?\n— Płacę kartą. Czy mogę prosić o <span class='drop-target' data-blank='1'></span>?\n— Tak, proszę przyłożyć kartę do <span class='drop-target' data-blank='2'></span>.",
-                correct: ["gotówką", "paragon", "terminala"],
-                words: ["gotówką", "paragon", "terminala", "koszyka", "chleba", "auta"]
+                emoji: "🧺",
+                title: "Szybkie zakupy",
+                template: "— Bierzemy duży wózek czy mały <span class='drop-target' data-blank='0'></span>?\n— Mały wystarczy, mam na liście tylko <span class='drop-target' data-blank='1'></span> i ser.\n— Dobrze. Pamiętaj, żeby wziąć <span class='drop-target' data-blank='2'></span> przy kasie!",
+                correct: ["koszyk", "mleko", "paragon"],
+                words: ["koszyk", "mleko", "paragon", "autobus", "szlaban", "bilet"]
             },
             {
-                emoji: "📢",
-                title: "Ogłoszenie w supermarkecie",
-                template: "Uwaga Klienci! Świeży <span class='drop-target' data-blank='0'></span> chrupki dzisiaj w promocji! Zapewniamy darmowy parking dla każdego <span class='drop-target' data-blank='1'></span>. Zapraszamy do <span class='drop-target' data-blank='2'></span> numer 4!",
-                correct: ["chleb", "samochodu", "kasy"],
-                words: ["chleb", "samochodu", "kasy", "mleka", "drogą", "autobusu"]
+                emoji: "📍",
+                title: "Szukanie produktów",
+                template: "— <span class='drop-target' data-blank='0'></span>, gdzie znajdę zieloną sałatę?\n— Sałata jest na <span class='drop-target' data-blank='1'></span> z warzywami.\n— Dziękuję bardzo! Wkładam ją do <span class='drop-target' data-blank='2'></span>.",
+                correct: ["Przepraszam", "półce", "koszyka"],
+                words: ["Przepraszam", "półce", "koszyka", "samochodu", "parkometru", "płacę"]
             },
             {
-                emoji: "🛍️",
-                title: "Duże zakupy weekendowe",
-                template: "W sobotę robimy duże zakupy. Czym jeździmy na zakupy? Najczęściej jedziemy <span class='drop-target' data-blank='0'></span>. W sklepie biorę duży <span class='drop-target' data-blank='1'></span>, a na koniec proszę o mocną <span class='drop-target' data-blank='2'></span>.",
-                correct: ["samochodem", "wózek", "torbę"],
-                words: ["samochodem", "wózek", "torbę", "przepraszam", "wodą", "kasie"]
+                emoji: "🍎",
+                title: "Owoce i dodatki",
+                template: "— Dzień dobry, ile kosztują te <span class='drop-target' data-blank='0'></span>?\n— 6 złotych za kilogram.\n— To poproszę dwa kilogramy i świeży <span class='drop-target' data-blank='1'></span>.\n— Dobrze, czy podać też <span class='drop-target' data-blank='2'></span> na zakupy?",
+                correct: ["jabłka", "chleb", "torbę"],
+                words: ["jabłka", "chleb", "torbę", "autobus", "tramwaj", "bilet"]
+            },
+            {
+                emoji: "💵",
+                title: "Gotówka i reszta",
+                template: "— Razem 18 złotych.\n— Płacę <span class='drop-target' data-blank='0'></span>, oto 20 złotych.\n— Dziękuję, oto dwa złote <span class='drop-target' data-blank='1'></span> i dla Pana <span class='drop-target' data-blank='2'></span>.\n— Dziękuję, miłego dnia!",
+                correct: ["gotówką", "reszty", "paragon"],
+                words: ["gotówką", "reszty", "paragon", "samochód", "szlaban", "półka"]
             },
             {
                 emoji: "🥩",
-                title: "Na stoisku mięsnym",
-                template: "Dzień dobry, proszę <span class='drop-target' data-blank='0'></span> szynki i świeże mięso. Pytam sprzedawcę: 'Ile to <span class='drop-target' data-blank='1'></span>?'. Odpowiedź brzmi: 30 złotych, więc płacę <span class='drop-target' data-blank='2'></span>.",
-                correct: ["kawałek", "kosztuje", "kartą"],
-                words: ["kawałek", "kosztuje", "kartą", "parkingu", "autobusem", "sałatę"]
+                title: "Stoisko mięsne",
+                template: "— Dzień dobry! Ile <span class='drop-target' data-blank='0'></span> ta szynka?\n— 35 złotych za kilogram.\n— Poproszę jeden <span class='drop-target' data-blank='1'></span>. Płacę zbliżeniowo <span class='drop-target' data-blank='2'></span>.\n— Dobrze, terminal jest gotowy.",
+                correct: ["kosztuje", "kawałek", "kartą"],
+                words: ["kosztuje", "kawałek", "kartą", "tramwajem", "wózkiem", "sałatą"]
             },
             {
-                emoji: "🏷️",
-                title: "Hasło reklamowe",
-                template: "Kupuj u nas! Oferujemy chrupiący <span class='drop-target' data-blank='0'></span>, świeżą zieloną <span class='drop-target' data-blank='1'></span> oraz ekologiczne owoce. Za zakupy zapłacisz wygodnie <span class='drop-target' data-blank='2'></span> lub kartą!",
-                correct: ["chleb", "sałatę", "gotówką"],
-                words: ["chleb", "sałatę", "gotówką", "tramwajem", "wózkiem", "biletem"]
-            },
-            {
-                emoji: "❓",
-                title: "Pytanie w alei sklepowej",
-                template: "Gdy nie znam ceny, pytam: '<span class='drop-target' data-blank='0'></span>, ile to kosztuje?'. Pracownik wskazuje cenę na <span class='drop-target' data-blank='1'></span>. Wkładam produkt do <span class='drop-target' data-blank='2'></span> i idę dalej.",
-                correct: ["Przepraszam", "półce", "koszyka"],
-                words: ["Przepraszam", "półce", "koszyka", "samochodu", "parkometru", "gotówki"]
-            },
-            {
-                emoji: "🚗",
-                title: "Informacja o parkingu",
-                template: "Nasz parking jest darmowy przez godzinę. Zostaw tu swój <span class='drop-target' data-blank='0'></span>. Co robimy przed wyjazdem z parkingu? Musimy skanować <span class='drop-target' data-blank='1'></span> przy wyjeździe, żeby podnieść <span class='drop-target' data-blank='2'></span>.",
-                correct: ["samochód", "bilet", "szlaban"],
-                words: ["samochód", "bilet", "szlaban", "chleb", "sałatę", "wózek"]
-            },
-            {
-                emoji: "🍊",
-                title: "Sok i owoce",
-                template: "Kupuję świeże pomarańcze na sok i zieloną <span class='drop-target' data-blank='0'></span>. Proszę też chrupiący <span class='drop-target' data-blank='1'></span>. Czy dostanę <span class='drop-target' data-blank='2'></span> do płatności?",
-                correct: ["sałatę", "chleb", "potwierdzenie"],
-                words: ["sałatę", "chleb", "potwierdzenie", "autobus", "tramwaj", "parking"]
-            },
-            {
-                emoji: "🧾",
-                title: "Prośba przy kasie",
-                template: "Po uskanowaniu produktów kasjer pyta o płatność. Odpowiadam: 'Płacę <span class='drop-target' data-blank='0'></span>'. Proszę świeży <span class='drop-target' data-blank='1'></span> do osobnej reklamówki i biorę mój <span class='drop-target' data-blank='2'></span>.",
-                correct: ["kartą", "chleb", "paragon"],
-                words: ["kartą", "chleb", "paragon", "samochodem", "autobusem", "parkometrem"]
-            },
-            {
-                emoji: "🚏",
-                title: "Powrót z zakupów",
-                template: "Kończymy zakupy. Czym jeździmy na zakupy, gdy nie mamy auta? Często jeździmy <span class='drop-target' data-blank='0'></span>. Dzisiaj wracamy jednak <span class='drop-target' data-blank='1'></span>. Zakupy trzymamy w dużej <span class='drop-target' data-blank='2'></span>.",
-                correct: ["autobusem", "tramwajem", "torbie"],
-                words: ["autobusem", "tramwajem", "torbie", "sałacie", "paragonie", "wózku"]
+                emoji: "🛍️",
+                title: "Powrót ze sklepu",
+                template: "— Masz już wszystkie zakupy w <span class='drop-target' data-blank='0'></span>?\n— Tak, mam chleb, ser i <span class='drop-target' data-blank='1'></span>.\n— Czym wracamy do domu?\n— Wracamy <span class='drop-target' data-blank='2'></span> numer 4.",
+                correct: ["torbie", "sałatę", "tramwajem"],
+                words: ["torbie", "sałatę", "tramwajem", "paragonem", "parkometrem", "szlabanem"]
             },
             {
                 emoji: "🏪",
-                title: "Szybka wizyta w osiedlowym sklepie",
-                template: "Wchodzę do małego sklepu. Kupuję świeżą <span class='drop-target' data-blank='0'></span> i wiejskie masło. Proszę też cieplutki <span class='drop-target' data-blank='1'></span>. Płacę odliczoną <span class='drop-target' data-blank='2'></span>.",
-                correct: ["sałatę", "chleb", "gotówką"],
-                words: ["sałatę", "chleb", "gotówką", "autobusem", "szlabanem", "parkometrem"]
+                title: "W małym sklepie",
+                template: "— Dzień dobry! Proszę jedno <span class='drop-target' data-blank='0'></span> i świeży chleb.\n— Proszę bardzo. Coś jeszcze?\n— Poproszę jeszcze jedną <span class='drop-target' data-blank='1'></span>.\n— Dobrze, razem 15 złotych. Płaci Pani <span class='drop-target' data-blank='2'></span>?",
+                correct: ["mleko", "sałatę", "gotówką"],
+                words: ["mleko", "sałatę", "gotówką", "autobusem", "wózkiem", "bilet"]
+            },
+            {
+                emoji: "🛍️",
+                title: "Pytanie o reklamówkę",
+                template: "— Czy potrzebuje Pan <span class='drop-target' data-blank='0'></span> na zakupy?\n— Tak, <span class='drop-target' data-blank='1'></span> jedną dużą.\n— Dobrze, doliczam 1 złoty. Czy wydrukować <span class='drop-target' data-blank='2'></span>?\n— Tak, poproszę.",
+                correct: ["torby", "poproszę", "paragon"],
+                words: ["torby", "poproszę", "paragon", "auto", "półkę", "ser"]
+            },
+            {
+                emoji: "🧾",
+                title: "Kolejka do kasy",
+                template: "— Przepraszam, czy ta <span class='drop-target' data-blank='0'></span> jest otwarta?\n— Tak, zapraszam! Proszę położyć zakupy na <span class='drop-target' data-blank='1'></span>.\n— Dziękuję. Będę płacić <span class='drop-target' data-blank='2'></span>.",
+                correct: ["kasa", "taśmę", "kartą"],
+                words: ["kasa", "taśmę", "kartą", "autobusem", "szlabanem", "chlebem"]
+            },
+            {
+                emoji: "💧",
+                title: "Pytanie o napoje",
+                template: "— Woda stoi na dole, tam na <span class='drop-target' data-blank='0'></span>.\n— Dobrze, wezmę dwie butelki i włożę do <span class='drop-target' data-blank='1'></span>.\n— A ile <span class='drop-target' data-blank='2'></span> ta woda?\n— 3 złote za butelkę.",
+                correct: ["półce", "wózka", "kosztuje"],
+                words: ["półce", "wózka", "kosztuje", "przepraszam", "tramwajem", "bilet"]
+            },
+            {
+                emoji: "🥖",
+                title: "Drobne zakupy",
+                template: "— Przepraszam, czy masz 5 złotych?\n— Mam tylko <span class='drop-target' data-blank='0'></span> w portfelu.\n— Szkoda, bo chcę kupić ten świeży <span class='drop-target' data-blank='1'></span>.\n— To nic, możesz przecież zapłacić <span class='drop-target' data-blank='2'></span>!",
+                correct: ["gotówkę", "chleb", "kartą"],
+                words: ["gotówkę", "chleb", "kartą", "autobusem", "torbie", "półce"]
+            },
+            {
+                emoji: "🚗",
+                title: "Przed sklepem",
+                template: "— Zostawiasz auto na <span class='drop-target' data-blank='0'></span>?\n— Tak. A Ty czym przyjechałeś?\n— Ja przyjechałem <span class='drop-target' data-blank='1'></span>.\n— O, to weźmy duży <span class='drop-target' data-blank='2'></span> na zakupy i chodźmy do środka.",
+                correct: ["parkingu", "autobusem", "wózek"],
+                words: ["parkingu", "autobusem", "wózek", "paragon", "szlaban", "sałatę"]
+            },
+            {
+                emoji: "🥐",
+                title: "Świeże bułki",
+                template: "— Dzień dobry! Czy jest dzisiaj świeży <span class='drop-target' data-blank='0'></span>?\n— Tak, prosto z pieca!\n— Poproszę jeden i jeszcze dwie słodkie <span class='drop-target' data-blank='1'></span>.\n— Razem 14 złotych. Podać też <span class='drop-target' data-blank='2'></span>?\n— Nie, dziękuję, mam własną.",
+                correct: ["chleb", "bułki", "torbę"],
+                words: ["chleb", "bułki", "torbę", "tramwaj", "szlaban", "wózek"]
             }
         ];
 
@@ -565,7 +568,7 @@
 
             if (isCorrect) {
                 feedback.className = 'feedback-message correct';
-                feedback.textContent = 'Świetnie! Wszystkie słowa zostały dopasowane poprawnie!';
+                feedback.textContent = 'Świetnie! Dialog został uzupełniony poprawnie!';
                 document.getElementById('check-btn').style.display = 'none';
                 document.getElementById('next-btn').style.display = 'block';
             } else {
