@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 1 – Test Końcowy</title>
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --primary-hover: #27ae60;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-color: #e2e8f0;
+            --error-color: #e74c3c;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        /* Top Bar */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            color: var(--primary-green);
+        }
+
+        /* Test Card */
+        .test-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .test-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background: var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--primary-green);
+            transition: width 0.3s ease;
+        }
+
+        /* Question Box */
+        .question-box {
+            display: none;
+        }
+
+        .question-box.active {
+            display: block;
+        }
+
+        .question-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+        }
+
+        .question-desc {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        /* Options & Inputs */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .option-btn {
+            background: #fff;
+            border: 2px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-green);
+            background: #f4fbf7;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            outline: none;
+        }
+
+        .text-input:focus {
+            border-color: var(--primary-green);
+        }
+
+        /* Sentence Building Area */
+        .word-pool, .sentence-builder {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 1rem;
+            border-radius: 12px;
+            min-height: 60px;
+        }
+
+        .sentence-builder {
+            border: 2px dashed var(--border-color);
+            margin-bottom: 1rem;
+            background: #fafafa;
+        }
+
+        .word-chip {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* Checkbox Group (Owoce) */
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .checkbox-label input {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Action Buttons */
+        .action-area {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            padding: 0.9rem 2rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Results Card */
+        .results-box {
+            text-align: center;
+            display: none;
+        }
+
+        .results-score {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary-green);
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="top-nav">
+        <a href="module-1.html" class="back-link">← Przerwij i wróć do modułu</a>
+        <span id="question-counter" style="font-weight:700; color:var(--text-muted);">Pytanie 1 z 6</span>
+    </div>
+
+    <div class="test-card">
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <br>
+
+        <!-- Q1: Wybór Wielokrotny (Owoce) -->
+        <div class="question-box active" id="q1">
+            <h2 class="question-title">1. Zaznacz wszystkie owoce z poniższej listy:</h2>
+            <p class="question-desc">Wybierz poprawne odpowiedzi (może być więcej niż jedna).</p>
+            <div class="checkbox-group">
+                <label class="checkbox-label"><input type="checkbox" value="truskawki"> Truskawki 🍓</label>
+                <label class="checkbox-label"><input type="checkbox" value="chleb"> Chleb 🍞</label>
+                <label class="checkbox-label"><input type="checkbox" value="borówki"> Borówki 🫐</label>
+                <label class="checkbox-label"><input type="checkbox" value="ser"> Ser żółty 🧀</label>
+            </div>
+        </div>
+
+        <!-- Q2: Pisanie ze słownika -->
+        <div class="question-box" id="q2">
+            <h2 class="question-title">2. Przetłumacz i wpisz po polsku odpowiednik słowa:</h2>
+            <p class="question-desc">Słowo do przetłumaczenia: <strong>"Apple pie"</strong></p>
+            <p style="margin-bottom: 0.5rem; font-weight: 600;">Zdanie: "Poproszę kawałek..."</p>
+            <input type="text" id="q2-input" class="text-input" placeholder="Wpisz np. ciasto jabłkowe" autocomplete="off">
+        </div>
+
+        <!-- Q3: Układanie wyrazów w kolejności -->
+        <div class="question-box" id="q3">
+            <h2 class="question-title">3. Ułóż słowa we właściwej kolejności:</h2>
+            <p class="question-desc">Klikaj słowa, aby ułożyć poprawne zdanie.</p>
+            
+            <div class="sentence-builder" id="sentence-target"></div>
+            <div class="word-pool" id="sentence-source">
+                <span class="word-chip" onclick="moveWord(this)">lodówce.</span>
+                <span class="word-chip" onclick="moveWord(this)">Mleko</span>
+                <span class="word-chip" onclick="moveWord(this)">w</span>
+                <span class="word-chip" onclick="moveWord(this)">jest</span>
+            </div>
+        </div>
+
+        <!-- Q4: Przypadek gramatyczny -->
+        <div class="question-box" id="q4">
+            <h2 class="question-title">4. Określ przypadek wyróżnionego słowa:</h2>
+            <p class="question-desc">Zdanie: "Kawa stoi na <strong>stole</strong>."</p>
+            <div class="options-grid">
+                <button class="option-btn" onclick="selectRadio('q4', 'mianownik')">A) Mianownik (Kto? Co?)</button>
+                <button class="option-btn" onclick="selectRadio('q4', 'biernik')">B) Biernik (Kogo? Co?)</button>
+                <button class="option-btn" onclick="selectRadio('q4', 'miejscownik')">C) Miejscownik (O kim? O czym? / Gdzie?)</button>
+                <button class="option-btn" onclick="selectRadio('q4', 'dopelniacz')">D) Dopełniacz (Kogo? Czego?)</button>
+            </div>
+        </div>
+
+        <!-- Q5: Gramatyka / Wybór zdania -->
+        <div class="question-box" id="q5">
+            <h2 class="question-title">5. Wybierz poprawną formę zdania:</h2>
+            <p class="question-desc">Chcesz zamówić zimny napój. Które zdanie jest poprawne?</p>
+            <div class="options-grid">
+                <button class="option-btn" onclick="selectRadio('q5', 'A')">A) Poproszę woda z lodem.</button>
+                <button class="option-btn" onclick="selectRadio('q5', 'B')">B) Poproszę wodę z lodem.</button>
+                <button class="option-btn" onclick="selectRadio('q5', 'C')">C) Poproszę wodę z lodu.</button>
+            </div>
+        </div>
+
+        <!-- Q6: Dopasowanie kontekstowe -->
+        <div class="question-box" id="q6">
+            <h2 class="question-title">6. Dokąd włożysz te produkty po zakupach?</h2>
+            <p class="question-desc">Uzupełnij lukę w zdaniu: "Sery, mleko i masło muszę schować do ________."</p>
+            <input type="text" id="q6-input" class="text-input" placeholder="Wpisz słowo..." autocomplete="off">
+        </div>
+
+        <!-- Ekran Wyników -->
+        <div class="results-box" id="results">
+            <h2>🎉 Gratulacje! Test ukończony!</h2>
+            <p class="question-desc">Twój wynik końcowy:</p>
+            <div class="results-score" id="score-text">0 / 6</div>
+            <p id="feedback-text" style="margin-bottom: 2rem; font-weight: 600; color: var(--text-muted);"></p>
+            <a href="module-1.html" class="btn">Wróć do strony modułu</a>
+        </div>
+
+        <!-- Przycisk Dalej -->
+        <div class="action-area" id="action-area">
+            <button class="btn" id="next-btn" onclick="nextQuestion()">Następne pytanie →</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentStep = 1;
+    const totalSteps = 6;
+    let score = 0;
+    
+    // Odpowiedzi tymczasowe
+    let answers = {
+        q4: null,
+        q5: null
+    };
+
+    function updateProgress() {
+        const percent = ((currentStep - 1) / totalSteps) * 100;
+        document.getElementById('progress-bar').style.width = percent + '%';
+        if(currentStep <= totalSteps) {
+            document.getElementById('question-counter').textContent = `Pytanie ${currentStep} z ${totalSteps}`;
+        } else {
+            document.getElementById('question-counter').textContent = `Koniec testu`;
+        }
+    }
+
+    // Obsługa układania wyrazów (Q3)
+    function moveWord(chip) {
+        const target = document.getElementById('sentence-target');
+        const source = document.getElementById('sentence-source');
+        
+        if (chip.parentElement === source) {
+            target.appendChild(chip);
+        } else {
+            source.appendChild(chip);
+        }
+    }
+
+    // Obsługa wyboru z przycisków (Q4 i Q5)
+    function selectRadio(qKey, value) {
+        answers[qKey] = value;
+        const container = document.getElementById(qKey);
+        const btns = container.querySelectorAll('.option-btn');
+        btns.forEach(btn => btn.style.borderColor = 'var(--border-color)');
+        event.currentTarget.style.borderColor = 'var(--primary-green)';
+    }
+
+    function calculateScore() {
+        // Q1: Owoce (truskawki + borówki)
+        const q1Checked = Array.from(document.querySelectorAll('#q1 input[type="checkbox"]:checked')).map(c => c.value);
+        if (q1Checked.length === 2 && q1Checked.includes('truskawki') && q1Checked.includes('borówki')) {
+            score++;
+        }
+
+        // Q2: Pisanie (ciasto jabłkowe)
+        const q2Val = document.getElementById('q2-input').value.trim().toLowerCase();
+        if (q2Val === 'ciasto jabłkowe' || q2Val === 'jabłkowe') {
+            score++;
+        }
+
+        // Q3: Zdanie "Mleko jest w lodówce."
+        const constructedSentence = Array.from(document.getElementById('sentence-target').children)
+            .map(c => c.textContent).join(' ');
+        if (constructedSentence === 'Mleko jest w lodówce.') {
+            score++;
+        }
+
+        // Q4: Miejscownik
+        if (answers.q4 === 'miejscownik') {
+            score++;
+        }
+
+        // Q5: Poprawna forma "wodę z lodem"
+        if (answers.q5 === 'B') {
+            score++;
+        }
+
+        // Q6: Lodówka
+        const q6Val = document.getElementById('q6-input').value.trim().toLowerCase();
+        if (q6Val === 'lodówki' || q6Val === 'lodówka' || q6Val === 'lodowki') {
+            score++;
+        }
+    }
+
+    function nextQuestion() {
+        // Schowaj obecne pytanie
+        document.getElementById(`q${currentStep}`).classList.remove('active');
+        
+        currentStep++;
+
+        if (currentStep <= totalSteps) {
+            document.getElementById(`q${currentStep}`).classList.add('active');
+            updateProgress();
+            
+            if (currentStep === totalSteps) {
+                document.getElementById('next-btn').textContent = "Zakończ test 🏆";
+            }
+        } else {
+            // Koniec testu
+            calculateScore();
+            document.getElementById('action-area').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('progress-bar').style.width = '100%';
+            
+            document.getElementById('score-text').textContent = `${score} / ${totalSteps}`;
+            
+            const feedback = document.getElementById('feedback-text');
+            if (score >= 4) {
+                feedback.textContent = "Wspaniale! Świetnie opanowałeś słownictwo i gramatykę z tego modułu!";
+            } else {
+                feedback.textContent = "Dobra robota, ale warto jeszcze powtórzyć niektóre etapy.";
+            }
+
+            // ZAPIS POSTĘPU W LOCALSTORAGE (Zaliczenie Etapu 6)
+            saveCompletion();
+        }
+    }
+
+    function saveCompletion() {
+        const MODULE_KEY = 'm1_progress';
+        let progress = {
+            stage1: true,
+            stage2: true,
+            stage3: true,
+            stage4: true,
+            stage5: true,
+            stage6: false
+        };
+
+        const saved = localStorage.getItem(MODULE_KEY);
+        if (saved) {
+            try { progress = JSON.parse(saved); } catch(e) {}
+        }
+
+        // Oznaczenie Etapu 6 jako zaliczony
+        progress.stage6 = true;
+        localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
+    }
+
+    // Inicjalizacja
+    updateProgress();
+</script>
+
+</body>
+</html>
