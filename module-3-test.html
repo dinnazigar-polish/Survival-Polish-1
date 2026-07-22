@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moduł 3 – Etap 7: Test Końcowy</title>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <title>Ćwiczenia Sklepowe – Uzupełnianie Luk</title>
     <style>
         :root {
             --primary-green: #2ecc71;
@@ -36,11 +35,10 @@
         }
 
         .container {
-            max-width: 700px;
+            max-width: 750px;
             margin: 0 auto;
         }
 
-        /* Top Navigation */
         .top-nav {
             display: flex;
             justify-content: space-between;
@@ -56,7 +54,6 @@
             text-decoration: none;
             font-weight: 600;
             font-size: 1rem;
-            transition: color 0.2s ease;
         }
 
         .back-link:hover {
@@ -72,7 +69,22 @@
             font-size: 0.95rem;
         }
 
-        /* Progress Bar */
+        .header-title-box {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-title-box h1 {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 0.3rem;
+        }
+
+        .header-title-box p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
         .progress-track {
             width: 100%;
             height: 10px;
@@ -89,65 +101,107 @@
             transition: width 0.3s ease;
         }
 
-        /* Question Card */
-        .test-card {
+        .exercise-card {
             background-color: var(--card-bg);
             border-radius: 24px;
-            padding: 2.5rem 2rem;
+            padding: 2rem;
             box-shadow: var(--shadow-soft);
             border: 2px solid var(--border-light);
             margin-bottom: 1.5rem;
         }
 
-        .question-category {
-            display: inline-block;
-            background-color: var(--badge-green-bg);
-            color: var(--primary-green);
-            font-size: 0.85rem;
-            font-weight: 700;
-            padding: 0.3rem 0.8rem;
-            border-radius: 12px;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
+        .exercise-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-light);
         }
 
-        .question-title {
-            font-size: 1.3rem;
-            font-weight: 700;
+        .exercise-header .icon {
+            font-size: 2.2rem;
+        }
+
+        .exercise-header h3 {
+            font-size: 1.25rem;
             color: var(--text-dark);
+        }
+
+        .text-box {
+            background-color: #f1f5f9;
+            border-radius: 16px;
+            padding: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .drop-target {
+            display: inline-block;
+            min-width: 110px;
+            padding: 0.2rem 0.6rem;
+            margin: 0 0.2rem;
+            border: 2px dashed var(--primary-green);
+            border-radius: 8px;
+            background-color: #ffffff;
+            text-align: center;
+            font-weight: 700;
+            color: var(--primary-green-hover);
+            vertical-align: middle;
+        }
+
+        .drop-target.filled {
+            border-style: solid;
+            background-color: var(--badge-green-bg);
+        }
+
+        .word-bank-box {
+            background-color: var(--badge-green-bg);
+            border-radius: 16px;
+            padding: 1.2rem;
+            border: 2px solid var(--border-light);
             margin-bottom: 1.5rem;
         }
 
-        .options-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
+        .word-bank-title {
+            font-weight: 700;
+            color: var(--primary-green-hover);
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .option-btn {
+        .words-flex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+
+        .word-chip {
             background-color: var(--card-bg);
             border: 2px solid var(--border-light);
-            border-radius: 16px;
-            padding: 1rem 1.2rem;
-            font-size: 1.05rem;
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: var(--text-dark);
             cursor: pointer;
-            text-align: left;
             transition: all 0.2s ease;
-            font-family: inherit;
+            user-select: none;
         }
 
-        .option-btn:hover:not(:disabled) {
+        .word-chip:hover {
             border-color: var(--primary-green);
-            background-color: var(--badge-green-bg);
+            background-color: #f0fdf4;
         }
 
-        .option-btn.selected {
-            border-color: var(--primary-green);
-            background-color: var(--badge-green-bg);
-            color: var(--primary-green);
-            font-weight: 700;
+        .word-chip.selected {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background-color: #e2e8f0;
         }
 
         .btn {
@@ -159,245 +213,429 @@
             border-radius: 30px;
             border: none;
             cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
             transition: background-color 0.2s ease;
             width: 100%;
-            margin-top: 1.5rem;
+            margin-top: 0.5rem;
         }
 
         .btn:hover {
             background-color: var(--primary-green-hover);
         }
 
-        /* Results Screen */
-        .result-screen {
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .feedback-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-align: center;
             display: none;
+        }
+
+        .feedback-message.correct {
+            background-color: var(--badge-green-bg);
+            color: var(--primary-green-hover);
+            border: 1px solid var(--primary-green);
+        }
+
+        .feedback-message.wrong {
+            background-color: var(--error-bg);
+            color: var(--error-red);
+            border: 1px solid var(--error-red);
+        }
+
+        .completion-screen {
+            display: none;
+            text-align: center;
             background-color: var(--card-bg);
             border-radius: 24px;
             padding: 3rem 2rem;
-            text-align: center;
             box-shadow: var(--shadow-soft);
             border: 2px solid var(--border-light);
         }
 
-        .stars-container {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            letter-spacing: 0.5rem;
-        }
-
-        .score-circle {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            background-color: var(--badge-green-bg);
-            color: var(--primary-green);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin: 1.5rem auto;
-            border: 4px solid var(--primary-green);
-        }
-
-        .result-screen h2 {
+        .completion-screen h2 {
             font-size: 2rem;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
 
-        .result-screen p {
-            color: var(--text-muted);
-            margin-bottom: 2rem;
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 999;
         }
     </style>
 </head>
 <body>
 
+    <canvas id="confetti-canvas"></canvas>
+
     <div class="container">
-        <!-- Navigation Header -->
         <div class="top-nav">
-            <a href="module3.html" class="back-link">
-                ← Powrót do Modułu 3
-            </a>
-            <span class="counter-badge" id="question-counter">Pytanie 1 / 30</span>
+            <a href="module-3-vocab.html" class="back-link">← Powrót do Modułu 3</a>
+            <span class="counter-badge" id="question-counter">Zadanie 1 / 20</span>
         </div>
 
-        <!-- Progress Bar -->
+        <div class="header-title-box">
+            <h1>Uzupełnij luki</h1>
+            <p>Wybierz właściwe słowa z podanej puli, aby stworzyć poprawny tekst.</p>
+        </div>
+
         <div class="progress-track">
             <div class="progress-fill" id="progress-bar"></div>
         </div>
 
-        <!-- Test Question Area -->
-        <div id="test-container">
-            <div class="test-card">
-                <span class="question-category" id="q-category">Słownictwo</span>
-                <div class="question-title" id="q-title">Co oznacza "paragon"?</div>
-                <div class="options-list" id="options-container"></div>
-                <button class="btn" id="next-btn" onclick="nextQuestion()" disabled>Dalej →</button>
+        <div id="exercise-container">
+            <div class="exercise-card">
+                <div class="exercise-header">
+                    <span class="icon" id="card-emoji">🛒</span>
+                    <h3 id="card-title">Tytuł ćwiczenia</h3>
+                </div>
+
+                <div class="text-box" id="text-template"></div>
+
+                <div class="word-bank-box">
+                    <div class="word-bank-title">Dostępne słowa (wybierz 3 pasujące):</div>
+                    <div class="words-flex" id="words-container"></div>
+                </div>
+
+                <button class="btn" id="check-btn" onclick="checkAnswers()">Sprawdź odpowiedź</button>
+                <button class="btn" id="next-btn" style="display: none;" onclick="nextQuestion()">Następne zadanie →</button>
+
+                <div class="feedback-message" id="feedback"></div>
             </div>
         </div>
 
-        <!-- Results Screen -->
-        <div class="result-screen" id="result-screen">
-            <div class="stars-container" id="stars-display">⭐⭐⭐</div>
-            <h2 id="result-title">Koniec Testu!</h2>
-            <div class="score-circle" id="score-circle">100%</div>
-            <p id="result-text">Doskonały wynik! Ukończyłeś cały Moduł 3 z zakupy z listą!</p>
-            <a href="module3.html" class="btn">Powrót do menu modułu</a>
+        <div class="completion-screen" id="completion-screen">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+            <h2>Wspaniale! Wszystkie zadania ukończone!</h2>
+            <p>Świetnie opanowałeś słownictwo i gramatykę sklepową.</p>
+            <a href="module-3-vocab.html" class="btn" style="display: inline-block; width: auto; margin-top: 2rem; text-decoration: none;">Powrót do menu</a>
         </div>
     </div>
 
     <script>
-        const testQuestions = [
-            // Vocabulary (10)
-            { category: "Słownictwo", q: "Co to jest 'paragon'?", opts: ["Dowód zakupu ze sklepu", "Karta do płacenia", "Miejsce na parking"], correct: 0 },
-            { category: "Słownictwo", q: "Co oznacza słowo 'gotówka'?", opts: ["Pieniądze papierowe / monety", "Płatność telefonem", "Bilet na autobus"], correct: 0 },
-            { category: "Słownictwo", q: "Gdzie kupisz świeży chleb i bułki?", opts: ["W sklepie / piekarni", "W parkometrze", "W tramwaju"], correct: 0 },
-            { category: "Słownictwo", q: "Co jest potrzebne do mycia włosów?", opts: ["Szampon", "Mydło", "Sałata"], correct: 0 },
-            { category: "Słownictwo", q: "Gdzie płacimy za zakupy?", opts: ["Przy kasie", "W wózku", "W parkometrze"], correct: 0 },
-            { category: "Słownictwo", q: "Co wkładamy do parkometru?", opts: ["Monety / gotówkę lub kartę", "Jajka", "Mydło"], correct: 0 },
-            { category: "Słownictwo", q: "Czym jeździmy po mieście?", opts: ["Autobusem i tramwajem", "Torba", "Dużym wózkiem"], correct: 0 },
-            { category: "Słownictwo", q: "Co jest słodkim deserem na urodziny?", opts: ["Tort", "Ogórek", "Sałata"], correct: 0 },
-            { category: "Słownictwo", q: "Co służy do noszenia zakupów ze sklepu?", opts: ["Torba", "Mydło", "Bilet parkingowy"], correct: 0 },
-            { category: "Słownictwo", q: "Co dzieci lubią układać?", opts: ["Klocki", "Paragon", "Szampon"], correct: 0 },
-
-            // Grammar (10)
-            { category: "Gramatyka", q: "Poprawna forma: Kupuję ______ (sałata).", opts: ["sałatę", "sałata", "sałatą"], correct: 0 },
-            { category: "Gramatyka", q: "Poprawna forma: Proszę świeży ______ (chleb).", opts: ["chleb", "chleba", "chlebem"], correct: 0 },
-            { category: "Gramatyka", q: "Poprawna forma: Płacę ______ (karta płatnicza).", opts: ["kartą płatniczą", "kartę płatniczą", "karta płatnicza"], correct: 0 },
-            { category: "Gramatyka", q: "Poprawna forma: Jadę do sklepu ______ (autobus).", opts: ["autobusem", "autobus", "autobusu"], correct: 0 },
-            { category: "Gramatyka", q: "Poprawna forma: Lubię ______ (robić zakupy).", opts: ["robić zakupy", "robisz zakupy", "robimy zakupy"], correct: 0 },
-            { category: "Gramatyka", q: "Poprawna forma: Masz ______ (duży wózek)?", opts: ["duży wózek", "dużym wózkiem", "dużego wózka"], correct: 0 },
-            { category: "Gramatyka", q: "Poprawna forma: Płacę ______ (gotówka).", opts: ["gotówką", "gotówkę", "gotówka"], correct: 0 },
-            { category: "Gramatyka", q: "Poprawna forma: Chcę ______ (pomagać).", opts: ["pomagać", "pomagam", "pomaga"], correct: 0 },
-            { category: "Gramatyka", q: "Poprawna forma: Kupuję sześć ______ (jajka).", opts: ["jajek", "jajka", "jajkiem"], correct: 0 },
-            { category: "Gramatyka", q: "Poprawna forma: Potrzebuję ______ (bilet parkingowy).", opts: ["bilet parkingowy", "biletem parkingowym", "bilety parkingowe"], correct: 0 },
-
-            // Dialogues & Practice (10)
-            { category: "Dialogi", q: "Co mówimy na wejście do sklepu?", opts: ["Dzień dobry!", "Do widzenia!", "Ile to kosztuje?"], correct: 0 },
-            { category: "Dialogi", q: "Pytanie: 'Płatność kartą czy gotówką?' Odpowiedź:", opts: ["Kartą, proszę.", "Dziękuję, nie mam.", "To jest parking."], correct: 0 },
-            { category: "Dialogi", q: "Pytanie: 'Czy potrzebuje Pan paragon?' Odpowiedź:", opts: ["Tak, proszę.", "Nie, to jest sok.", "Jadę tramwajem."], correct: 0 },
-            { category: "Dialogi", q: "Pytanie: 'W czym mogę pomóc?' Odpowiedź:", opts: ["Szukam świeżego sera i chleba.", "Mam bilet parkingowy.", "Zapłacę w parkometrze."], correct: 0 },
-            { category: "Dialogi", q: "Co robimy przed wyjazdem z płatnego parkingu?", opts: ["Płacimy w parkometrze za bilet", "Kupujemy sałatę", "Szukamy wózka"], correct: 0 },
-            { category: "Dialogi", q: "Kiedy mówimy 'Przepraszam, ile to kosztuje?'", opts: ["Gdy chcemy poznać cenę produktu", "Gdy wychodzimy z autobusu", "Gdy kupujemy klocki"], correct: 0 },
-            { category: "Dialogi", q: "Gdzie wkładamy zakupy podczas chodzenia po sklepie?", opts: ["Do wózka lub koszyka", "Do parkometru", "Do autobusu"], correct: 0 },
-            { category: "Dialogi", q: "Co odpowie ekspedient na 'Dziękuję'?", opts: ["Proszę bardzo! / Miłego dnia!", "Nie mam gotówki.", "To jest kloczek."], correct: 0 },
-            { category: "Dialogi", q: "Gdzie kupujemy bilet na tramwaj lub autobus?", opts: ["W biletomacie lub przez aplikację", "W kasie w sklepie mięsnym", "U parkometru"], correct: 0 },
-            { category: "Dialogi", q: "Co dajemy jubilatowi na urodziny?", opts: ["Prezent i tort", "Mydło i szampon", "Bilet parkingowy"], correct: 0 }
+        const exercisesData = [
+            {
+                emoji: "🛒",
+                title: "Gdzie wkładamy zakupy?",
+                template: "Kiedy wchodzę do sklepu, biorę duży <span class='drop-target' data-blank='0'></span>. Wkładam do niego wszystkie zakupy. Przed wyjściem idę do <span class='drop-target' data-blank='1'></span>, a po zapłaceniu pakuję wszystko w <span class='drop-target' data-blank='2'></span>.",
+                correct: ["wózek", "kasy", "torbę"],
+                words: ["wózek", "kasy", "torbę", "parkometr", "tramwaj", "bilet"]
+            },
+            {
+                emoji: "🚌",
+                title: "Dojazd na zakupy",
+                template: "Czym jeździmy na zakupy? Często wybieramy <span class='drop-target' data-blank='0'></span> lub tramwaj. Jeśli zakupy są bardzo duże, jedziemy własnym <span class='drop-target' data-blank='1'></span> i zostawiamy go na <span class='drop-target' data-blank='2'></span>.",
+                correct: ["autobus", "samochodem", "parkingu"],
+                words: ["autobus", "samochodem", "parkingu", "wózku", "stole", "półce"]
+            },
+            {
+                emoji: "🥗",
+                title: "Zamówienie na stoisku",
+                template: "Dzień dobry! Dzisiaj na obiad kupuję <span class='drop-target' data-blank='0'></span> oraz świeże warzywa. Proszę też świeży <span class='drop-target' data-blank='1'></span>. Czy mogę zapłacić <span class='drop-target' data-blank='2'></span>?",
+                correct: ["sałatę", "chleb", "kartą"],
+                words: ["sałatę", "chleb", "kartą", "parkometrem", "autobusem", "półką"]
+            },
+            {
+                emoji: "💬",
+                title: "Pytanie o cenę",
+                template: "Przepraszam, nie widzę ceny. Kiedy mówimy '<span class='drop-target' data-blank='0'></span>, ile to kosztuje?'? Wtedy, gdy chcemy poznać cenę produktu. Ekspedientka odpowiada, że towar <span class='drop-target' data-blank='1'></span> dziesięć złotych, więc wyciągam <span class='drop-target' data-blank='2'></span>.",
+                correct: ["Przepraszam", "kosztuje", "gotówkę"],
+                words: ["Przepraszam", "kosztuje", "gotówkę", "wózek", "pomidor", "fakturę"]
+            },
+            {
+                emoji: "🅿️",
+                title: "Wyjazd z parkingu",
+                template: "Co robimy przed wyjazdem z parkingu? Najpierw musimy <span class='drop-target' data-blank='0'></span> bilet w opłatomacie. Potem wkładamy go przy <span class='drop-target' data-blank='1'></span>, żeby szlaban się podniósł i wyjeżdżamy <span class='drop-target' data-blank='2'></span>.",
+                correct: ["scalić/opłacić", "wyjeździe", "autem"],
+                words: ["opłacić", "wyjeździe", "autem", "zjeść", "napisać", "kupić"]
+            },
+            {
+                emoji: "🥛",
+                title: "Szybkie zakupy",
+                template: "Wchodzę do sklepu i biorę mały <span class='drop-target' data-blank='0'></span>. Kupuję zimne <span class='drop-target' data-blank='1'></span> oraz dwa dojrzałe pomidory. Podchodzę do kasy i proszę o <span class='drop-target' data-blank='2'></span>.",
+                correct: ["koszyk", "mleko", "paragon"],
+                words: ["koszyk", "mleko", "paragon", "auto", "przystanek", "ser"]
+            },
+            {
+                emoji: "🧀",
+                title: "Stoisko z nabiałem",
+                template: "Proszę podać mi ten świeży <span class='drop-target' data-blank='0'></span> żółty. Poproszę też cztery <span class='drop-target' data-blank='1'></span> wiejskie. Ile razem <span class='drop-target' data-blank='2'></span>?",
+                correct: ["ser", "jajka", "płacę"],
+                words: ["ser", "jajka", "płacę", "chleb", "wózek", "jeżdżę"]
+            },
+            {
+                emoji: "🥖",
+                title: "W piekarni",
+                template: "Dzień dobry! Proszę świeży <span class='drop-target' data-blank='0'></span> oraz dwie słodkie bułki. Kupuję też ziarnistą <span class='drop-target' data-blank='1'></span>. Czy płatność <span class='drop-target' data-blank='2'></span> jest możliwa?",
+                correct: ["chleb", "bułkę", "gotówką"],
+                words: ["chleb", "bułkę", "gotówką", "autobusem", "sałatę", "parkometrem"]
+            },
+            {
+                emoji: "🍏",
+                title: "Owoce i warzywa",
+                template: "Dzisiaj kupuję zieloną <span class='drop-target' data-blank='0'></span> i słodkie jabłka. Gdzie wkładamy zakupy w sklepie? Wszystkie produkty układam w <span class='drop-target' data-blank='1'></span>. Na koniec ważę owoce na <span class='drop-target' data-blank='2'></span>.",
+                correct: ["sałatę", "wózku", "wadze"],
+                words: ["sałatę", "wózku", "wadze", "fakturze", "samochodzie", "tramwaju"]
+            },
+            {
+                emoji: "💳",
+                title: "Dialog przy kasie",
+                template: "— Czy płaci Pan kartą czy <span class='drop-target' data-blank='0'></span>?\n— Płacę kartą. Czy mogę prosić o <span class='drop-target' data-blank='1'></span>?\n— Tak, proszę przyłożyć kartę do <span class='drop-target' data-blank='2'></span>.",
+                correct: ["gotówką", "paragon", "terminala"],
+                words: ["gotówką", "paragon", "terminala", "koszyka", "chleba", "auta"]
+            },
+            {
+                emoji: "📢",
+                title: "Ogłoszenie w supermarkecie",
+                template: "Uwaga Klienci! Świeży <span class='drop-target' data-blank='0'></span> chrupki dzisiaj w promocji! Zapewniamy darmowy parking dla każdego <span class='drop-target' data-blank='1'></span>. Zapraszamy do <span class='drop-target' data-blank='2'></span> numer 4!",
+                correct: ["chleb", "samochodu", "kasy"],
+                words: ["chleb", "samochodu", "kasy", "mleka", "drogą", "autobusu"]
+            },
+            {
+                emoji: "🛍️",
+                title: "Duże zakupy weekendowe",
+                template: "W sobotę robimy duże zakupy. Czym jeździmy na zakupy? Najczęściej jedziemy <span class='drop-target' data-blank='0'></span>. W sklepie biorę duży <span class='drop-target' data-blank='1'></span>, a na koniec proszę o mocną <span class='drop-target' data-blank='2'></span>.",
+                correct: ["samochodem", "wózek", "torbę"],
+                words: ["samochodem", "wózek", "torbę", "przepraszam", "wodą", "kasie"]
+            },
+            {
+                emoji: "🥩",
+                title: "Na stoisku mięsnym",
+                template: "Dzień dobry, proszę <span class='drop-target' data-blank='0'></span> szynki i świeże mięso. Pytam sprzedawcę: 'Ile to <span class='drop-target' data-blank='1'></span>?'. Odpowiedź brzmi: 30 złotych, więc płacę <span class='drop-target' data-blank='2'></span>.",
+                correct: ["kawałek", "kosztuje", "kartą"],
+                words: ["kawałek", "kosztuje", "kartą", "parkingu", "autobusem", "sałatę"]
+            },
+            {
+                emoji: "🏷️",
+                title: "Hasło reklamowe",
+                template: "Kupuj u nas! Oferujemy chrupiący <span class='drop-target' data-blank='0'></span>, świeżą zieloną <span class='drop-target' data-blank='1'></span> oraz ekologiczne owoce. Za zakupy zapłacisz wygodnie <span class='drop-target' data-blank='2'></span> lub kartą!",
+                correct: ["chleb", "sałatę", "gotówką"],
+                words: ["chleb", "sałatę", "gotówką", "tramwajem", "wózkiem", "biletem"]
+            },
+            {
+                emoji: "❓",
+                title: "Pytanie w alei sklepowej",
+                template: "Gdy nie znam ceny, pytam: '<span class='drop-target' data-blank='0'></span>, ile to kosztuje?'. Pracownik wskazuje cenę na <span class='drop-target' data-blank='1'></span>. Wkładam produkt do <span class='drop-target' data-blank='2'></span> i idę dalej.",
+                correct: ["Przepraszam", "półce", "koszyka"],
+                words: ["Przepraszam", "półce", "koszyka", "samochodu", "parkometru", "gotówki"]
+            },
+            {
+                emoji: "🚗",
+                title: "Informacja o parkingu",
+                template: "Nasz parking jest darmowy przez godzinę. Zostaw tu swój <span class='drop-target' data-blank='0'></span>. Co robimy przed wyjazdem z parkingu? Musimy skanować <span class='drop-target' data-blank='1'></span> przy wyjeździe, żeby podnieść <span class='drop-target' data-blank='2'></span>.",
+                correct: ["samochód", "bilet", "szlaban"],
+                words: ["samochód", "bilet", "szlaban", "chleb", "sałatę", "wózek"]
+            },
+            {
+                emoji: "🍊",
+                title: "Sok i owoce",
+                template: "Kupuję świeże pomarańcze na sok i zieloną <span class='drop-target' data-blank='0'></span>. Proszę też chrupiący <span class='drop-target' data-blank='1'></span>. Czy dostanę <span class='drop-target' data-blank='2'></span> do płatności?",
+                correct: ["sałatę", "chleb", "potwierdzenie"],
+                words: ["sałatę", "chleb", "potwierdzenie", "autobus", "tramwaj", "parking"]
+            },
+            {
+                emoji: "🧾",
+                title: "Prośba przy kasie",
+                template: "Po uskanowaniu produktów kasjer pyta o płatność. Odpowiadam: 'Płacę <span class='drop-target' data-blank='0'></span>'. Proszę świeży <span class='drop-target' data-blank='1'></span> do osobnej reklamówki i biorę mój <span class='drop-target' data-blank='2'></span>.",
+                correct: ["kartą", "chleb", "paragon"],
+                words: ["kartą", "chleb", "paragon", "samochodem", "autobusem", "parkometrem"]
+            },
+            {
+                emoji: "🚏",
+                title: "Powrót z zakupów",
+                template: "Kończymy zakupy. Czym jeździmy na zakupy, gdy nie mamy auta? Często jeździmy <span class='drop-target' data-blank='0'></span>. Dzisiaj wracamy jednak <span class='drop-target' data-blank='1'></span>. Zakupy trzymamy w dużej <span class='drop-target' data-blank='2'></span>.",
+                correct: ["autobusem", "tramwajem", "torbie"],
+                words: ["autobusem", "tramwajem", "torbie", "sałacie", "paragonie", "wózku"]
+            },
+            {
+                emoji: "🏪",
+                title: "Szybka wizyta w osiedlowym sklepie",
+                template: "Wchodzę do małego sklepu. Kupuję świeżą <span class='drop-target' data-blank='0'></span> i wiejskie masło. Proszę też cieplutki <span class='drop-target' data-blank='1'></span>. Płacę odliczoną <span class='drop-target' data-blank='2'></span>.",
+                correct: ["sałatę", "chleb", "gotówką"],
+                words: ["sałatę", "chleb", "gotówką", "autobusem", "szlabanem", "parkometrem"]
+            }
         ];
 
         let currentIdx = 0;
-        let selectedOption = null;
-        let userAnswers = [];
+        let userAnswers = [null, null, null];
 
-        function loadQuestion() {
-            selectedOption = null;
-            document.getElementById('next-btn').disabled = true;
+        function shuffle(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
 
-            const item = testQuestions[currentIdx];
+        function loadExercise() {
+            const ex = exercisesData[currentIdx];
+            userAnswers = [null, null, null];
 
-            document.getElementById('question-counter').textContent = `Pytanie ${currentIdx + 1} / ${testQuestions.length}`;
-            document.getElementById('progress-bar').style.width = `${(currentIdx / testQuestions.length) * 100}%`;
+            document.getElementById('question-counter').textContent = `Zadanie ${currentIdx + 1} / ${exercisesData.length}`;
+            document.getElementById('progress-bar').style.width = `${((currentIdx) / exercisesData.length) * 100}%`;
+            document.getElementById('card-emoji').textContent = ex.emoji;
+            document.getElementById('card-title').textContent = ex.title;
 
-            document.getElementById('q-category').textContent = item.category;
-            document.getElementById('q-title').textContent = item.q;
+            document.getElementById('text-template').innerHTML = ex.template;
 
-            const optsContainer = document.getElementById('options-container');
-            optsContainer.innerHTML = '';
+            const targets = document.querySelectorAll('.drop-target');
+            targets.forEach(target => {
+                target.onclick = () => clearBlank(parseInt(target.dataset.blank));
+            });
 
-            item.opts.forEach((opt, idx) => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.textContent = opt;
-                btn.onclick = () => selectOption(idx, btn);
-                optsContainer.appendChild(btn);
+            const wordsContainer = document.getElementById('words-container');
+            wordsContainer.innerHTML = '';
+            
+            const shuffledWords = shuffle(ex.words);
+            shuffledWords.forEach(word => {
+                const chip = document.createElement('div');
+                chip.className = 'word-chip';
+                chip.textContent = word;
+                chip.onclick = () => selectWord(word, chip);
+                wordsContainer.appendChild(chip);
+            });
+
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('check-btn').style.display = 'block';
+            document.getElementById('check-btn').disabled = false;
+            document.getElementById('next-btn').style.display = 'none';
+        }
+
+        function selectWord(word, chip) {
+            if (chip.classList.contains('selected')) return;
+
+            const emptyIdx = userAnswers.findIndex(ans => ans === null);
+            if (emptyIdx !== -1) {
+                userAnswers[emptyIdx] = { word: word, element: chip };
+                chip.classList.add('selected');
+                updateTargets();
+            }
+        }
+
+        function clearBlank(blankIdx) {
+            if (userAnswers[blankIdx]) {
+                userAnswers[blankIdx].element.classList.remove('selected');
+                userAnswers[blankIdx] = null;
+                updateTargets();
+            }
+        }
+
+        function updateTargets() {
+            const targets = document.querySelectorAll('.drop-target');
+            targets.forEach((target, idx) => {
+                if (userAnswers[idx]) {
+                    target.textContent = userAnswers[idx].word;
+                    target.classList.add('filled');
+                } else {
+                    target.textContent = '';
+                    target.classList.remove('filled');
+                }
             });
         }
 
-        function selectOption(idx, btn) {
-            selectedOption = idx;
-            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            document.getElementById('next-btn').disabled = false;
+        function checkAnswers() {
+            if (userAnswers.includes(null)) {
+                alert('Uzupełnij wszystkie luki przed sprawdzeniem!');
+                return;
+            }
+
+            const ex = exercisesData[currentIdx];
+            let isCorrect = true;
+
+            for (let i = 0; i < 3; i++) {
+                if (userAnswers[i].word !== ex.correct[i]) {
+                    isCorrect = false;
+                    break;
+                }
+            }
+
+            const feedback = document.getElementById('feedback');
+            feedback.style.display = 'block';
+
+            if (isCorrect) {
+                feedback.className = 'feedback-message correct';
+                feedback.textContent = 'Świetnie! Wszystkie słowa zostały dopasowane poprawnie!';
+                document.getElementById('check-btn').style.display = 'none';
+                document.getElementById('next-btn').style.display = 'block';
+            } else {
+                feedback.className = 'feedback-message wrong';
+                feedback.textContent = 'Niektóre słowa są w złym miejscu. Spróbuj jeszcze raz!';
+            }
         }
 
         function nextQuestion() {
-            if (selectedOption === null) return;
-
-            userAnswers.push(selectedOption);
             currentIdx++;
-
-            if (currentIdx < testQuestions.length) {
-                loadQuestion();
+            if (currentIdx < exercisesData.length) {
+                loadExercise();
             } else {
-                showResults();
+                finishAll();
             }
         }
 
-        function showResults() {
-            let correctCount = 0;
-            testQuestions.forEach((q, idx) => {
-                if (userAnswers[idx] === q.correct) {
-                    correctCount++;
-                }
-            });
-
-            const scorePercent = Math.round((correctCount / testQuestions.length) * 100);
-
-            document.getElementById('test-container').style.display = 'none';
-            document.getElementById('result-screen').style.display = 'block';
+        function finishAll() {
             document.getElementById('progress-bar').style.width = '100%';
+            document.getElementById('exercise-container').style.display = 'none';
+            document.getElementById('completion-screen').style.display = 'block';
+            launchConfetti();
+        }
 
-            document.getElementById('score-circle').textContent = `${scorePercent}%`;
+        function launchConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
 
-            const starsDisplay = document.getElementById('stars-display');
-            const resultTitle = document.getElementById('result-title');
-            const resultText = document.getElementById('result-text');
+            const particles = [];
+            const colors = ['#2ecc71', '#3498db', '#f1c40f', '#e74c3c', '#9b59b6'];
 
-            if (scorePercent >= 80) {
-                // Pass
-                completeStage();
-                if (typeof confetti === 'function') {
-                    confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
-                }
+            for (let i = 0; i < 80; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    size: Math.random() * 8 + 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    speedY: Math.random() * 3 + 2,
+                    speedX: Math.random() * 2 - 1,
+                    rotation: Math.random() * 360
+                });
+            }
 
-                if (scorePercent === 100) {
-                    starsDisplay.textContent = '⭐⭐⭐';
-                    resultTitle.textContent = 'Mistrzowski Wynik!';
-                    resultText.textContent = 'Bezbłędny test! Twój polski na zakupach jest perfekcyjny!';
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.y += p.speedY;
+                    p.x += p.speedX;
+                    p.rotation += 2;
+
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate((p.rotation * Math.PI) / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                    ctx.restore();
+                });
+
+                if (particles.some(p => p.y < canvas.height)) {
+                    requestAnimationFrame(animate);
                 } else {
-                    starsDisplay.textContent = '⭐⭐';
-                    resultTitle.textContent = 'Świetny Wynik!';
-                    resultText.textContent = `Zdobyłeś ${scorePercent}%. Moduł 3 został oficjalnie zaliczony!`;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
                 }
-            } else {
-                // Fail
-                starsDisplay.textContent = '⭐';
-                resultTitle.textContent = 'Spróbuj Ponownie!';
-                resultText.textContent = `Twój wynik to ${scorePercent}%. Do zaliczenia modułu potrzebujesz co najmniej 80%.`;
             }
+            animate();
         }
 
-        function completeStage() {
-            const MODULE_KEY = 'm3_progress';
-            let progress = { stage1: true, stage2: true, stage3: true, stage4: true, stage5: true, stage6: true, stage7: false };
-            
-            const saved = localStorage.getItem(MODULE_KEY);
-            if (saved) {
-                try { progress = JSON.parse(saved); } catch(e) {}
-            }
-
-            progress.stage7 = true;
-            localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
-        }
-
-        // Initialize test
-        loadQuestion();
+        loadExercise();
     </script>
 </body>
 </html>
