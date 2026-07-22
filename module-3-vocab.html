@@ -1,63 +1,547 @@
-function updateUI() {
-    const stages = [
-        { id: 1, key: 'stage1', href: 'module3-vocab.html', title: 'Etap 1: Fiszki', btnText: 'Rozpocznij' },
-        { id: 2, key: 'stage2', href: 'module3-matching.html', title: 'Etap 2: Dopasowywanie', btnText: 'Rozpocznij' },
-        { id: 3, key: 'stage3', href: 'module3-typing.html', title: 'Etap 3: Pisanie', btnText: 'Rozpocznij' },
-        { id: 4, key: 'stage4', href: 'module3-grammar.html', title: 'Etap 4: Gramatyka', btnText: 'Rozpocznij' },
-        { id: 5, key: 'stage5', href: 'module3-dialogues.html', title: 'Etap 5: Dialogi', btnText: 'Rozpocznij' },
-        { id: 6, key: 'stage6', href: 'module3-game.html', title: 'Etap 6: Mini Gra', btnText: 'Rozpocznij' },
-        { id: 7, key: 'stage7', href: 'module3-final-test.html', title: 'Etap 7: Test końcowy', btnText: 'Rozpocznij Test' }
-    ];
-
-    let completedCount = 0;
-
-    stages.forEach((stage, index) => {
-        const card = document.getElementById(`card-stage${stage.id}`);
-        const btn = document.getElementById(`btn-stage${stage.id}`);
-        const h2 = card.querySelector('.stage-info h2');
-        const badge = document.getElementById(`badge-stage${stage.id}`);
-
-        const isDone = progress[stage.key];
-        
-        let isUnlocked = false;
-        if (index === 0) {
-            isUnlocked = true;
-        } else {
-            isUnlocked = progress[stages[index - 1].key];
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 3 – Zakupy i Sklep</title>
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --primary-green-hover: #27ae60;
+            --badge-green-bg: #e8f8f0;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-light: #e2e8f0;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 15px 35px rgba(0, 0, 0, 0.1);
+            --locked-bg: #f1f3f5;
+            --locked-text: #adb5bd;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
-        if (isDone) {
-            completedCount++;
-            card.className = 'stage-card unlocked completed';
-            btn.className = 'btn';
-            btn.textContent = 'Powtórz';
-            btn.href = stage.href;
-            h2.childNodes[0].textContent = stage.title + " ✅ ";
-            badge.style.display = 'inline-block';
-        } else if (isUnlocked) {
-            card.className = 'stage-card unlocked';
-            btn.className = 'btn';
-            btn.textContent = stage.btnText;
-            btn.href = stage.href;
-            h2.childNodes[0].textContent = stage.title + " ";
-            badge.style.display = 'none';
-        } else {
-            card.className = 'stage-card locked';
-            btn.className = 'btn btn-locked';
-            btn.textContent = stage.btnText;
-            btn.removeAttribute('href');
-            h2.childNodes[0].textContent = stage.title + " 🔒 ";
-            badge.style.display = 'none';
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
-    });
 
-    // Update Progress Header
-    const percentage = Math.round((completedCount / 7) * 100);
-    document.getElementById('progress-bar').style.width = percentage + '%';
-    document.getElementById('progress-percent').textContent = percentage + '%';
-    document.getElementById('lessons-completed-text').textContent = `⭐ Ukończono lekcji: ${completedCount}/7`;
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
 
-    if (completedCount === 7) {
-        runConfetti();
-    }
-}
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        /* Top Navigation & Breadcrumbs */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-green);
+        }
+
+        .breadcrumb {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        /* Header Card */
+        .header-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 2rem;
+        }
+
+        .header-title-area {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .module-badge {
+            background-color: var(--badge-green-bg);
+            color: var(--primary-green);
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: var(--text-dark);
+            font-weight: 800;
+        }
+
+        .header-desc {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Progress Bar */
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 14px;
+            background-color: var(--border-light);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-green);
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.6s ease;
+        }
+
+        /* Learning Path Layout */
+        .learning-path {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .stage-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .stage-card.unlocked:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stage-card.completed {
+            border-color: var(--primary-green);
+        }
+
+        .stage-card.locked {
+            background-color: var(--locked-bg);
+            box-shadow: none;
+            opacity: 0.75;
+        }
+
+        .stage-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .stage-icon {
+            font-size: 2.5rem;
+            width: 65px;
+            height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-color);
+            border-radius: 16px;
+            flex-shrink: 0;
+        }
+
+        .stage-info h2 {
+            font-size: 1.25rem;
+            color: var(--text-dark);
+            margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stage-card.locked .stage-info h2 {
+            color: var(--locked-text);
+        }
+
+        .stage-info p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .stage-card.locked .stage-info p {
+            color: var(--locked-text);
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: var(--primary-green);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-green-hover);
+        }
+
+        .btn-locked {
+            background-color: var(--locked-text);
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .badge-status {
+            font-size: 0.8rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 8px;
+            font-weight: 700;
+            background-color: var(--badge-green-bg);
+            color: var(--primary-green);
+        }
+
+        /* Confetti Canvas */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        @media (max-width: 600px) {
+            .stage-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .stage-right {
+                width: 100%;
+            }
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="container">
+        <!-- Top Navigation & Breadcrumbs -->
+        <div class="top-nav">
+            <a href="index.html" class="back-link">
+                ← Powrót do modułów
+            </a>
+            <div class="breadcrumb">
+                <a href="index.html">🏠 Strona główna</a> &gt; <strong>Moduł 3</strong>
+            </div>
+        </div>
+
+        <!-- Header Card -->
+        <div class="header-card">
+            <div class="header-title-area">
+                <span class="module-badge">Moduł 3</span>
+            </div>
+            <h1>Zakupy i Sklep</h1>
+            <p class="header-desc">Naucz się słownictwa potrzebnego podczas zakupów, płacenia i poruszania się po mieście.</p>
+
+            <!-- Overall Progress Bar -->
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span id="lessons-completed-text">⭐ Ukończono lekcji: 0/7</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progress-bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learning Path -->
+        <div class="learning-path">
+
+            <!-- Stage 1 -->
+            <div class="stage-card unlocked" id="card-stage1">
+                <div class="stage-left">
+                    <div class="stage-icon">🃏</div>
+                    <div class="stage-info">
+                        <h2>
+                            Etap 1: Fiszki 
+                            <span class="badge-status" id="badge-stage1" style="display:none;">Ukończono</span>
+                        </h2>
+                        <p>Poznaj 28 słów ze świata zakupów i miasta.</p>
+                    </div>
+                </div>
+                <div class="stage-right">
+                    <a href="module3-vocab.html" class="btn" id="btn-stage1">Rozpocznij</a>
+                </div>
+            </div>
+
+            <!-- Stage 2 -->
+            <div class="stage-card unlocked" id="card-stage2">
+                <div class="stage-left">
+                    <div class="stage-icon">🧩</div>
+                    <div class="stage-info">
+                        <h2>
+                            Etap 2: Dopasowywanie
+                            <span class="badge-status" id="badge-stage2" style="display:none;">Ukończono</span>
+                        </h2>
+                        <p>Dopasuj obrazki do polskich słów.</p>
+                    </div>
+                </div>
+                <div class="stage-right">
+                    <a href="module3-matching.html" class="btn" id="btn-stage2">Rozpocznij</a>
+                </div>
+            </div>
+
+            <!-- Stage 3 -->
+            <div class="stage-card unlocked" id="card-stage3">
+                <div class="stage-left">
+                    <div class="stage-icon">⌨️</div>
+                    <div class="stage-info">
+                        <h2>
+                            Etap 3: Pisanie
+                            <span class="badge-status" id="badge-stage3" style="display:none;">Ukończono</span>
+                        </h2>
+                        <p>Spójrz na obrazek i wpisz poprawne polskie słowo.</p>
+                    </div>
+                </div>
+                <div class="stage-right">
+                    <a href="module3-typing.html" class="btn" id="btn-stage3">Rozpocznij</a>
+                </div>
+            </div>
+
+            <!-- Stage 4 -->
+            <div class="stage-card unlocked" id="card-stage4">
+                <div class="stage-left">
+                    <div class="stage-icon">✍</div>
+                    <div class="stage-info">
+                        <h2>
+                            Etap 4: Gramatyka
+                            <span class="badge-status" id="badge-stage4" style="display:none;">Ukończono</span>
+                        </h2>
+                        <p>Ćwiczenia gramatyczne, przypadki i odmiana słów.</p>
+                    </div>
+                </div>
+                <div class="stage-right">
+                    <a href="module3-grammar.html" class="btn" id="btn-stage4">Rozpocznij</a>
+                </div>
+            </div>
+
+            <!-- Stage 5 -->
+            <div class="stage-card unlocked" id="card-stage5">
+                <div class="stage-left">
+                    <div class="stage-icon">💬</div>
+                    <div class="stage-info">
+                        <h2>
+                            Etap 5: Dialogi
+                            <span class="badge-status" id="badge-stage5" style="display:none;">Ukończono</span>
+                        </h2>
+                        <p>Rozmowy w sklepie, przy kasie i na biletomatach.</p>
+                    </div>
+                </div>
+                <div class="stage-right">
+                    <a href="module3-dialogues.html" class="btn" id="btn-stage5">Rozpocznij</a>
+                </div>
+            </div>
+
+            <!-- Stage 6 -->
+            <div class="stage-card unlocked" id="card-stage6">
+                <div class="stage-left">
+                    <div class="stage-icon">🎮</div>
+                    <div class="stage-info">
+                        <h2>
+                            Etap 6: Mini Gra
+                            <span class="badge-status" id="badge-stage6" style="display:none;">Ukończono</span>
+                        </h2>
+                        <p>Szybkie, wymieszane zadania sprawdzające refleks.</p>
+                    </div>
+                </div>
+                <div class="stage-right">
+                    <a href="module3-game.html" class="btn" id="btn-stage6">Rozpocznij</a>
+                </div>
+            </div>
+
+            <!-- Stage 7 -->
+            <div class="stage-card unlocked" id="card-stage7">
+                <div class="stage-left">
+                    <div class="stage-icon">🏆</div>
+                    <div class="stage-info">
+                        <h2>
+                            Etap 7: Test końcowy
+                            <span class="badge-status" id="badge-stage7" style="display:none;">Ukończono</span>
+                        </h2>
+                        <p>30 pytań sprawdzających całą wiedzę z Modułu 3.</p>
+                    </div>
+                </div>
+                <div class="stage-right">
+                    <a href="module3-final-test.html" class="btn" id="btn-stage7">Rozpocznij Test</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // LocalStorage Key for Module 3 Progress
+        const MODULE_KEY = 'm3_progress';
+
+        // Default state for 7 stages
+        let progress = {
+            stage1: false,
+            stage2: false,
+            stage3: false,
+            stage4: false,
+            stage5: false,
+            stage6: false,
+            stage7: false
+        };
+
+        function loadProgress() {
+            const saved = localStorage.getItem(MODULE_KEY);
+            if (saved) {
+                try {
+                    progress = JSON.parse(saved);
+                } catch(e) {
+                    console.error("Błąd ładowania postępu Modułu 3", e);
+                }
+            }
+            updateUI();
+        }
+
+        function updateUI() {
+            const stages = [
+                { id: 1, key: 'stage1', href: 'module3-vocab.html', title: 'Etap 1: Fiszki', btnText: 'Rozpocznij' },
+                { id: 2, key: 'stage2', href: 'module3-matching.html', title: 'Etap 2: Dopasowywanie', btnText: 'Rozpocznij' },
+                { id: 3, key: 'stage3', href: 'module3-typing.html', title: 'Etap 3: Pisanie', btnText: 'Rozpocznij' },
+                { id: 4, key: 'stage4', href: 'module3-grammar.html', title: 'Etap 4: Gramatyka', btnText: 'Rozpocznij' },
+                { id: 5, key: 'stage5', href: 'module3-dialogues.html', title: 'Etap 5: Dialogi', btnText: 'Rozpocznij' },
+                { id: 6, key: 'stage6', href: 'module3-game.html', title: 'Etap 6: Mini Gra', btnText: 'Rozpocznij' },
+                { id: 7, key: 'stage7', href: 'module3-final-test.html', title: 'Etap 7: Test końcowy', btnText: 'Rozpocznij Test' }
+            ];
+
+            let completedCount = 0;
+
+            stages.forEach((stage) => {
+                const card = document.getElementById(`card-stage${stage.id}`);
+                const btn = document.getElementById(`btn-stage${stage.id}`);
+                const h2 = card.querySelector('.stage-info h2');
+                const badge = document.getElementById(`badge-stage${stage.id}`);
+
+                const isDone = progress[stage.key];
+
+                if (isDone) {
+                    completedCount++;
+                    card.className = 'stage-card unlocked completed';
+                    btn.className = 'btn';
+                    btn.textContent = 'Powtórz';
+                    btn.href = stage.href;
+                    h2.childNodes[0].textContent = stage.title + " ✅ ";
+                    badge.style.display = 'inline-block';
+                } else {
+                    card.className = 'stage-card unlocked';
+                    btn.className = 'btn';
+                    btn.textContent = stage.btnText;
+                    btn.href = stage.href;
+                    h2.childNodes[0].textContent = stage.title + " ";
+                    badge.style.display = 'none';
+                }
+            });
+
+            // Update Progress Header
+            const percentage = Math.round((completedCount / 7) * 100);
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            document.getElementById('progress-percent').textContent = percentage + '%';
+            document.getElementById('lessons-completed-text').textContent = `⭐ Ukończono lekcji: ${completedCount}/7`;
+
+            if (completedCount === 7) {
+                runConfetti();
+            }
+        }
+
+        // Confetti Effect upon full completion
+        function runConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = Array.from({ length: 80 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height - canvas.height,
+                size: Math.random() * 8 + 4,
+                color: ['#2ecc71', '#3498db', '#f1c40f', '#e74c3c'][Math.floor(Math.random() * 4)],
+                speed: Math.random() * 3 + 2
+            }));
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.y += p.speed;
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(p.x, p.y, p.size, p.size);
+                });
+                if (particles.some(p => p.y < canvas.height)) {
+                    requestAnimationFrame(draw);
+                }
+            }
+            draw();
+        }
+
+        document.addEventListener('DOMContentLoaded', loadProgress);
+    </script>
+</body>
+</html>
