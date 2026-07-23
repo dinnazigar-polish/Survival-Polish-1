@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moduł 2 – Etap 4: Dialogi</title>
+    <title>Moduł 2 – Test Podsumowujący (30 pytań)</title>
     <style>
         :root {
             --primary-salmon: #f49c96;
@@ -16,6 +16,7 @@
             --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             --success-color: #27ae60;
+            --error-color: #e74c3c;
         }
 
         * {
@@ -71,41 +72,121 @@
             transition: width 0.3s ease;
         }
 
-        .dialog-card {
+        .quiz-card {
             background-color: var(--card-bg);
             border-radius: 20px;
             padding: 2rem;
             box-shadow: var(--shadow-soft);
             border: 2px solid var(--border-light);
-            margin-bottom: 1.5rem;
         }
 
-        .dialog-title {
-            font-size: 1.3rem;
+        .question-title {
+            font-size: 1.25rem;
             font-weight: 800;
             color: var(--text-dark);
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 2px solid #fdf0ef;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            margin-bottom: 1.2rem;
         }
 
+        /* Input dla pytań ze słownictwem */
+        .input-box {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 2px solid var(--border-light);
+            border-radius: 12px;
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary-salmon);
+        }
+
+        .input-field.correct {
+            border-color: var(--success-color);
+            background-color: #eafaf1;
+        }
+
+        .input-field.incorrect {
+            border-color: var(--error-color);
+            background-color: #fdf2f2;
+        }
+
+        .btn-check {
+            background-color: var(--primary-salmon);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-check:hover {
+            background-color: var(--primary-salmon-hover);
+        }
+
+        /* Opcje wyboru (ABC) */
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .option-btn {
+            background-color: #ffffff;
+            border: 2px solid var(--border-light);
+            padding: 1rem 1.2rem;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary-salmon);
+            background-color: #fffaf9;
+        }
+
+        .option-btn.correct {
+            border-color: var(--success-color);
+            background-color: #eafaf1;
+            color: var(--success-color);
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--error-color);
+            background-color: #fdf2f2;
+            color: var(--error-color);
+        }
+
+        /* Czat Sekwencyjny */
         .chat-container {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
         }
 
         .chat-bubble {
-            max-width: 85%;
-            padding: 0.9rem 1.2rem;
-            border-radius: 18px;
-            font-size: 1.05rem;
+            max-width: 88%;
+            padding: 0.8rem 1.1rem;
+            border-radius: 16px;
+            font-size: 1rem;
             line-height: 1.4;
-            position: relative;
             animation: fadeIn 0.3s ease;
         }
 
@@ -128,40 +209,13 @@
             font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
             margin-bottom: 0.2rem;
             color: var(--text-muted);
         }
 
-        .options-container {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            margin-top: 1rem;
-        }
-
-        .option-btn {
-            background-color: #ffffff;
-            border: 2px solid var(--border-light);
-            padding: 1rem;
-            border-radius: 14px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .option-btn:hover {
-            border-color: var(--primary-salmon);
-            background-color: #fffaf9;
-            transform: translateY(-2px);
-        }
-
-        /* Sekcja kluczowych fraz pod dialogiem */
-        .phrases-box {
-            margin-top: 1.5rem;
+        /* Wyjaśnienia i frazy */
+        .explanation-box {
+            margin-top: 1.2rem;
             padding: 1.2rem;
             background-color: #fffaf9;
             border-radius: 16px;
@@ -169,45 +223,15 @@
             display: none;
         }
 
-        .phrases-box.visible {
+        .explanation-box.visible {
             display: block;
-            animation: fadeIn 0.4s ease;
+            animation: fadeIn 0.3s ease;
         }
 
-        .phrases-title {
-            font-size: 1.05rem;
+        .explanation-title {
             font-weight: 800;
             color: #d96b63;
-            margin-bottom: 0.8rem;
-        }
-
-        .phrase-item {
-            margin-bottom: 0.8rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .phrase-item:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
-        }
-
-        .phrase-head {
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        .phrase-en {
-            font-style: italic;
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        .phrase-ex {
-            font-size: 0.95rem;
-            color: var(--text-dark);
-            margin-top: 0.2rem;
+            margin-bottom: 0.5rem;
         }
 
         .next-btn {
@@ -220,7 +244,7 @@
             font-size: 1.1rem;
             font-weight: 700;
             cursor: pointer;
-            margin-top: 1.5rem;
+            margin-top: 1.2rem;
             display: none;
             transition: background-color 0.2s ease;
         }
@@ -229,6 +253,15 @@
             background-color: var(--primary-salmon-hover);
         }
 
+        .feedback-msg {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+
+        .feedback-msg.correct { color: var(--success-color); }
+        .feedback-msg.incorrect { color: var(--error-color); }
+
         .completion-screen {
             text-align: center;
             padding: 3rem 1rem;
@@ -236,7 +269,7 @@
         }
 
         .score-badge {
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: 800;
             color: var(--primary-salmon);
             margin-bottom: 1rem;
@@ -254,7 +287,7 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
@@ -263,215 +296,496 @@
 
     <div class="container">
         <div class="header">
-            <a href="module-2-vocab.html" class="back-link">← Powrót do listy etapów</a>
-            <span id="step-counter" style="font-weight: 700; color: var(--text-muted);">Dialog 1 / 6</span>
+            <a href="module-2-vocab.html" class="back-link">← Powrót do modułu</a>
+            <span id="step-counter" style="font-weight: 700; color: var(--text-muted);">Pytanie 1 / 30</span>
         </div>
 
         <div class="progress-bar-container">
             <div class="progress-fill" id="progress-bar"></div>
         </div>
 
-        <!-- Karta Dialogu -->
-        <div class="dialog-card" id="dialog-card">
-            <div class="dialog-title" id="dialog-title">💬 Rozmowa...</div>
-            
-            <div class="chat-container" id="chat-container"></div>
+        <!-- Karta Testu -->
+        <div class="quiz-card" id="quiz-card">
+            <div class="question-title" id="question-title">---</div>
 
-            <div class="options-container" id="options-container"></div>
-
-            <!-- Sekcja fraz i definicji -->
-            <div class="phrases-box" id="phrases-box">
-                <div class="phrases-title">💡 Kluczowe frazy i słownictwo:</div>
-                <div id="phrases-list"></div>
+            <!-- Typ 1: Wpisywanie słowa -->
+            <div id="type-input" style="display: none;">
+                <div class="input-box">
+                    <input type="text" id="user-input" class="input-field" placeholder="Wpisz słowo po polsku..." autocomplete="off">
+                    <button class="btn-check" id="btn-submit-input" onclick="checkInputAnswer()">Sprawdź odpowiedź</button>
+                </div>
+                <div id="input-feedback" class="feedback-msg"></div>
             </div>
 
-            <button class="next-btn" id="next-btn" onclick="nextDialog()">Następny dialog →</button>
+            <!-- Typ 2 & 4: Wybór opcji (Dopasowanie par / Wybór ABC) -->
+            <div class="options-grid" id="options-grid" style="display: none;"></div>
+
+            <!-- Typ 3: Dialog Sekwencyjny -->
+            <div id="type-dialog" style="display: none;">
+                <div class="chat-container" id="chat-container"></div>
+                <div class="options-grid" id="dialog-options"></div>
+            </div>
+
+            <!-- Sekcja Objaśnień / Tłumaczeń -->
+            <div class="explanation-box" id="explanation-box">
+                <div class="explanation-title" id="explanation-title">💡 Objaśnienie:</div>
+                <div class="explanation-text" id="explanation-text"></div>
+            </div>
+
+            <button class="next-btn" id="next-btn" onclick="nextQuestion()">Następne pytanie →</button>
         </div>
 
         <!-- Ekran Końcowy -->
         <div class="completion-screen" id="completion-screen">
-            <h2>🎉 Świetna robota! Dialogi ukończone</h2>
-            <div class="score-badge">100%</div>
-            <p>Przećwiczyłeś wszystkie sytuacje konwersacyjne z Modułu 2.</p>
-            <a href="module-2-vocab.html" class="btn-finish" onclick="markStageComplete()">Zapisz i wróć do modułu</a>
+            <h2>🎉 Test Podsumowujący Ukończony!</h2>
+            <div class="score-badge" id="final-score">0 / 30</div>
+            <p id="completion-desc">Wspaniały wynik! Moduł 2 opanowany w całości.</p>
+            <a href="module-2-vocab.html" class="btn-finish" onclick="markStageComplete()">Zapisz wynik i wróć</a>
         </div>
     </div>
 
     <script>
-        const dialoguesData = [
+        const testQuestions = [
+            // --- CZEŚĆ 1: PODPISAĆ WYRAZY Z MODULE 2 (5 PYTAŃ) ---
             {
-                title: "Kto odbiera Wasze dzieci ze szkoły?",
-                dialogue: [
-                    { speaker: "A", text: "Kto zwykle odbiera Wasze dzieci ze szkoły w tygodniu?" },
-                    { speaker: "B", text: "Najczęściej robi to moja żona, ale czasami pomaga nam też babcia.", isChoice: true },
-                    { speaker: "A", text: "To bardzo wygodne rozwiązanie!" }
-                ],
+                type: "input",
+                title: "Wpisz słowo po polsku: 🇬🇧 «grandmother»",
+                correctWord: "babcia",
+                en: "grandmother"
+            },
+            {
+                type: "input",
+                title: "Wpisz słowo po polsku: 🇬🇧 «uncle»",
+                correctWord: "wujek",
+                en: "uncle"
+            },
+            {
+                type: "input",
+                title: "Wpisz słowo po polsku: 🇬🇧 «recipe»",
+                correctWord: "przepis",
+                en: "recipe"
+            },
+            {
+                type: "input",
+                title: "Wpisz słowo po polsku: 🇬🇧 «pastry shop / bakery»",
+                correctWord: "cukiernia",
+                en: "pastry shop"
+            },
+            {
+                type: "input",
+                title: "Wpisz słowo po polsku: 🇬🇧 «retirement»",
+                correctWord: "emerytura",
+                en: "retirement"
+            },
+
+            // --- CZEŚĆ 2: DOPASOWAĆ PARY - ZESTAW 1 (5 PYTAŃ) ---
+            {
+                type: "pair",
+                title: "Wybierz poprawne tłumaczenie dla: „gotować obiad”",
+                options: ["to cook dinner", "to drink coffee", "to eat fruit"],
+                correct: 0,
+                explanation: "«gotować obiad» = to cook dinner"
+            },
+            {
+                type: "pair",
+                title: "Wybierz poprawne tłumaczenie dla: „pić kawę”",
+                options: ["to buy a gift", "to drink coffee", "to have siblings"],
+                correct: 1,
+                explanation: "«pić kawę» = to drink coffee"
+            },
+            {
+                type: "pair",
+                title: "Wybierz poprawne tłumaczenie dla: „jeść owoce”",
+                options: ["to eat fruit", "to cook dinner", "to buy a gift"],
+                correct: 0,
+                explanation: "«jeść owoce» = to eat fruit"
+            },
+            {
+                type: "pair",
+                title: "Wybierz poprawne tłumaczenie dla: „kupować prezent”",
+                options: ["to have siblings", "to buy a gift", "to drink coffee"],
+                correct: 1,
+                explanation: "«kupować prezent» = to buy a gift"
+            },
+            {
+                type: "pair",
+                title: "Wybierz poprawne tłumaczenie dla: „mieć rodzeństwo”",
+                options: ["to eat fruit", "to cook dinner", "to have siblings"],
+                correct: 2,
+                explanation: "«mieć rodzeństwo» = to have siblings"
+            },
+
+            // --- CZEŚĆ 3: DOPASOWAĆ PARY - ZESTAW 2 (5 PYTAŃ) ---
+            {
+                type: "pair",
+                title: "Wybierz poprawne tłumaczenie dla: „odbierać dzieci”",
+                options: ["to pick up children", "to bake cakes", "difficult task"],
+                correct: 0,
+                explanation: "«odbierać dzieci» = to pick up children"
+            },
+            {
+                type: "pair",
+                title: "Wybierz poprawne tłumaczenie dla: „nauczać matematyki”",
+                options: ["to work in a pastry shop", "to teach mathematics", "difficult task"],
+                correct: 1,
+                explanation: "«nauczać matematyki» = to teach mathematics"
+            },
+            {
+                type: "pair",
+                title: "Wybierz poprawne tłumaczenie dla: „piec ciasta”",
+                options: ["to bake cakes", "to pick up children", "to work in a pastry shop"],
+                correct: 0,
+                explanation: "«piec ciasta» = to bake cakes"
+            },
+            {
+                type: "pair",
+                title: "Wybierz poprawne tłumaczenie dla: „pracować w cukierni”",
+                options: ["to teach mathematics", "to work in a pastry shop", "difficult task"],
+                correct: 1,
+                explanation: "«pracować w cukierni» = to work in a pastry shop"
+            },
+            {
+                type: "pair",
+                title: "Wybierz poprawne tłumaczenie dla: „trudne zadanie”",
+                options: ["to pick up children", "to bake cakes", "difficult task"],
+                correct: 2,
+                explanation: "«trudne zadanie» = difficult task"
+            },
+
+            // --- CZEŚĆ 4: 10 DIALOGÓW (PREPYW SEKWENCYJNY) ---
+            {
+                type: "dialog",
+                title: "Dialog 1: Kto odbiera Wasze dzieci ze szkoły?",
+                firstComment: "Kto zwykle odbiera Wasze dzieci ze szkoły w tygodniu?",
+                lastComment: "To bardzo wygodne rozwiązanie!",
                 choices: [
                     "Najczęściej robi to moja żona, ale czasami pomaga nam też babcia.",
                     "Moje dzieci chodzą do szkoły na piechotę z kolegami."
                 ],
+                correct: 0,
                 phrases: [
-                    {
-                        phrase: "odbierać dzieci",
-                        en: "to pick up children",
-                        example: "Codziennie o godzinie 15:00 muszę odbierać dzieci ze szkoły."
-                    },
-                    {
-                        phrase: "wygodne rozwiązanie",
-                        en: "convenient solution",
-                        example: "Praca zdalna z domu to dla naszej rodziny bardzo wygodne rozwiązanie."
-                    }
+                    { phrase: "odbierać dzieci", en: "to pick up children", ex: "Codziennie o 15:00 muszę odbierać dzieci ze szkoły." },
+                    { phrase: "wygodne rozwiązanie", en: "convenient solution", ex: "Pomoc babci to dla nas bardzo wygodne rozwiązanie." }
                 ]
             },
             {
-                title: "Czym zajmuje się Twoja mama?",
-                dialogue: [
-                    { speaker: "A", text: "Czym zajmuje się Twoja mama?" },
-                    { speaker: "B", text: "Moja mama jest nauczycielką. Naucza matematyki i fizyki w szkole.", isChoice: true },
-                    { speaker: "A", text: "Uczenie matematyki brzmi jak bardzo trudne zadanie!" }
-                ],
+                type: "dialog",
+                title: "Dialog 2: Czym zajmuje się Twoja mama?",
+                firstComment: "Czym zajmuje się Twoja mama?",
+                lastComment: "Uczenie matematyki brzmi jak bardzo trudne zadanie!",
                 choices: [
                     "Moja mama jest nauczycielką. Naucza matematyki i fizyki w szkole.",
-                    "Moja mama pracowała dawniej w biurze, ale teraz jest na emeryturze."
+                    "Moja mama bardzo lubi spędzać czas w ogrodzie."
                 ],
+                correct: 0,
                 phrases: [
-                    {
-                        phrase: "zajmować się",
-                        en: "to deal with / to do for a living",
-                        example: "Czym zajmujesz się w wolnym czasie po pracy?"
-                    },
-                    {
-                        phrase: "trudne",
-                        en: "difficult / hard",
-                        example: "To zadanie domowe jest bardzo trudne, potrzebuję pomocy."
-                    }
+                    { phrase: "zajmować się", en: "to do for a living / deal with", ex: "Czym zajmujesz się w nowej pracy?" },
+                    { phrase: "trudne zadanie", en: "difficult task", ex: "Praca w szkole to odpowiedzialne i trudne zadanie." }
                 ]
             },
             {
-                title: "Kto Ciebie nauczył tak dobrze mówić po polsku?",
-                dialogue: [
-                    { speaker: "A", text: "Kto Ciebie nauczył tak dobrze mówić po polsku?" },
-                    { speaker: "B", text: "Mój dziadek! Często ze mną rozmawiał, kiedy byłem mały." },
-                    { speaker: "A", text: "Mówisz naprawdę świetnie i wspaniale porozumiewasz się po polsku." }
+                type: "dialog",
+                title: "Dialog 3: Nauczanie języka",
+                firstComment: "Kto Ciebie nauczył tak dobrze mówić po polsku?",
+                lastComment: "Mówisz naprawdę świetnie i wspaniale porozumiewasz się po polsku.",
+                choices: [
+                    "Mój dziadek! Często ze mną rozmawiał, kiedy byłem mały.",
+                    "Uczę się sam z internetu."
                 ],
+                correct: 0,
                 phrases: [
-                    {
-                        phrase: "świetnie",
-                        en: "greatly / excellently",
-                        example: "Twój brat świetnie gra w piłkę nożną."
-                    },
-                    {
-                        phrase: "wspaniale",
-                        en: "wonderfully / fantastically",
-                        example: "Spędziliśmy wspaniale czas podczas wakacji u dziadków."
-                    }
+                    { phrase: "świetnie", en: "excellently / greatly", ex: "Twój brat świetnie mówi po angielsku." },
+                    { phrase: "wspaniale", en: "wonderfully", ex: "Spędziliśmy wspaniale czas na wakacjach." }
                 ]
             },
             {
-                title: "Kto upiekł ten pyszny tort?",
-                dialogue: [
-                    { speaker: "A", text: "Kto upiekł ten pyszny tort na Twoje urodziny?" },
-                    { speaker: "B", text: "Moja ciocia! Ona uwielbia piec ciasta dla całej rodziny." },
-                    { speaker: "A", text: "Jest naprawdę wyśmienity! Muszę poprosić ją o przepis." }
+                type: "dialog",
+                title: "Dialog 4: Pyszny tort",
+                firstComment: "Kto upiekł ten pyszny tort na Twoje urodziny?",
+                lastComment: "Jest naprawdę wyśmienity! Muszę poprosić ją o przepis.",
+                choices: [
+                    "Moja ciocia! Ona uwielbia piec ciasta dla całej rodziny.",
+                    "Kupiłem ten tort wczoraj w markecie."
                 ],
+                correct: 0,
                 phrases: [
-                    {
-                        phrase: "wyśmienity",
-                        en: "delicious / exquisite",
-                        example: "Obiad przygotowany przez moją babcię jest wyśmienity."
-                    },
-                    {
-                        phrase: "przepis",
-                        en: "recipe",
-                        example: "Czy możesz dać mi przepis na ten pyszny sernik?"
-                    }
+                    { phrase: "wyśmienity", en: "delicious / exquisite", ex: "Ten tort czekoladowy jest naprawdę wyśmienity!" },
+                    { phrase: "przepis", en: "recipe", ex: "Czy dasz mi przepis na to ciasto?" }
                 ]
             },
             {
-                title: "Czy masz rodzeństwo?",
-                dialogue: [
-                    { speaker: "A", text: "Czy masz rodzeństwo?" },
-                    { speaker: "B", text: "Tak, mam brata i siostrę." },
-                    { speaker: "A", text: "Często się spotykacie?" },
-                    { speaker: "B", text: "Tak, w każdy weekend odwiedzamy rodziców, którzy są już na emeryturze." }
+                type: "dialog",
+                title: "Dialog 5: Rodzina i rodzeństwo",
+                firstComment: "Czy masz rodzeństwo?",
+                lastComment: "Cudownie! Moi rodzice też są już na emeryturze.",
+                choices: [
+                    "Tak, mam brata i siostrę. Często odwiedzamy rodziców na emeryturze.",
+                    "Nie, jestem jedynakiem."
                 ],
+                correct: 0,
                 phrases: [
-                    {
-                        phrase: "emerytura",
-                        en: "retirement",
-                        example: "Mój dziadek jest już na emeryturze i ma dużo wolnego czasu."
-                    },
-                    {
-                        phrase: "Często się spotykacie?",
-                        en: "Do you meet often?",
-                        example: "Mieszkamy w tym samym mieście. Często się spotykacie z przyjaciółmi?"
-                    }
+                    { phrase: "emerytura", en: "retirement", ex: "Mój dziadek jest na emeryturze i odpoczywa." },
+                    { phrase: "rodzeństwo", en: "siblings", ex: "Czy Twoje rodzeństwo mieszka w Warszawie?" }
                 ]
             },
             {
-                title: "Jak wygląda Twój najlepszy przyjaciel?",
-                dialogue: [
-                    { speaker: "A", text: "Jak wygląda Twój najlepszy przyjaciel?" },
-                    { speaker: "B", text: "Jest wysoki, ma krótkie ciemne włosy i nosi okulary." },
-                    { speaker: "A", text: "Wydaje się bardzo miłą i sympatyczną osobą!" }
+                type: "dialog",
+                title: "Dialog 6: Wygląd przyjaciela",
+                firstComment: "Jak wygląda Twój najlepszy przyjaciel?",
+                lastComment: "Wydaje się bardzo miłą i sympatyczną osobą!",
+                choices: [
+                    "Jest wysoki, ma krótkie ciemne włosy i nosi okulary.",
+                    "Mój przyjaciel bardzo lubi grać na gitarze."
                 ],
+                correct: 0,
                 phrases: [
-                    {
-                        phrase: "wygląda",
-                        en: "looks like / appears",
-                        example: "Jak wygląda Twój nowy dom w Warszawie?"
-                    },
-                    {
-                        phrase: "Wydaje się",
-                        en: "It seems / He seems",
-                        example: "Ten nowy nauczyciel wydaje się bardzo sympatyczny."
-                    }
+                    { phrase: "wygląda", en: "looks like", ex: "Jak wygląda Twój nowy brat?" },
+                    { phrase: "wydaje się", en: "seems to be", ex: "Ten człowiek wydaje się bardzo sympatyczny." }
                 ]
+            },
+            {
+                type: "dialog",
+                title: "Dialog 7: Wizyta u babci",
+                firstComment: "Dokąd jedziecie w ten weekend?",
+                lastComment: "Babcia na pewno ucieszy się z Waszej wizyty!",
+                choices: [
+                    "Jedziemy do naszej babci na niedzielny obiad.",
+                    "Zostajemy w domu i sprzątamy."
+                ],
+                correct: 0,
+                phrases: [
+                    { phrase: "wizyta", en: "visit", ex: "To była bardzo udana wizyta u rodziny." }
+                ]
+            },
+            {
+                type: "dialog",
+                title: "Dialog 8: Praca w cukierni",
+                firstComment: "Gdzie pracuje Twoja siostra?",
+                lastComment: "To słodka i przyjemna praca!",
+                choices: [
+                    "Moja siostra pracuje w znanej cukierni w centrum miasta.",
+                    "Ona studiuje na uniwersytecie."
+                ],
+                correct: 0,
+                phrases: [
+                    { phrase: "cukiernia", en: "pastry shop / bakery", ex: "Kupiłem pyszne pączki w lokalnej cukierni." }
+                ]
+            },
+            {
+                type: "dialog",
+                title: "Dialog 9: Poranna kawa",
+                firstComment: "Co zwykle robisz z żoną rano?",
+                lastComment: "Nie ma nic lepszego niż spokojny poranek!",
+                choices: [
+                    "Zwykle pijemy razem kawę i rozmawiamy przed pracą.",
+                    "Szybko wybiegamy z domu bez śniadania."
+                ],
+                correct: 0,
+                phrases: [
+                    { phrase: "pić kawę", en: "to drink coffee", ex: "Lubię pić kawę bez cukru." }
+                ]
+            },
+            {
+                type: "dialog",
+                title: "Dialog 10: Prezent urodzinowy",
+                firstComment: "Co kupujesz dla brata na urodziny?",
+                lastComment: "To genialny pomysł, na pewno się ucieszy!",
+                choices: [
+                    "Planuję kupować elegancki prezent – dobrą książkę.",
+                    "Jeszcze nie wiem, nic nie kupuję."
+                ],
+                correct: 0,
+                phrases: [
+                    { phrase: "kupować prezent", en: "to buy a gift", ex: "Uwielbiam kupować prezenty dla bliskich." }
+                ]
+            },
+
+            // --- CZEŚĆ 5: GRAMATYKA I PYTANIA DODATKOWE (5 PYTAŃ) ---
+            {
+                type: "pair",
+                title: "Jutro będę ______ moją ciocię.",
+                options: ["odwiedzać", "odwiedzać się", "odwiedzam"],
+                correct: 0,
+                explanation: "Po «będę» używamy bezokolicznika (odwiedzać)."
+            },
+            {
+                type: "pair",
+                title: "Mamy fantastyczną ______.",
+                options: ["sąsiadka", "sąsiadkę", "sąsiadki"],
+                correct: 1,
+                explanation: "Mieć + Biernik r. żeńskiego = fantastyczną sąsiadkę."
+            },
+            {
+                type: "pair",
+                title: "Brat mojego ojca to mój ______.",
+                options: ["dziadek", "wujek", "syn"],
+                correct: 1,
+                explanation: "Brat ojca lub matki to wujek (uncle)."
+            },
+            {
+                type: "pair",
+                title: "Jedynak to osoba, która ______.",
+                options: ["nie ma rodzeństwa", "ma pięciu braci", "jest najstarsza"],
+                correct: 0,
+                explanation: "Jedynak (only child) nie ma brata ani siostry."
+            },
+            {
+                type: "pair",
+                title: "Co robimy w piekarniku z ciastem lub chlebem?",
+                options: ["gotujemy", "pieczemy", "pijemy"],
+                correct: 1,
+                explanation: "W piekarniku pieczemy ciasto, tort lub chleb."
             }
         ];
 
-        let currentDialogIndex = 0;
+        let currentQIndex = 0;
+        let score = 0;
+        let attempts = 0;
 
-        function renderDialogue() {
-            const currentData = dialoguesData[currentDialogIndex];
+        function renderQuestion() {
+            const current = testQuestions[currentQIndex];
             
-            document.getElementById('dialog-title').textContent = `💬 ${currentData.title}`;
+            document.getElementById('question-title').textContent = `${currentQIndex + 1}. ${current.title}`;
             
-            const chatContainer = document.getElementById('chat-container');
-            const optionsContainer = document.getElementById('options-container');
-            const phrasesBox = document.getElementById('phrases-box');
+            const typeInput = document.getElementById('type-input');
+            const optionsGrid = document.getElementById('options-grid');
+            const typeDialog = document.getElementById('type-dialog');
+            const explanationBox = document.getElementById('explanation-box');
             const nextBtn = document.getElementById('next-btn');
 
-            chatContainer.innerHTML = '';
-            optionsContainer.innerHTML = '';
-            phrasesBox.classList.remove('visible');
+            typeInput.style.display = 'none';
+            optionsGrid.style.display = 'none';
+            typeDialog.style.display = 'none';
+            explanationBox.classList.remove('visible');
             nextBtn.style.display = 'none';
 
-            let hasChoices = !!currentData.choices;
+            attempts = 0;
 
-            if (hasChoices) {
-                // Dodajemy tylko pierwszą wypowiedź (pytanie Osoby A)
-                const firstLine = currentData.dialogue[0];
-                addBubble(firstLine.speaker, firstLine.text);
-
-                // Tworzymy przyciski wyboru dla Osoby B
-                currentData.choices.forEach((choiceText) => {
+            if (current.type === 'input') {
+                typeInput.style.display = 'block';
+                const inputElem = document.getElementById('user-input');
+                inputElem.value = '';
+                inputElem.disabled = false;
+                inputElem.className = 'input-field';
+                document.getElementById('input-feedback').textContent = '';
+                document.getElementById('btn-submit-input').disabled = false;
+                inputElem.focus();
+            } else if (current.type === 'pair') {
+                optionsGrid.style.display = 'flex';
+                optionsGrid.innerHTML = '';
+                current.options.forEach((optText, idx) => {
                     const btn = document.createElement('button');
                     btn.className = 'option-btn';
-                    btn.textContent = choiceText;
-                    btn.onclick = () => selectChoice(choiceText);
-                    optionsContainer.appendChild(btn);
+                    btn.textContent = optText;
+                    btn.onclick = () => selectPairOption(btn, idx, current);
+                    optionsGrid.appendChild(btn);
                 });
-            } else {
-                // Jeśli dialog statyczny, renderujemy całość
-                currentData.dialogue.forEach(line => {
-                    addBubble(line.speaker, line.text);
-                });
-                showPhrases(currentData.phrases);
-                nextBtn.style.display = 'block';
+            } else if (current.type === 'dialog') {
+                typeDialog.style.display = 'block';
+                setupDialogQuestion(current);
             }
 
             updateProgress();
+        }
+
+        // --- OBSŁUGA WEJŚCIA TEKSTOWEGO (3 PRÓBY) ---
+        function checkInputAnswer() {
+            const current = testQuestions[currentQIndex];
+            const inputElem = document.getElementById('user-input');
+            const feedback = document.getElementById('input-feedback');
+            const userVal = inputElem.value.trim().toLowerCase();
+            const correctVal = current.correctWord.toLowerCase();
+
+            if (!userVal) return;
+
+            if (userVal === correctVal) {
+                score++;
+                inputElem.className = 'input-field correct';
+                inputElem.disabled = true;
+                feedback.textContent = '✨ Poprawnie!';
+                feedback.className = 'feedback-msg correct';
+                document.getElementById('btn-submit-input').disabled = true;
+                document.getElementById('next-btn').style.display = 'block';
+            } else {
+                attempts++;
+                inputElem.className = 'input-field incorrect';
+
+                if (attempts < 3) {
+                    const firstLetter = current.correctWord.charAt(0).toUpperCase();
+                    feedback.textContent = `❌ Spróbuj ponownie (Próba ${attempts}/3). Zaczyna się na "${firstLetter}"`;
+                    feedback.className = 'feedback-msg incorrect';
+                } else {
+                    // Po 3 nieudanych próbach przechodzimy dalej
+                    inputElem.disabled = true;
+                    document.getElementById('btn-submit-input').disabled = true;
+                    feedback.textContent = `❌ Poprawna odpowiedź to: "${current.correctWord}"`;
+                    feedback.className = 'feedback-msg incorrect';
+                    document.getElementById('next-btn').style.display = 'block';
+                }
+            }
+        }
+
+        // --- OBSŁUGA OPCJI ABC / DOPASOWANIA PAR ---
+        function selectPairOption(selectedBtn, idx, current) {
+            const allBtns = document.querySelectorAll('#options-grid .option-btn');
+            allBtns.forEach(btn => btn.disabled = true);
+
+            if (idx === current.correct) {
+                selectedBtn.classList.add('correct');
+                score++;
+            } else {
+                selectedBtn.classList.add('incorrect');
+                allBtns[current.correct].classList.add('correct');
+            }
+
+            showExplanation("💡 Objaśnienie:", current.explanation);
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        // --- OBSŁUGA DIALOGÓW SEKWENCYJNYCH ---
+        function setupDialogQuestion(dialogData) {
+            const chatContainer = document.getElementById('chat-container');
+            const dialogOptions = document.getElementById('dialog-options');
+
+            chatContainer.innerHTML = '';
+            dialogOptions.innerHTML = '';
+
+            // KROK 1: Pierwszy komentarz Osoby A
+            addBubble('A', dialogData.firstComment);
+
+            // KROK 2: Przyciski wyboru dla Osoby B
+            dialogData.choices.forEach((choiceText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = choiceText;
+                btn.onclick = () => handleDialogChoice(idx, choiceText, dialogData);
+                dialogOptions.appendChild(btn);
+            });
+        }
+
+        function handleDialogChoice(selectedIdx, choiceText, dialogData) {
+            document.getElementById('dialog-options').innerHTML = '';
+
+            // Wybór Osoby B
+            addBubble('B', choiceText);
+
+            if (selectedIdx === dialogData.correct) {
+                score++;
+            }
+
+            // KROK 3: Ostatni komentarz Osoby A
+            setTimeout(() => {
+                addBubble('A', dialogData.lastComment);
+
+                // KROK 4: Sekcja tłumaczeń i wyjaśnień
+                let htmlPhrases = "<strong>💡 Kluczowe frazy i słownictwo:</strong><br><br>";
+                dialogData.phrases.forEach(p => {
+                    htmlPhrases += `🔹 <strong>${p.phrase}</strong> (🇬🇧 <em>${p.en}</em>)<br>✏️ Przykład: „${p.ex}”<br><br>`;
+                });
+
+                showExplanation("💬 Tłumaczenie i wyrażenia z dialogu:", htmlPhrases);
+                document.getElementById('next-btn').style.display = 'block';
+            }, 300);
         }
 
         function addBubble(speaker, text) {
@@ -479,91 +793,71 @@
             const bubble = document.createElement('div');
             bubble.className = `chat-bubble ${speaker === 'A' ? 'speaker-a' : 'speaker-b'}`;
             
-            const speakerLabel = document.createElement('div');
-            speakerLabel.className = 'speaker-name';
-            speakerLabel.textContent = speaker === 'A' ? 'Osoba A' : 'Osoba B';
+            const label = document.createElement('div');
+            label.className = 'speaker-name';
+            label.textContent = speaker === 'A' ? 'Osoba A' : 'Osoba B';
 
-            const textSpan = document.createElement('div');
-            textSpan.textContent = text;
+            const txt = document.createElement('div');
+            txt.textContent = text;
 
-            bubble.appendChild(speakerLabel);
-            bubble.appendChild(textSpan);
+            bubble.appendChild(label);
+            bubble.appendChild(txt);
             chatContainer.appendChild(bubble);
         }
 
-        function selectChoice(selectedText) {
-            const currentData = dialoguesData[currentDialogIndex];
-            const optionsContainer = document.getElementById('options-container');
-            
-            optionsContainer.innerHTML = ''; // Usuwamy opcje po dokonaniu wyboru
-
-            // Dodajemy odpowiedź Osoby B
-            addBubble('B', selectedText);
-
-            // Dodajemy pozostałe wypowiedzi po odpowiedzi (np. podsumowujący komentarz Osoby A)
-            let choiceFound = false;
-            currentData.dialogue.forEach((line) => {
-                if (choiceFound) {
-                    addBubble(line.speaker, line.text);
-                }
-                if (line.isChoice) {
-                    choiceFound = true;
-                }
-            });
-
-            // PO wyświetleniu pełnego dialogu odsłaniamy tłumaczenia oraz przycisk przejścia dalej
-            showPhrases(currentData.phrases);
-            document.getElementById('next-btn').style.display = 'block';
+        function showExplanation(title, htmlContent) {
+            const box = document.getElementById('explanation-box');
+            document.getElementById('explanation-title').innerHTML = title;
+            document.getElementById('explanation-text').innerHTML = htmlContent;
+            box.classList.add('visible');
         }
 
-        function showPhrases(phrasesArray) {
-            const phrasesList = document.getElementById('phrases-list');
-            phrasesList.innerHTML = '';
-
-            phrasesArray.forEach(item => {
-                const phraseDiv = document.createElement('div');
-                phraseDiv.className = 'phrase-item';
-                phraseDiv.innerHTML = `
-                    <div class="phrase-head">🔹 ${item.phrase} <span class="phrase-en">(${item.en})</span></div>
-                    <div class="phrase-ex">✏️ Przykład: „${item.example}”</div>
-                `;
-                phrasesList.appendChild(phraseDiv);
-            });
-
-            document.getElementById('phrases-box').classList.add('visible');
-        }
-
-        function nextDialog() {
-            currentDialogIndex++;
-            if (currentDialogIndex < dialoguesData.length) {
-                renderDialogue();
+        function nextQuestion() {
+            currentQIndex++;
+            if (currentQIndex < testQuestions.length) {
+                renderQuestion();
             } else {
                 showCompletion();
             }
         }
 
         function updateProgress() {
-            const total = dialoguesData.length;
-            const progressPct = (currentDialogIndex / total) * 100;
-            document.getElementById('progress-bar').style.width = `${progressPct}%`;
-            document.getElementById('step-counter').textContent = `Dialog ${currentDialogIndex + 1} / ${total}`;
+            const total = testQuestions.length;
+            const pct = (currentQIndex / total) * 100;
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+            document.getElementById('step-counter').textContent = `Pytanie ${currentQIndex + 1} / ${total}`;
         }
 
         function showCompletion() {
-            document.getElementById('dialog-card').style.display = 'none';
+            document.getElementById('quiz-card').style.display = 'none';
             document.getElementById('completion-screen').style.display = 'block';
             document.getElementById('progress-bar').style.width = '100%';
+            document.getElementById('final-score').textContent = `${score} / ${testQuestions.length}`;
+            
+            const desc = document.getElementById('completion-desc');
+            if (score >= 24) {
+                desc.textContent = "Fantastyczny wynik! Doskonale opanowałeś materiał z Modułu 2.";
+            } else {
+                desc.textContent = "Dobra robota! Warto jeszcze raz przejrzeć poszczególne etapy, aby utrwalić wiedzę.";
+            }
         }
 
         function markStageComplete() {
             const MODULE_KEY = 'm2_progress';
             let progress = JSON.parse(localStorage.getItem(MODULE_KEY)) || {};
-            progress.stage4 = true;
+            progress.stage7 = true;
             localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
         }
 
-        // Start
-        renderDialogue();
+        // Enter zatwierdza wpisywanie w pytaniach z polem tekstowym
+        document.getElementById('user-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkInputAnswer();
+            }
+        });
+
+        // Start testu
+        renderQuestion();
     </script>
 </body>
 </html>
