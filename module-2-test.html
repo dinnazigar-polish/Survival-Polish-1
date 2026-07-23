@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moduł 2 – Test Podsumowujący (30 pytań)</title>
+    <title>Moduł 2 – Test Podsumowujący</title>
     <style>
         :root {
             --primary-salmon: #f49c96;
@@ -87,7 +87,7 @@
             margin-bottom: 1.2rem;
         }
 
-        /* Input dla pytań ze słownictwem */
+        /* Sekcja Wpisywania Tekstu */
         .input-box {
             display: flex;
             flex-direction: column;
@@ -131,11 +131,16 @@
             transition: background-color 0.2s ease;
         }
 
-        .btn-check:hover {
+        .btn-check:hover:not(:disabled) {
             background-color: var(--primary-salmon-hover);
         }
 
-        /* Opcje wyboru (ABC) */
+        .btn-check:disabled {
+            background-color: var(--border-light);
+            cursor: not-allowed;
+        }
+
+        /* Siatka Opcji Wyboru (ABC / Słowa) */
         .options-grid {
             display: flex;
             flex-direction: column;
@@ -173,47 +178,33 @@
             color: var(--error-color);
         }
 
-        /* Czat Sekwencyjny */
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            margin-bottom: 1.2rem;
-        }
-
-        .chat-bubble {
-            max-width: 88%;
-            padding: 0.8rem 1.1rem;
-            border-radius: 16px;
-            font-size: 1rem;
-            line-height: 1.4;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .chat-bubble.speaker-a {
-            align-self: flex-start;
+        /* Podgląd Dialogu z Luką */
+        .dialog-preview {
             background-color: #f1f5f9;
-            color: var(--text-dark);
-            border-bottom-left-radius: 4px;
+            border-radius: 14px;
+            padding: 1.2rem;
+            margin-bottom: 1.2rem;
+            font-size: 1.05rem;
+            line-height: 1.6;
         }
 
-        .chat-bubble.speaker-b {
-            align-self: flex-end;
-            background-color: #fdf0ef;
+        .dialog-line {
+            margin-bottom: 0.6rem;
+        }
+
+        .dialog-line:last-child {
+            margin-bottom: 0;
+        }
+
+        .blank-placeholder {
+            display: inline-block;
+            font-weight: 800;
             color: #b0463e;
-            font-weight: 600;
-            border-bottom-right-radius: 4px;
+            border-bottom: 2px dashed #b0463e;
+            padding: 0 0.4rem;
         }
 
-        .speaker-name {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 0.2rem;
-            color: var(--text-muted);
-        }
-
-        /* Wyjaśnienia i frazy */
+        /* Sekcja Objaśnień */
         .explanation-box {
             margin-top: 1.2rem;
             padding: 1.2rem;
@@ -234,23 +225,56 @@
             margin-bottom: 0.5rem;
         }
 
+        /* Nawigacja Dolna */
+        .nav-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .prev-btn {
+            flex: 1;
+            background-color: #ffffff;
+            color: var(--text-dark);
+            border: 2px solid var(--border-light);
+            padding: 0.9rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .prev-btn:hover:not(:disabled) {
+            border-color: var(--text-muted);
+            background-color: #f1f5f9;
+        }
+
+        .prev-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .next-btn {
-            width: 100%;
+            flex: 2;
             background-color: var(--primary-salmon);
             color: white;
             border: none;
-            padding: 1rem;
+            padding: 0.9rem;
             border-radius: 30px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
-            margin-top: 1.2rem;
-            display: none;
             transition: background-color 0.2s ease;
         }
 
-        .next-btn:hover {
+        .next-btn:hover:not(:disabled) {
             background-color: var(--primary-salmon-hover);
+        }
+
+        .next-btn:disabled {
+            background-color: var(--border-light);
+            cursor: not-allowed;
         }
 
         .feedback-msg {
@@ -272,7 +296,41 @@
             font-size: 3.5rem;
             font-weight: 800;
             color: var(--primary-salmon);
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .score-percent {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-action-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 2rem;
+            align-items: center;
+        }
+
+        .btn-restart {
+            background-color: #ffffff;
+            color: var(--text-dark);
+            border: 2px solid var(--border-light);
+            padding: 0.9rem 2rem;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        .btn-restart:hover {
+            border-color: var(--primary-salmon);
+            color: var(--primary-salmon);
         }
 
         .btn-finish {
@@ -283,7 +341,8 @@
             padding: 0.9rem 2rem;
             border-radius: 30px;
             font-weight: 700;
-            margin-top: 1.5rem;
+            width: 100%;
+            max-width: 280px;
         }
 
         @keyframes fadeIn {
@@ -297,7 +356,7 @@
     <div class="container">
         <div class="header">
             <a href="module-2-vocab.html" class="back-link">← Powrót do modułu</a>
-            <span id="step-counter" style="font-weight: 700; color: var(--text-muted);">Pytanie 1 / 30</span>
+            <span id="step-counter" style="font-weight: 700; color: var(--text-muted);">Pytanie 1 / 25</span>
         </div>
 
         <div class="progress-bar-container">
@@ -308,7 +367,7 @@
         <div class="quiz-card" id="quiz-card">
             <div class="question-title" id="question-title">---</div>
 
-            <!-- Typ 1: Wpisywanie słowa -->
+            <!-- Typ 1: Wpisywanie słowa (Pytania 1–5) -->
             <div id="type-input" style="display: none;">
                 <div class="input-box">
                     <input type="text" id="user-input" class="input-field" placeholder="Wpisz słowo po polsku..." autocomplete="off">
@@ -317,68 +376,71 @@
                 <div id="input-feedback" class="feedback-msg"></div>
             </div>
 
-            <!-- Typ 2 & 4: Wybór opcji (Dopasowanie par / Wybór ABC) -->
-            <div class="options-grid" id="options-grid" style="display: none;"></div>
-
-            <!-- Typ 3: Dialog Sekwencyjny -->
-            <div id="type-dialog" style="display: none;">
-                <div class="chat-container" id="chat-container"></div>
-                <div class="options-grid" id="dialog-options"></div>
+            <!-- Typ 2: Dialog z luką (Pytania 16–25) -->
+            <div id="type-dialog-gap" style="display: none;">
+                <div class="dialog-preview" id="dialog-preview"></div>
             </div>
 
-            <!-- Sekcja Objaśnień / Tłumaczeń -->
+            <!-- Siatka wyboru (Dla dopasowania par i wyboru słów z luki) -->
+            <div class="options-grid" id="options-grid" style="display: none;"></div>
+
+            <!-- Wyjaśnienie / Kontekst -->
             <div class="explanation-box" id="explanation-box">
-                <div class="explanation-title" id="explanation-title">💡 Przykład użycia w kontekście:</div>
+                <div class="explanation-title" id="explanation-title">💡 Objaśnienie:</div>
                 <div class="explanation-text" id="explanation-text"></div>
             </div>
 
-            <button class="next-btn" id="next-btn" onclick="nextQuestion()">Następne pytanie →</button>
+            <!-- Nawigacja: Wstecz i Dalej -->
+            <div class="nav-controls">
+                <button class="prev-btn" id="prev-btn" onclick="prevQuestion()">← Wstecz</button>
+                <button class="next-btn" id="next-btn" onclick="nextQuestion()">Następne pytanie →</button>
+            </div>
         </div>
 
         <!-- Ekran Końcowy -->
         <div class="completion-screen" id="completion-screen">
             <h2>🎉 Test Podsumowujący Ukończony!</h2>
-            <div class="score-badge" id="final-score">0 / 30</div>
-            <p id="completion-desc">Wspaniały wynik! Moduł 2 opanowany w całości.</p>
-            <a href="module-2-vocab.html" class="btn-finish" onclick="markStageComplete()">Zapisz wynik i wróć</a>
+            <div class="score-badge" id="final-score">0 / 25</div>
+            <div class="score-percent" id="final-percent">0%</div>
+            <p id="completion-desc">Oto Twój wynik za cały moduł.</p>
+
+            <div class="btn-action-group">
+                <button class="btn-restart" onclick="restartTest()">🔄 Powtórz test</button>
+                <a href="module-2-vocab.html" class="btn-finish" onclick="markStageComplete()">Zapisz wynik i wróć</a>
+            </div>
         </div>
     </div>
 
     <script>
         const testQuestions = [
-            // --- CZEŚĆ 1: PODPISAĆ WYRAZY Z MODULE 2 (5 PYTAŃ) ---
+            // --- CZĘŚĆ 1: PODPISAĆ WYRAZY - WPISYWANIE (5 PYTAŃ) ---
             {
                 type: "input",
                 title: "Wpisz słowo po polsku: 🇬🇧 «grandmother»",
-                correctWord: "babcia",
-                en: "grandmother"
+                correctWord: "babcia"
             },
             {
                 type: "input",
                 title: "Wpisz słowo po polsku: 🇬🇧 «uncle»",
-                correctWord: "wujek",
-                en: "uncle"
+                correctWord: "wujek"
             },
             {
                 type: "input",
                 title: "Wpisz słowo po polsku: 🇬🇧 «recipe»",
-                correctWord: "przepis",
-                en: "recipe"
+                correctWord: "przepis"
             },
             {
                 type: "input",
                 title: "Wpisz słowo po polsku: 🇬🇧 «pastry shop / bakery»",
-                correctWord: "cukiernia",
-                en: "pastry shop"
+                correctWord: "cukiernia"
             },
             {
                 type: "input",
                 title: "Wpisz słowo po polsku: 🇬🇧 «retirement»",
-                correctWord: "emerytura",
-                en: "retirement"
+                correctWord: "emerytura"
             },
 
-            // --- CZEŚĆ 2: DOPASOWAĆ PARY - ZESTAW 1 (5 PYTAŃ) ---
+            // --- CZĘŚĆ 2: DOPASOWAĆ PARY - ZESTAW 1 (5 PYTAŃ) ---
             {
                 type: "pair",
                 title: "Gotować obiad?",
@@ -415,232 +477,150 @@
                 explanation: "<strong>Przykłady w kontekście:</strong><br>• Czy masz rodzeństwo, czy jesteś jedynakiem?<br>• Mam duże rodzeństwo – dwóch braci i siostrę."
             },
 
-            // --- CZEŚĆ 3: DOPASOWAĆ PARY - ZESTAW 2 (5 PYTAŃ) ---
+            // --- CZĘŚĆ 3: DOPASOWAĆ PARY - ZESTAW 2 (5 PYTAŃ) ---
             {
                 type: "pair",
-                title: "Wybierz poprawne tłumaczenie dla: „odbierać dzieci”",
+                title: "Odbierać dzieci?",
                 options: ["to pick up children", "to bake cakes", "difficult task"],
                 correct: 0,
-                explanation: "«odbierać dzieci» = to pick up children"
+                explanation: "<strong>Przykłady w kontekście:</strong><br>• Muszę odebrać dzieci ze szkoły o 15:00."
             },
             {
                 type: "pair",
-                title: "Wybierz poprawne tłumaczenie dla: „nauczać matematyki”",
+                title: "Nauczać matematyki?",
                 options: ["to work in a pastry shop", "to teach mathematics", "difficult task"],
                 correct: 1,
-                explanation: "«nauczać matematyki» = to teach mathematics"
+                explanation: "<strong>Przykłady w kontekście:</strong><br>• Pan Tomasz naucza matematyki w liceum."
             },
             {
                 type: "pair",
-                title: "Wybierz poprawne tłumaczenie dla: „piec ciasta”",
+                title: "Piec ciasta?",
                 options: ["to bake cakes", "to pick up children", "to work in a pastry shop"],
                 correct: 0,
-                explanation: "«piec ciasta» = to bake cakes"
+                explanation: "<strong>Przykłady w kontekście:</strong><br>• Moja babcia bardzo lubi piec ciasta na weekend."
             },
             {
                 type: "pair",
-                title: "Wybierz poprawne tłumaczenie dla: „pracować w cukierni”",
+                title: "Pracować w cukierni?",
                 options: ["to teach mathematics", "to work in a pastry shop", "difficult task"],
                 correct: 1,
-                explanation: "«pracować w cukierni» = to work in a pastry shop"
+                explanation: "<strong>Przykłady w kontekście:</strong><br>• Praca w cukierni jest słodka i przyjemna."
             },
             {
                 type: "pair",
-                title: "Wybierz poprawne tłumaczenie dla: „trudne zadanie”",
+                title: "Trudne zadanie?",
                 options: ["to pick up children", "to bake cakes", "difficult task"],
                 correct: 2,
-                explanation: "«trudne zadanie» = difficult task"
+                explanation: "<strong>Przykłady w kontekście:</strong><br>• Rozwiązanie tego problemu to naprawdę trudne zadanie."
             },
 
-            // --- CZEŚĆ 4: 10 DIALOGÓW (PREPYW SEKWENCYJNY) ---
+            // --- CZĘŚĆ 4: DIALOGI Z LUKAMI (10 PYTAŃ - Pytania 16–25) ---
             {
-                type: "dialog",
-                title: "Dialog 1: Kto odbiera Wasze dzieci ze szkoły?",
-                firstComment: "Kto zwykle odbiera Wasze dzieci ze szkoły w tygodniu?",
-                lastComment: "To bardzo wygodne rozwiązanie!",
-                choices: [
-                    "Najczęściej robi to moja żona, ale czasami pomaga nam też babcia.",
-                    "Moje dzieci chodzą do szkoły na piechotę z kolegami."
-                ],
+                type: "dialogGap",
+                title: "Uzupełnij lukę w dialogu 1:",
+                speakerA: "Kto zwykle odbiera Wasze dzieci ze szkoły w tygodniu?",
+                speakerB_template: "Najczęściej robi to moja żona, ale czasami pomaga nam też ___.",
+                speakerA_end: "To bardzo wygodne rozwiązanie!",
+                options: ["babcia", "babci", "żona", "sąsiadka"],
                 correct: 0,
-                phrases: [
-                    { phrase: "odbierać dzieci", en: "to pick up children", ex: "Codziennie o 15:00 muszę odbierać dzieci ze szkoły." },
-                    { phrase: "wygodne rozwiązanie", en: "convenient solution", ex: "Pomoc babci to dla nas bardzo wygodne rozwiązanie." }
-                ]
+                explanation: "Mianownik: mowa o osobie (kto?) -> babcia."
             },
             {
-                type: "dialog",
-                title: "Dialog 2: Czym zajmuje się Twoja mama?",
-                firstComment: "Czym zajmuje się Twoja mama?",
-                lastComment: "Uczenie matematyki brzmi jak bardzo trudne zadanie!",
-                choices: [
-                    "Moja mama jest nauczycielką. Naucza matematyki i fizyki w szkole.",
-                    "Moja mama bardzo lubi spędzać czas w ogrodzie."
-                ],
+                type: "dialogGap",
+                title: "Uzupełnij lukę w dialogu 2:",
+                speakerA: "Czym zajmuje się Twoja mama?",
+                speakerB_template: "Moja mama jest nauczycielką. Naucza ___ i fizyki w szkole.",
+                speakerA_end: "Uczenie tego przedmiotu brzmi jak trudne zadanie!",
+                options: ["matematyki", "matematyką", "matematyka", "fizyka"],
                 correct: 0,
-                phrases: [
-                    { phrase: "zajmować się", en: "to do for a living / deal with", ex: "Czym zajmujesz się w nowej pracy?" },
-                    { phrase: "trudne zadanie", en: "difficult task", ex: "Praca w szkole to odpowiedzialne i trudne zadanie." }
-                ]
+                explanation: "Nauczać + Dopełniacz: nauczać (czego?) -> matematyki."
             },
             {
-                type: "dialog",
-                title: "Dialog 3: Nauczanie języka",
-                firstComment: "Kto Ciebie nauczył tak dobrze mówić po polsku?",
-                lastComment: "Mówisz naprawdę świetnie i wspaniale porozumiewasz się po polsku.",
-                choices: [
-                    "Mój dziadek! Często ze mną rozmawiał, kiedy byłem mały.",
-                    "Uczę się sam z internetu."
-                ],
+                type: "dialogGap",
+                title: "Uzupełnij lukę w dialogu 3:",
+                speakerA: "Kto Ciebie nauczył tak dobrze mówić po polsku?",
+                speakerB_template: "Mój ___! Często ze mną rozmawiał, kiedy byłem mały.",
+                speakerA_end: "Mówisz naprawdę świetnie i wspaniale!",
+                options: ["dziadek", "dziadka", "wujek", "ojciec"],
                 correct: 0,
-                phrases: [
-                    { phrase: "świetnie", en: "excellently / greatly", ex: "Twój brat świetnie mówi po angielsku." },
-                    { phrase: "wspaniale", en: "wonderfully", ex: "Spędziliśmy wspaniale czas na wakacjach." }
-                ]
+                explanation: "Mianownik r. męski: Mój dziadek."
             },
             {
-                type: "dialog",
-                title: "Dialog 4: Pyszny tort",
-                firstComment: "Kto upiekł ten pyszny tort na Twoje urodziny?",
-                lastComment: "Jest naprawdę wyśmienity! Muszę poprosić ją o przepis.",
-                choices: [
-                    "Moja ciocia! Ona uwielbia piec ciasta dla całej rodziny.",
-                    "Kupiłem ten tort wczoraj w markecie."
-                ],
+                type: "dialogGap",
+                title: "Uzupełnij lukę w dialogu 4:",
+                speakerA: "Kto upiekł ten pyszny tort na Twoje urodziny?",
+                speakerB_template: "Moja ciocia! Ona uwielbia piec ___ dla całej rodziny.",
+                speakerA_end: "Jest naprawdę wyśmienity! Muszę poprosić ją o przepis.",
+                options: ["ciasta", "ciasto", "tortu", "chleb"],
                 correct: 0,
-                phrases: [
-                    { phrase: "wyśmienity", en: "delicious / exquisite", ex: "Ten tort czekoladowy jest naprawdę wyśmienity!" },
-                    { phrase: "przepis", en: "recipe", ex: "Czy dasz mi przepis na to ciasto?" }
-                ]
+                explanation: "Piec (co?) Biernik l. mnoga -> ciasta."
             },
             {
-                type: "dialog",
-                title: "Dialog 5: Rodzina i rodzeństwo",
-                firstComment: "Czy masz rodzeństwo?",
-                lastComment: "Cudownie! Moi rodzice też są już na emeryturze.",
-                choices: [
-                    "Tak, mam brata i siostrę. Często odwiedzamy rodziców na emeryturze.",
-                    "Nie, jestem jedynakiem."
-                ],
+                type: "dialogGap",
+                title: "Uzupełnij lukę w dialogu 5:",
+                speakerA: "Czy masz rodzeństwo?",
+                speakerB_template: "Tak, mam brata i siostrę. Często odwiedzamy rodziców na ___.",
+                speakerA_end: "Cudownie! Moi rodzice też już nie pracują.",
+                options: ["emeryturze", "emerytura", "pracy", "urlopie"],
                 correct: 0,
-                phrases: [
-                    { phrase: "emerytura", en: "retirement", ex: "Mój dziadek jest na emeryturze i odpoczywa." },
-                    { phrase: "rodzeństwo", en: "siblings", ex: "Czy Twoje rodzeństwo mieszka w Warszawie?" }
-                ]
+                explanation: "Na + Miejscownik: na emeryturze."
             },
             {
-                type: "dialog",
-                title: "Dialog 6: Wygląd przyjaciela",
-                firstComment: "Jak wygląda Twój najlepszy przyjaciel?",
-                lastComment: "Wydaje się bardzo miłą i sympatyczną osobą!",
-                choices: [
-                    "Jest wysoki, ma krótkie ciemne włosy i nosi okulary.",
-                    "Mój przyjaciel bardzo lubi grać na gitarze."
-                ],
+                type: "dialogGap",
+                title: "Uzupełnij lukę w dialogu 6:",
+                speakerA: "Jak wygląda Twój najlepszy przyjaciel?",
+                speakerB_template: "Jest wysoki, ma krótkie ciemne włosy i nosi ___.",
+                speakerA_end: "Wydaje się bardzo miłą i sympatyczną osobą!",
+                options: ["okulary", "okularów", "koszula", "zegarek"],
                 correct: 0,
-                phrases: [
-                    { phrase: "wygląda", en: "looks like", ex: "Jak wygląda Twój nowy brat?" },
-                    { phrase: "wydaje się", en: "seems to be", ex: "Ten człowiek wydaje się bardzo sympatyczny." }
-                ]
+                explanation: "Nosić (co?) Biernik l. mnoga -> okulary."
             },
             {
-                type: "dialog",
-                title: "Dialog 7: Wizyta u babci",
-                firstComment: "Dokąd jedziecie w ten weekend?",
-                lastComment: "Babcia na pewno ucieszy się z Waszej wizyty!",
-                choices: [
-                    "Jedziemy do naszej babci na niedzielny obiad.",
-                    "Zostajemy w domu i sprzątamy."
-                ],
+                type: "dialogGap",
+                title: "Uzupełnij lukę w dialogu 7:",
+                speakerA: "Dokąd jedziecie w ten weekend?",
+                speakerB_template: "Jedziemy do naszej babci na niedzielny ___.",
+                speakerA_end: "Babcia na pewno ucieszy się z Waszej wizyty!",
+                options: ["obiad", "obiadu", "kolacja", "posiłek"],
                 correct: 0,
-                phrases: [
-                    { phrase: "wizyta", en: "visit", ex: "To była bardzo udana wizyta u rodziny." }
-                ]
+                explanation: "Na + Biernik: na niedzielny obiad."
             },
             {
-                type: "dialog",
-                title: "Dialog 8: Praca w cukierni",
-                firstComment: "Gdzie pracuje Twoja siostra?",
-                lastComment: "To słodka i przyjemna praca!",
-                choices: [
-                    "Moja siostra pracuje w znanej cukierni w centrum miasta.",
-                    "Ona studiuje na uniwersytecie."
-                ],
+                type: "dialogGap",
+                title: "Uzupełnij lukę w dialogu 8:",
+                speakerA: "Gdzie pracuje Twoja siostra?",
+                speakerB_template: "Moja siostra pracuje w znanej ___ w centrum miasta.",
+                speakerA_end: "To słodka i przyjemna praca!",
+                options: ["cukierni", "cukiernia", "piekarnia", "restauracji"],
                 correct: 0,
-                phrases: [
-                    { phrase: "cukiernia", en: "pastry shop / bakery", ex: "Kupiłem pyszne pączki w lokalnej cukierni." }
-                ]
+                explanation: "W + Miejscownik r. żeńskiego -> w cukierni."
             },
             {
-                type: "dialog",
-                title: "Dialog 9: Poranna kawa",
-                firstComment: "Co zwykle robisz z żoną rano?",
-                lastComment: "Nie ma nic lepszego niż spokojny poranek!",
-                choices: [
-                    "Zwykle pijemy razem kawę i rozmawiamy przed pracą.",
-                    "Szybko wybiegamy z domu bez śniadania."
-                ],
+                type: "dialogGap",
+                title: "Uzupełnij lukę w dialogu 9:",
+                speakerA: "Co zwykle robisz z żoną rano?",
+                speakerB_template: "Zwykle pijemy razem ___ i rozmawiamy przed pracą.",
+                speakerA_end: "Nie ma nic lepszego niż spokojny poranek!",
+                options: ["kawę", "kawa", "herbatę", "mleko"],
                 correct: 0,
-                phrases: [
-                    { phrase: "pić kawę", en: "to drink coffee", ex: "Lubię pić kawę bez cukru." }
-                ]
+                explanation: "Pić (co?) Biernik r. żeńskiego -> kawę."
             },
             {
-                type: "dialog",
-                title: "Dialog 10: Prezent urodzinowy",
-                firstComment: "Co kupujesz dla brata na urodziny?",
-                lastComment: "To genialny pomysł, na pewno się ucieszy!",
-                choices: [
-                    "Planuję kupować elegancki prezent – dobrą książkę.",
-                    "Jeszcze nie wiem, nic nie kupuję."
-                ],
+                type: "dialogGap",
+                title: "Uzupełnij lukę w dialogu 10:",
+                speakerA: "Co kupujesz dla brata na urodziny?",
+                speakerB_template: "Planuję kupować elegancki ___ – dobrą książkę.",
+                speakerA_end: "To genialny pomysł, na pewno się ucieszy!",
+                options: ["prezent", "prezentu", "upominek", "książkę"],
                 correct: 0,
-                phrases: [
-                    { phrase: "kupować prezent", en: "to buy a gift", ex: "Uwielbiam kupować prezenty dla bliskich." }
-                ]
-            },
-
-            // --- CZEŚĆ 5: GRAMATYKA I PYTANIA DODATKOWE (5 PYTAŃ) ---
-            {
-                type: "pair",
-                title: "Jutro będę ______ moją ciocię.",
-                options: ["odwiedzać", "odwiedzać się", "odwiedzam"],
-                correct: 0,
-                explanation: "Po «będę» używamy bezokolicznika (odwiedzać)."
-            },
-            {
-                type: "pair",
-                title: "Mamy fantastyczną ______.",
-                options: ["sąsiadkę", "sąsiadka", "sąsiadki"],
-                correct: 0,
-                explanation: "Mieć + Biernik r. żeńskiego = fantastyczną sąsiadkę."
-            },
-            {
-                type: "pair",
-                title: "Brat mojego ojca to mój ______.",
-                options: ["dziadek", "wujek", "syn"],
-                correct: 1,
-                explanation: "Brat ojca lub matki to wujek (uncle)."
-            },
-            {
-                type: "pair",
-                title: "Jedynak to osoba, która ______.",
-                options: ["nie ma rodzeństwa", "ma pięciu braci", "jest najstarsza"],
-                correct: 0,
-                explanation: "Jedynak (only child) nie ma brata ani siostry."
-            },
-            {
-                type: "pair",
-                title: "Co robimy w piekarniku z ciastem lub chlebem?",
-                options: ["gotujemy", "pieczemy", "pijemy"],
-                correct: 1,
-                explanation: "W piekarniku pieczemy ciasto, tort lub chleb."
+                explanation: "Kupować (co?) Biernik -> prezent."
             }
         ];
 
         let currentQIndex = 0;
-        let score = 0;
         let attempts = 0;
+        // Przechowywanie stanu odpowiedzi dla każdego pytania
+        let userAnswers = new Array(testQuestions.length).fill(null);
 
         function renderQuestion() {
             const current = testQuestions[currentQIndex];
@@ -648,207 +628,257 @@
             document.getElementById('question-title').textContent = `${currentQIndex + 1}. ${current.title}`;
             
             const typeInput = document.getElementById('type-input');
+            const typeDialogGap = document.getElementById('type-dialog-gap');
             const optionsGrid = document.getElementById('options-grid');
-            const typeDialog = document.getElementById('type-dialog');
             const explanationBox = document.getElementById('explanation-box');
-            const nextBtn = document.getElementById('next-btn');
-
+            
             typeInput.style.display = 'none';
+            typeDialogGap.style.display = 'none';
             optionsGrid.style.display = 'none';
-            typeDialog.style.display = 'none';
             explanationBox.classList.remove('visible');
-            nextBtn.style.display = 'none';
 
-            attempts = 0;
+            // Kontrola przycisku Wstecz
+            document.getElementById('prev-btn').disabled = (currentQIndex === 0);
+
+            // Stan poprzednio zapisanej odpowiedzi
+            const savedAns = userAnswers[currentQIndex];
 
             if (current.type === 'input') {
                 typeInput.style.display = 'block';
                 const inputElem = document.getElementById('user-input');
-                inputElem.value = '';
-                inputElem.disabled = false;
-                inputElem.className = 'input-field';
-                document.getElementById('input-feedback').textContent = '';
-                document.getElementById('btn-submit-input').disabled = false;
-                inputElem.focus();
-            } else if (current.type === 'pair') {
+                const feedback = document.getElementById('input-feedback');
+                const btnSubmit = document.getElementById('btn-submit-input');
+
+                feedback.textContent = '';
+                attempts = savedAns ? savedAns.attempts : 0;
+
+                if (savedAns && savedAns.completed) {
+                    inputElem.value = savedAns.val;
+                    inputElem.disabled = true;
+                    btnSubmit.disabled = true;
+                    if (savedAns.isCorrect) {
+                        inputElem.className = 'input-field correct';
+                        feedback.textContent = '✨ Poprawnie!';
+                        feedback.className = 'feedback-msg correct';
+                    } else {
+                        inputElem.className = 'input-field incorrect';
+                        feedback.textContent = `❌ Prawidłowa odpowiedź: "${current.correctWord}"`;
+                        feedback.className = 'feedback-msg incorrect';
+                    }
+                    enableNextButton(true);
+                } else {
+                    inputElem.value = '';
+                    inputElem.disabled = false;
+                    inputElem.className = 'input-field';
+                    btnSubmit.disabled = false;
+                    enableNextButton(false);
+                    inputElem.focus();
+                }
+
+            } else if (current.type === 'pair' || current.type === 'dialogGap') {
+                if (current.type === 'dialogGap') {
+                    typeDialogGap.style.display = 'block';
+                    const preview = document.getElementById('dialog-preview');
+                    
+                    let filledText = "___";
+                    if (savedAns && savedAns.completed) {
+                        filledText = current.options[savedAns.selectedIdx];
+                    }
+
+                    const templateWithBlank = current.speakerB_template.replace("___", `<span class="blank-placeholder">${filledText}</span>`);
+
+                    preview.innerHTML = `
+                        <div class="dialog-line"><strong>Osoba A:</strong> ${current.speakerA}</div>
+                        <div class="dialog-line"><strong>Osoba B:</strong> ${templateWithBlank}</div>
+                        <div class="dialog-line"><strong>Osoba A:</strong> ${current.speakerA_end}</div>
+                    `;
+                }
+
                 optionsGrid.style.display = 'flex';
                 optionsGrid.innerHTML = '';
+
                 current.options.forEach((optText, idx) => {
                     const btn = document.createElement('button');
                     btn.className = 'option-btn';
                     btn.textContent = optText;
-                    btn.onclick = () => selectPairOption(btn, idx, current);
+
+                    if (savedAns && savedAns.completed) {
+                        btn.disabled = true;
+                        if (idx === current.correct) {
+                            btn.classList.add('correct');
+                        }
+                        if (idx === savedAns.selectedIdx && !savedAns.isCorrect) {
+                            btn.classList.add('incorrect');
+                        }
+                    } else {
+                        btn.onclick = () => selectOption(btn, idx, current);
+                    }
                     optionsGrid.appendChild(btn);
                 });
-            } else if (current.type === 'dialog') {
-                typeDialog.style.display = 'block';
-                setupDialogQuestion(current);
+
+                if (savedAns && savedAns.completed) {
+                    showExplanation(current.explanation);
+                    enableNextButton(true);
+                } else {
+                    enableNextButton(false);
+                }
             }
 
             updateProgress();
         }
 
-        // --- OBSŁUGA WEJŚCIA TEKSTOWEGO (3 PRÓBY) ---
+        // --- WPISYWANIE SŁOWA (MAX 3 PRÓBY) ---
         function checkInputAnswer() {
             const current = testQuestions[currentQIndex];
             const inputElem = document.getElementById('user-input');
             const feedback = document.getElementById('input-feedback');
+            const btnSubmit = document.getElementById('btn-submit-input');
             const userVal = inputElem.value.trim().toLowerCase();
             const correctVal = current.correctWord.toLowerCase();
 
             if (!userVal) return;
 
             if (userVal === correctVal) {
-                score++;
                 inputElem.className = 'input-field correct';
                 inputElem.disabled = true;
+                btnSubmit.disabled = true;
                 feedback.textContent = '✨ Poprawnie!';
                 feedback.className = 'feedback-msg correct';
-                document.getElementById('btn-submit-input').disabled = true;
-                document.getElementById('next-btn').style.display = 'block';
+
+                userAnswers[currentQIndex] = { completed: true, isCorrect: true, val: userVal, attempts: attempts + 1 };
+                enableNextButton(true);
             } else {
                 attempts++;
                 inputElem.className = 'input-field incorrect';
 
                 if (attempts < 3) {
                     const firstLetter = current.correctWord.charAt(0).toUpperCase();
-                    feedback.textContent = `❌ Spróbuj ponownie (Próba ${attempts}/3). Zaczyna się na "${firstLetter}"`;
+                    feedback.textContent = `❌ Niepoprawnie (Próba ${attempts}/3). Podpowiedź: zaczyna się na "${firstLetter}"`;
                     feedback.className = 'feedback-msg incorrect';
                 } else {
                     inputElem.disabled = true;
-                    document.getElementById('btn-submit-input').disabled = true;
-                    feedback.textContent = `❌ Poprawna odpowiedź to: "${current.correctWord}"`;
+                    btnSubmit.disabled = true;
+                    feedback.textContent = `❌ Brak prób. Poprawna odpowiedź: "${current.correctWord}"`;
                     feedback.className = 'feedback-msg incorrect';
-                    document.getElementById('next-btn').style.display = 'block';
+
+                    userAnswers[currentQIndex] = { completed: true, isCorrect: false, val: userVal, attempts: attempts };
+                    enableNextButton(true);
                 }
             }
         }
 
-        // --- OBSŁUGA OPCJI ABC / DOPASOWANIA PAR ---
-        function selectPairOption(selectedBtn, idx, current) {
+        // --- SELEKCJA OPCJI (WYBÓR ABC / SŁOWA Z LUKI) ---
+        function selectOption(selectedBtn, idx, current) {
             const allBtns = document.querySelectorAll('#options-grid .option-btn');
             allBtns.forEach(btn => btn.disabled = true);
 
-            if (idx === current.correct) {
+            const isCorrect = (idx === current.correct);
+
+            if (isCorrect) {
                 selectedBtn.classList.add('correct');
-                score++;
             } else {
                 selectedBtn.classList.add('incorrect');
                 allBtns[current.correct].classList.add('correct');
             }
 
-            showExplanation("💡 Objaśnienie / Kontekst:", current.explanation);
-            document.getElementById('next-btn').style.display = 'block';
-        }
+            userAnswers[currentQIndex] = { completed: true, isCorrect: isCorrect, selectedIdx: idx };
 
-        // --- OBSŁUGA DIALOGÓW SEKWENCYJNYCH ---
-        function setupDialogQuestion(dialogData) {
-            const chatContainer = document.getElementById('chat-container');
-            const dialogOptions = document.getElementById('dialog-options');
-
-            chatContainer.innerHTML = '';
-            dialogOptions.innerHTML = '';
-
-            // KROK 1: Pierwszy komentarz Osoby A
-            addBubble('A', dialogData.firstComment);
-
-            // KROK 2: Przyciski wyboru dla Osoby B
-            dialogData.choices.forEach((choiceText, idx) => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.textContent = choiceText;
-                btn.onclick = () => handleDialogChoice(idx, choiceText, dialogData);
-                dialogOptions.appendChild(btn);
-            });
-        }
-
-        function handleDialogChoice(selectedIdx, choiceText, dialogData) {
-            document.getElementById('dialog-options').innerHTML = '';
-
-            // Wybór Osoby B
-            addBubble('B', choiceText);
-
-            if (selectedIdx === dialogData.correct) {
-                score++;
+            if (current.type === 'dialogGap') {
+                const preview = document.getElementById('dialog-preview');
+                const templateWithBlank = current.speakerB_template.replace("___", `<span class="blank-placeholder">${current.options[idx]}</span>`);
+                preview.innerHTML = `
+                    <div class="dialog-line"><strong>Osoba A:</strong> ${current.speakerA}</div>
+                    <div class="dialog-line"><strong>Osoba B:</strong> ${templateWithBlank}</div>
+                    <div class="dialog-line"><strong>Osoba A:</strong> ${current.speakerA_end}</div>
+                `;
             }
 
-            // KROK 3: Ostatni komentarz Osoby A
-            setTimeout(() => {
-                addBubble('A', dialogData.lastComment);
-
-                // KROK 4: Sekcja tłumaczeń i wyjaśnień
-                let htmlPhrases = "<strong>💡 Kluczowe frazy i słownictwo:</strong><br><br>";
-                dialogData.phrases.forEach(p => {
-                    htmlPhrases += `🔹 <strong>${p.phrase}</strong> (🇬🇧 <em>${p.en}</em>)<br>✏️ Przykład: „${p.ex}”<br><br>`;
-                });
-
-                showExplanation("💬 Tłumaczenie i wyrażenia z dialogu:", htmlPhrases);
-                document.getElementById('next-btn').style.display = 'block';
-            }, 300);
+            showExplanation(current.explanation);
+            enableNextButton(true);
         }
 
-        function addBubble(speaker, text) {
-            const chatContainer = document.getElementById('chat-container');
-            const bubble = document.createElement('div');
-            bubble.className = `chat-bubble ${speaker === 'A' ? 'speaker-a' : 'speaker-b'}`;
-            
-            const label = document.createElement('div');
-            label.className = 'speaker-name';
-            label.textContent = speaker === 'A' ? 'Osoba A' : 'Osoba B';
-
-            const txt = document.createElement('div');
-            txt.textContent = text;
-
-            bubble.appendChild(label);
-            bubble.appendChild(txt);
-            chatContainer.appendChild(bubble);
-        }
-
-        function showExplanation(title, htmlContent) {
+        function showExplanation(htmlContent) {
+            if (!htmlContent) return;
             const box = document.getElementById('explanation-box');
-            document.getElementById('explanation-title').innerHTML = title;
             document.getElementById('explanation-text').innerHTML = htmlContent;
             box.classList.add('visible');
         }
 
+        function enableNextButton(enable) {
+            document.getElementById('next-btn').disabled = !enable;
+        }
+
         function nextQuestion() {
-            currentQIndex++;
-            if (currentQIndex < testQuestions.length) {
+            if (currentQIndex < testQuestions.length - 1) {
+                currentQIndex++;
                 renderQuestion();
             } else {
                 showCompletion();
             }
         }
 
+        function prevQuestion() {
+            if (currentQIndex > 0) {
+                currentQIndex--;
+                renderQuestion();
+            }
+        }
+
         function updateProgress() {
             const total = testQuestions.length;
-            const pct = (currentQIndex / total) * 100;
+            const pct = ((currentQIndex + 1) / total) * 100;
             document.getElementById('progress-bar').style.width = `${pct}%`;
             document.getElementById('step-counter').textContent = `Pytanie ${currentQIndex + 1} / ${total}`;
+        }
+
+        function calculateScore() {
+            let totalScore = 0;
+            userAnswers.forEach(ans => {
+                if (ans && ans.isCorrect) {
+                    totalScore++;
+                }
+            });
+            return totalScore;
         }
 
         function showCompletion() {
             document.getElementById('quiz-card').style.display = 'none';
             document.getElementById('completion-screen').style.display = 'block';
             document.getElementById('progress-bar').style.width = '100%';
-            document.getElementById('final-score').textContent = `${score} / ${testQuestions.length}`;
-            
+
+            const score = calculateScore();
+            const total = testQuestions.length;
+            const percent = Math.round((score / total) * 100);
+
+            document.getElementById('final-score').textContent = `${score} / ${total}`;
+            document.getElementById('final-percent').textContent = `${percent}%`;
+
             const desc = document.getElementById('completion-desc');
-            if (score >= 24) {
-                desc.textContent = "Fantastyczny wynik! Doskonale opanowałeś materiał z Modułu 2.";
+            if (percent >= 80) {
+                desc.textContent = "Wyśmienicie! Moduł 2 został opanowany na bardzo wysokim poziomie.";
+            } else if (percent >= 50) {
+                desc.textContent = "Dobra robota! Wynik jest pozytywny, ale warto przećwiczyć trudniejsze słówka.";
             } else {
-                desc.textContent = "Dobra robota! Warto jeszcze raz przejrzeć poszczególne etapy, aby utrwalić wiedzę.";
+                desc.textContent = "Spróbuj ponownie! Powtórka materiału pozwoli Ci uzyskać lepszy wynik.";
             }
+        }
+
+        function restartTest() {
+            currentQIndex = 0;
+            userAnswers = new Array(testQuestions.length).fill(null);
+            document.getElementById('completion-screen').style.display = 'none';
+            document.getElementById('quiz-card').style.display = 'block';
+            renderQuestion();
         }
 
         function markStageComplete() {
             const MODULE_KEY = 'm2_progress';
             let progress = JSON.parse(localStorage.getItem(MODULE_KEY)) || {};
-            progress.stage7 = true;
+            progress.test = true;
             localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
         }
 
-        // Enter zatwierdza wpisywanie w pytaniach z polem tekstowym
+        // Obsługa klawisza Enter w polu wpisywania
         document.getElementById('user-input').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 checkInputAnswer();
