@@ -6,17 +6,18 @@
     <title>Moduł 1 – Test końcowy</title>
     <style>
         :root {
-            --primary-salmon: #f49c96;
-            --primary-salmon-hover: #e0857f;
-            --bg-color: #f8f9fa;
+            --primary-green: #22c55e;
+            --primary-green-hover: #16a34a;
+            --primary-green-light: #f0fdf4;
+            --bg-color: #f8fafc;
             --card-bg: #ffffff;
-            --text-dark: #2c3e50;
-            --text-muted: #7f8c8d;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
             --border-light: #e2e8f0;
-            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --success-color: #27ae60;
-            --error-color: #e74c3c;
+            --success-color: #16a34a;
+            --error-color: #ef4444;
         }
 
         * {
@@ -34,7 +35,7 @@
         }
 
         .container {
-            max-width: 680px;
+            max-width: 720px;
             margin: 0 auto;
         }
 
@@ -53,21 +54,21 @@
         }
 
         .back-link:hover {
-            color: var(--primary-salmon);
+            color: var(--primary-green);
         }
 
         .progress-bar-container {
             width: 100%;
-            height: 10px;
+            height: 12px;
             background-color: var(--border-light);
-            border-radius: 5px;
+            border-radius: 6px;
             overflow: hidden;
             margin-bottom: 2rem;
         }
 
         .progress-fill {
             height: 100%;
-            background-color: var(--primary-salmon);
+            background-color: var(--primary-green);
             width: 0%;
             transition: width 0.3s ease;
         }
@@ -75,7 +76,7 @@
         .quiz-card {
             background-color: var(--card-bg);
             border-radius: 20px;
-            padding: 2rem;
+            padding: 2.5rem;
             box-shadow: var(--shadow-soft);
             border: 2px solid var(--border-light);
         }
@@ -84,7 +85,7 @@
             font-size: 1.25rem;
             font-weight: 800;
             color: var(--text-dark);
-            margin-bottom: 1.2rem;
+            margin-bottom: 1.5rem;
         }
 
         .options-container {
@@ -97,8 +98,8 @@
         .option-btn {
             background-color: #ffffff;
             border: 2px solid var(--border-light);
-            border-radius: 12px;
-            padding: 0.9rem 1.2rem;
+            border-radius: 14px;
+            padding: 1rem 1.2rem;
             font-size: 1rem;
             font-weight: 600;
             color: var(--text-dark);
@@ -111,30 +112,30 @@
         }
 
         .option-btn:hover:not(:disabled) {
-            border-color: var(--primary-salmon);
-            background-color: #fffaf9;
+            border-color: var(--primary-green);
+            background-color: var(--primary-green-light);
         }
 
         .option-btn.selected {
-            border-color: var(--primary-salmon);
-            background-color: #fde8e7;
+            border-color: var(--primary-green);
+            background-color: var(--primary-green-light);
         }
 
         .option-btn.correct {
             border-color: var(--success-color);
-            background-color: #eafaf1;
+            background-color: #dcfce7;
             color: var(--success-color);
         }
 
         .option-btn.incorrect {
             border-color: var(--error-color);
-            background-color: #fdf2f2;
+            background-color: #fee2e2;
             color: var(--error-color);
         }
 
         .checkbox-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 0.8rem;
             margin-bottom: 1.2rem;
         }
@@ -143,41 +144,41 @@
             background-color: #ffffff;
             border: 2px solid var(--border-light);
             border-radius: 12px;
-            padding: 0.9rem 1rem;
+            padding: 1rem;
             font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.8rem;
             user-select: none;
             transition: all 0.2s ease;
         }
 
         .checkbox-item:hover {
-            border-color: var(--primary-salmon);
+            border-color: var(--primary-green);
         }
 
         .checkbox-item.selected {
-            border-color: var(--primary-salmon);
-            background-color: #fffaf9;
+            border-color: var(--primary-green);
+            background-color: var(--primary-green-light);
         }
 
         .checkbox-item input {
-            accent-color: var(--primary-salmon);
-            width: 18px;
-            height: 18px;
+            accent-color: var(--primary-green);
+            width: 20px;
+            height: 20px;
         }
 
         .input-box {
             display: flex;
             flex-direction: column;
-            gap: 0.8rem;
+            gap: 1rem;
             margin-bottom: 1rem;
         }
 
         .input-field {
             width: 100%;
-            padding: 0.9rem 1.2rem;
+            padding: 1rem 1.2rem;
             border: 2px solid var(--border-light);
             border-radius: 12px;
             font-size: 1.1rem;
@@ -186,24 +187,24 @@
         }
 
         .input-field:focus {
-            border-color: var(--primary-salmon);
+            border-color: var(--primary-green);
         }
 
         .input-field.correct {
             border-color: var(--success-color);
-            background-color: #eafaf1;
+            background-color: #dcfce7;
         }
 
         .input-field.incorrect {
             border-color: var(--error-color);
-            background-color: #fdf2f2;
+            background-color: #fee2e2;
         }
 
         .btn-check {
-            background-color: var(--primary-salmon);
+            background-color: var(--primary-green);
             color: white;
             border: none;
-            padding: 0.8rem 1.5rem;
+            padding: 0.9rem 1.5rem;
             border-radius: 12px;
             font-size: 1rem;
             font-weight: 700;
@@ -212,12 +213,58 @@
         }
 
         .btn-check:hover:not(:disabled) {
-            background-color: var(--primary-salmon-hover);
+            background-color: var(--primary-green-hover);
         }
 
         .btn-check:disabled {
             background-color: var(--border-light);
             cursor: not-allowed;
+        }
+
+        /* Sekcja Dialogów z Lukami */
+        .dialog-container {
+            background-color: #f1f5f9;
+            padding: 1.5rem;
+            border-radius: 14px;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 2;
+        }
+
+        .dialog-select {
+            padding: 0.4rem 0.8rem;
+            border: 2px solid var(--border-light);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            background-color: #fff;
+            outline: none;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+
+        .dialog-select:focus {
+            border-color: var(--primary-green);
+        }
+
+        .word-bank {
+            background-color: var(--primary-green-light);
+            border: 2px dashed var(--primary-green);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+        }
+
+        .word-bank span {
+            display: inline-block;
+            background-color: #fff;
+            padding: 0.2rem 0.6rem;
+            margin: 0.2rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-light);
+            font-weight: 700;
         }
 
         .feedback-msg {
@@ -232,7 +279,7 @@
         .nav-controls {
             display: flex;
             gap: 1rem;
-            margin-top: 1.5rem;
+            margin-top: 2rem;
         }
 
         .prev-btn {
@@ -260,7 +307,7 @@
 
         .next-btn {
             flex: 2;
-            background-color: var(--primary-salmon);
+            background-color: var(--primary-green);
             color: white;
             border: none;
             padding: 0.9rem;
@@ -272,7 +319,7 @@
         }
 
         .next-btn:hover:not(:disabled) {
-            background-color: var(--primary-salmon-hover);
+            background-color: var(--primary-green-hover);
         }
 
         .next-btn:disabled {
@@ -282,15 +329,19 @@
 
         .completion-screen {
             text-align: center;
-            padding: 3rem 1rem;
+            padding: 3rem 1.5rem;
             display: none;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-light);
         }
 
         .score-badge {
             font-size: 3.5rem;
             font-weight: 800;
-            color: var(--primary-salmon);
-            margin-bottom: 0.5rem;
+            color: var(--primary-green);
+            margin-bottom: 0.2rem;
         }
 
         .score-percent {
@@ -319,24 +370,29 @@
             font-size: 1rem;
             transition: all 0.2s ease;
             width: 100%;
-            max-width: 280px;
+            max-width: 300px;
         }
 
         .btn-restart:hover {
-            border-color: var(--primary-salmon);
-            color: var(--primary-salmon);
+            border-color: var(--primary-green);
+            color: var(--primary-green);
         }
 
         .btn-finish {
             display: inline-block;
-            background-color: var(--primary-salmon);
+            background-color: var(--primary-green);
             color: white;
             text-decoration: none;
             padding: 0.9rem 2rem;
             border-radius: 30px;
             font-weight: 700;
             width: 100%;
-            max-width: 280px;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        .btn-finish:hover {
+            background-color: var(--primary-green-hover);
         }
     </style>
 </head>
@@ -345,7 +401,7 @@
     <div class="container">
         <div class="header">
             <a href="module-2-vocab.html" class="back-link">← Powrót do modułu</a>
-            <span id="step-counter" style="font-weight: 700; color: var(--text-muted);">Pytanie 1 / 5</span>
+            <span id="step-counter" style="font-weight: 700; color: var(--text-muted);">Pytanie 1 / 20</span>
         </div>
 
         <div class="progress-bar-container">
@@ -367,9 +423,9 @@
         <!-- Ekran Końcowy -->
         <div class="completion-screen" id="completion-screen">
             <h2>🎉 Test Ukończony!</h2>
-            <div class="score-badge" id="final-score">0 / 5</div>
+            <div class="score-badge" id="final-score">0 / 20</div>
             <div class="score-percent" id="final-percent">0%</div>
-            <p id="completion-desc">Świetnie! Ukończyłeś test sprawdzający Moduł 1.</p>
+            <p id="completion-desc">Świetna robota! Sprawdź swój wynik końcowy poniżej.</p>
 
             <div class="btn-action-group">
                 <button class="btn-restart" onclick="restartQuiz()">🔄 Powtórz test</button>
@@ -404,9 +460,105 @@
                 correctIndex: 0
             },
             {
+                type: "checkbox",
+                title: "5. Co pijemy rano ze śniadaniem?",
+                options: ["Sok", "Woda", "Kawa"],
+                correctIndices: [0, 1, 2]
+            },
+            {
                 type: "text",
-                title: "5. Co pijemy rano na pobudzenie? (wpisz słowo)",
-                correct: "kawa"
+                title: "6. Gdzie parkujemy samochód? (Wpisz słowo w odpowiedniej formie: do...)",
+                correct: "garażu"
+            },
+            {
+                type: "radio",
+                title: "7. Dopasowanie: W którym pomieszczeniu śpimy?",
+                options: ["Kuchnia", "Sypialnia", "Łazienka"],
+                correctIndex: 1
+            },
+            {
+                type: "dialog",
+                title: "8. Dialog w kuchni: Uzupełnij luki w zdaniach.",
+                wordBank: ["lodówka", "lodówki", "obiad", "obiadu", "kuchnia"],
+                text: "– Gdzie jest mleko?<br>– Mleko jest w {0}. Zaraz zrobimy pyszny {1}!",
+                correctAnswers: ["lodówce", "obiad"],
+                options: [
+                    ["lodówce", "lodówka", "lodówki"],
+                    ["obiad", "obiadu", "obiadem"]
+                ]
+            },
+            {
+                type: "radio",
+                title: "9. Wybierz poprawną odmianę: Mieszkam w dużym ________.",
+                options: ["domu", "dom", "domem"],
+                correctIndex: 0
+            },
+            {
+                type: "text",
+                title: "10. Przetłumacz słowo „Living room” na język polski:",
+                correct: "salon"
+            },
+            {
+                type: "checkbox",
+                title: "11. Zaznacz meble znajdujące się w pokoju:",
+                options: ["Kanapa", "Piekarnik", "Szafa", "Wanna", "Stół"],
+                correctIndices: [0, 2, 4]
+            },
+            {
+                type: "radio",
+                title: "12. Tłumaczenie: Jak powiesz po polsku „Garden”?",
+                options: ["Garaż", "Ogród", "Balkon"],
+                correctIndex: 1
+            },
+            {
+                type: "text",
+                title: "13. Odmiana: Chcę kupić nową ________ (kanapa). Wpisz w poprawnej formie:",
+                correct: "kanapę"
+            },
+            {
+                type: "radio",
+                title: "14. Gdzie myjemy zęby i bierzemy prysznic?",
+                options: ["W łazience", "W kuchni", "W piwnicy"],
+                correctIndex: 0
+            },
+            {
+                type: "dialog",
+                title: "15. Dialog w mieszkaniu: Uzupełnij wypowiedź.",
+                wordBank: ["mieszkanie", "mieszkania", "balkon", "balkonu"],
+                text: "– Czy twoje {0} jest duże?<br>– Tak, i mam piękny {1} z widokiem na park.",
+                correctAnswers: ["mieszkanie", "balkon"],
+                options: [
+                    ["mieszkanie", "mieszkania", "mieszkaniu"],
+                    ["balkon", "balkonu", "balkonie"]
+                ]
+            },
+            {
+                type: "text",
+                title: "16. Gdzie przechowujemy lody i mrożonki? Wpisz słowo:",
+                correct: "zamrażarka"
+            },
+            {
+                type: "radio",
+                title: "17. Wybierz poprawną formę: Na stole stoi gorąca ________.",
+                options: ["zupa", "zupę", "zupy"],
+                correctIndex: 0
+            },
+            {
+                type: "checkbox",
+                title: "18. Wybierz produkty, które trzymamy w lodówce:",
+                options: ["Masło", "Chleb", "Jogurt", "Mleko"],
+                correctIndices: [0, 2, 3]
+            },
+            {
+                type: "text",
+                title: "19. Odmiana: Przetłumacz i wpisz w odpowiedniej formie: On siedzi na ________ (chair).",
+                correct: "krześle"
+            },
+            {
+                type: "radio",
+                title: "20. Co robimy w jadalni?",
+                options: ["Jemy posiłki", "Grajmy w piłkę", "Myjemy auto"],
+                correctIndex: 0
             }
         ];
 
@@ -516,10 +668,10 @@
                         chk.checked = saved.selected.includes(idx);
                         if (q.correctIndices.includes(idx)) {
                             label.style.borderColor = 'var(--success-color)';
-                            label.style.backgroundColor = '#eafaf1';
+                            label.style.backgroundColor = '#dcfce7';
                         } else if (saved.selected.includes(idx)) {
                             label.style.borderColor = 'var(--error-color)';
-                            label.style.backgroundColor = '#fdf2f2';
+                            label.style.backgroundColor = '#fee2e2';
                         }
                     } else {
                         chk.onchange = () => {
@@ -545,6 +697,46 @@
                     enableNextButton(false);
                 } else {
                     feedback.textContent = saved.isCorrect ? '✨ Wszystkie poprawne zaznaczone!' : '❌ Niezupełnie dobrze.';
+                    feedback.className = `feedback-msg ${saved.isCorrect ? 'correct' : 'incorrect'}`;
+                    enableNextButton(true);
+                }
+            } else if (q.type === 'dialog') {
+                const bank = document.createElement('div');
+                bank.className = 'word-bank';
+                bank.innerHTML = '<strong>Bank słów do wyboru:</strong><br>' + q.wordBank.map(w => `<span>${w}</span>`).join(' ');
+                container.appendChild(bank);
+
+                const dialogBox = document.createElement('div');
+                dialogBox.className = 'dialog-container';
+
+                let formattedText = q.text;
+                q.options.forEach((opts, slotIdx) => {
+                    let selectHTML = `<select class="dialog-select" id="slot-${slotIdx}" ${saved && saved.completed ? 'disabled' : ''}>`;
+                    selectHTML += `<option value="">--wybierz--</option>`;
+                    opts.forEach(opt => {
+                        selectHTML += `<option value="${opt}">${opt}</option>`;
+                    });
+                    selectHTML += `</select>`;
+                    formattedText = formattedText.replace(`{${slotIdx}}`, selectHTML);
+                });
+
+                dialogBox.innerHTML = formattedText;
+                container.appendChild(dialogBox);
+
+                if (!saved || !saved.completed) {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn-check';
+                    btn.style.width = '100%';
+                    btn.textContent = 'Sprawdź dialog';
+                    btn.onclick = checkDialogAnswer;
+                    container.appendChild(btn);
+                    enableNextButton(false);
+                } else {
+                    q.options.forEach((_, slotIdx) => {
+                        const sel = document.getElementById(`slot-${slotIdx}`);
+                        sel.value = saved.selected[slotIdx] || '';
+                    });
+                    feedback.textContent = saved.isCorrect ? '✨ Świetnie! Dialog skompletowany.' : `❌ Prawidłowe słowa: ${q.correctAnswers.join(', ')}`;
                     feedback.className = `feedback-msg ${saved.isCorrect ? 'correct' : 'incorrect'}`;
                     enableNextButton(true);
                 }
@@ -587,6 +779,7 @@
                     feedback.textContent = `❌ Brak prób. Prawidłowa odpowiedź to: "${q.correct}"`;
                     feedback.className = 'feedback-msg incorrect';
 
+                    // Brak punktu po 3 nieudanych próbach
                     userAnswers[currentIndex] = { completed: true, isCorrect: false, val: q.correct };
                     enableNextButton(true);
                 }
@@ -608,6 +801,25 @@
                 q.correctIndices.every(val => checkedInputs.includes(val));
 
             userAnswers[currentIndex] = { completed: true, isCorrect: isCorrect, selected: checkedInputs };
+            renderQuestion();
+        }
+
+        function checkDialogAnswer() {
+            const q = testQuestions[currentIndex];
+            const selectedValues = [];
+            let allSelected = true;
+
+            q.options.forEach((_, slotIdx) => {
+                const val = document.getElementById(`slot-${slotIdx}`).value;
+                if (!val) allSelected = false;
+                selectedValues.push(val);
+            });
+
+            if (!allSelected) return;
+
+            const isCorrect = selectedValues.every((val, idx) => val === q.correctAnswers[idx]);
+
+            userAnswers[currentIndex] = { completed: true, isCorrect: isCorrect, selected: selectedValues };
             renderQuestion();
         }
 
