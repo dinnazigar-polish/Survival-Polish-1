@@ -106,6 +106,7 @@
             font-size: 1.05rem;
             line-height: 1.4;
             position: relative;
+            animation: fadeIn 0.3s ease forwards;
         }
 
         .chat-bubble.speaker-a {
@@ -300,11 +301,13 @@
         const dialoguesData = [
             {
                 title: "Kto odbiera Wasze dzieci ze szkoły?",
-                dialogue: [
-                    { speaker: "A", text: "Kto zwykle odbiera Wasze dzieci ze szkoły w tygodniu?" },
-                    { speaker: "B", text: "Najczęściej robi to moja żona, ale czasami pomaga nam też babcia." },
-                    { speaker: "A", text: "To bardzo wygodne rozwiązanie!" }
+                firstComment: "Kto zwykle odbiera Wasze dzieci ze szkoły w tygodniu?",
+                lastComment: "To bardzo wygodne rozwiązanie!",
+                choices: [
+                    "Najczęściej robi to moja żona, ale czasami pomaga nam też babcia.",
+                    "Moje dzieci chodzą do szkoły na piechotę z kolegami."
                 ],
+                correctChoiceIndex: 0,
                 phrases: [
                     {
                         phrase: "odbierać dzieci",
@@ -320,15 +323,13 @@
             },
             {
                 title: "Czym zajmuje się Twoja mama?",
-                dialogue: [
-                    { speaker: "A", text: "Czym zajmuje się Twoja mama?" },
-                    { speaker: "B", text: "Moja mama jest nauczycielką. Naucza matematyki i fizyki w szkole.", isChoice: true },
-                    { speaker: "A", text: "Uczenie matematyki brzmi jak bardzo trudne zadanie!" }
-                ],
+                firstComment: "Czym zajmuje się Twoja mama?",
+                lastComment: "Uczenie matematyki brzmi jak bardzo trudne zadanie!",
                 choices: [
                     "Moja mama jest nauczycielką. Naucza matematyki i fizyki w szkole.",
                     "Moja mama pracowała dawniej w biurze, ale teraz jest na emeryturze."
                 ],
+                correctChoiceIndex: 0,
                 phrases: [
                     {
                         phrase: "zajmować się",
@@ -344,11 +345,13 @@
             },
             {
                 title: "Kto Ciebie nauczył tak dobrze mówić po polsku?",
-                dialogue: [
-                    { speaker: "A", text: "Kto Ciebie nauczył tak dobrze mówić po polsku?" },
-                    { speaker: "B", text: "Mój dziadek! Często ze mną rozmawiał, kiedy byłem mały." },
-                    { speaker: "A", text: "Mówisz naprawdę świetnie i wspaniale porozumiewasz się po polsku." }
+                firstComment: "Kto Ciebie nauczył tak dobrze mówić po polsku?",
+                lastComment: "Mówisz naprawdę świetnie i wspaniale porozumiewasz się po polsku.",
+                choices: [
+                    "Mój dziadek! Często ze mną rozmawiał, kiedy byłem mały.",
+                    "Uczę się z książek w księgarni."
                 ],
+                correctChoiceIndex: 0,
                 phrases: [
                     {
                         phrase: "świetnie",
@@ -364,11 +367,13 @@
             },
             {
                 title: "Kto upiekł ten pyszny tort?",
-                dialogue: [
-                    { speaker: "A", text: "Kto upiekł ten pyszny tort na Twoje urodziny?" },
-                    { speaker: "B", text: "Moja ciocia! Ona uwielbia piec ciasta dla całej rodziny." },
-                    { speaker: "A", text: "Jest naprawdę wyśmienity! Muszę poprosić ją o przepis." }
+                firstComment: "Kto upiekł ten pyszny tort na Twoje urodziny?",
+                lastComment: "Jest naprawdę wyśmienity! Muszę poprosić ją o przepis.",
+                choices: [
+                    "Moja ciocia! Ona uwielbia piec ciasta dla całej rodziny.",
+                    "Kupiłem ten tort w sklepie spożywczym."
                 ],
+                correctChoiceIndex: 0,
                 phrases: [
                     {
                         phrase: "wyśmienity",
@@ -384,12 +389,13 @@
             },
             {
                 title: "Czy masz rodzeństwo?",
-                dialogue: [
-                    { speaker: "A", text: "Czy masz rodzeństwo?" },
-                    { speaker: "B", text: "Tak, mam brata i siostrę." },
-                    { speaker: "A", text: "Często się spotykacie?" },
-                    { speaker: "B", text: "Tak, w każdy weekend odwiedzamy rodziców, którzy są już na emeryturze." }
+                firstComment: "Czy masz rodzeństwo?",
+                lastComment: "Wspaniale! Moi rodzice też są już na emeryturze.",
+                choices: [
+                    "Tak, mam brata i siostrę. Często odwiedzamy rodziców, którzy są na emeryturze.",
+                    "Nie, jestem jedynakiem i nie mam brata ani siostry."
                 ],
+                correctChoiceIndex: 0,
                 phrases: [
                     {
                         phrase: "emerytura",
@@ -405,11 +411,13 @@
             },
             {
                 title: "Jak wygląda Twój najlepszy przyjaciel?",
-                dialogue: [
-                    { speaker: "A", text: "Jak wygląda Twój najlepszy przyjaciel?" },
-                    { speaker: "B", text: "Jest wysoki, ma krótkie ciemne włosy i nosi okulary." },
-                    { speaker: "A", text: "Wydaje się bardzo miłą i sympatyczną osobą!" }
+                firstComment: "Jak wygląda Twój najlepszy przyjaciel?",
+                lastComment: "Wydaje się bardzo miłą i sympatyczną osobą!",
+                choices: [
+                    "Jest wysoki, ma krótkie ciemne włosy i nosi okulary.",
+                    "Mój przyjaciel bardzo lubi słuchać muzyki i grać w gry."
                 ],
+                correctChoiceIndex: 0,
                 phrases: [
                     {
                         phrase: "wygląda",
@@ -442,88 +450,55 @@
             phrasesBox.classList.remove('visible');
             nextBtn.style.display = 'none';
 
-            // Jeśli dialog zawiera wybór dla użytkownika
-            let hasChoices = !!currentData.choices;
+            // KROK 1: Wyświetlenie pierwszego komentarza (Osoba A)
+            addBubble('A', currentData.firstComment);
 
-            currentData.dialogue.forEach((line) => {
-                if (line.isChoice && hasChoices) {
-                    // Miejsce, gdzie użytkownik musi wybrać odpowiedź
-                    currentData.choices.forEach((choiceText) => {
-                        const btn = document.createElement('button');
-                        btn.className = 'option-btn';
-                        btn.textContent = choiceText;
-                        btn.onclick = () => selectChoice(choiceText);
-                        optionsContainer.appendChild(btn);
-                    });
-                } else {
-                    const bubble = document.createElement('div');
-                    bubble.className = `chat-bubble ${line.speaker === 'A' ? 'speaker-a' : 'speaker-b'}`;
-                    
-                    const speakerLabel = document.createElement('div');
-                    speakerLabel.className = 'speaker-name';
-                    speakerLabel.textContent = line.speaker === 'A' ? 'Osoba A' : 'Osoba B';
-
-                    const textSpan = document.createElement('div');
-                    textSpan.textContent = line.text;
-
-                    bubble.appendChild(speakerLabel);
-                    bubble.appendChild(textSpan);
-                    chatContainer.appendChild(bubble);
-                }
+            // KROK 2: Wyświetlenie opcji wyboru (Osoba B)
+            currentData.choices.forEach((choiceText, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = choiceText;
+                btn.onclick = () => handleChoiceSelect(choiceText, currentData);
+                optionsContainer.appendChild(btn);
             });
-
-            // Jeśli brak interaktywnego wyboru, bezpośrednio pokazujemy cały dialog i frazy
-            if (!hasChoices) {
-                showPhrases(currentData.phrases);
-                nextBtn.style.display = 'block';
-            }
 
             updateProgress();
         }
 
-        function selectChoice(selectedText) {
-            const currentData = dialoguesData[currentDialogIndex];
+        function addBubble(speaker, text) {
             const chatContainer = document.getElementById('chat-container');
+            const bubble = document.createElement('div');
+            bubble.className = `chat-bubble ${speaker === 'A' ? 'speaker-a' : 'speaker-b'}`;
+            
+            const speakerLabel = document.createElement('div');
+            speakerLabel.className = 'speaker-name';
+            speakerLabel.textContent = speaker === 'A' ? 'Osoba A' : 'Osoba B';
+
+            const textSpan = document.createElement('div');
+            textSpan.textContent = text;
+
+            bubble.appendChild(speakerLabel);
+            bubble.appendChild(textSpan);
+            chatContainer.appendChild(bubble);
+        }
+
+        function handleChoiceSelect(selectedText, currentData) {
             const optionsContainer = document.getElementById('options-container');
             
-            optionsContainer.innerHTML = ''; // czyszczenie przycisków
+            // Czyszczenie przycisków opcji
+            optionsContainer.innerHTML = '';
 
-            // Dokładamy wybraną i pozostałe wypowiedzi do czatu
-            currentData.dialogue.forEach((line) => {
-                if (line.isChoice) {
-                    const bubble = document.createElement('div');
-                    bubble.className = 'chat-bubble speaker-b';
-                    
-                    const speakerLabel = document.createElement('div');
-                    speakerLabel.className = 'speaker-name';
-                    speakerLabel.textContent = 'Osoba B';
+            // Dodajemy odpowiedź użytkownika (KROK 2)
+            addBubble('B', selectedText);
 
-                    const textSpan = document.createElement('div');
-                    textSpan.textContent = selectedText;
+            // KROK 3: Wyświetlamy ostatni komentarz podsumowujący (Osoba A)
+            setTimeout(() => {
+                addBubble('A', currentData.lastComment);
 
-                    bubble.appendChild(speakerLabel);
-                    bubble.appendChild(textSpan);
-                    chatContainer.appendChild(bubble);
-                } else if (chatContainer.children.length < currentData.dialogue.length) {
-                    // Dodaj kolejne linie, jeśli jeszcze ich nie ma
-                    const bubble = document.createElement('div');
-                    bubble.className = `chat-bubble ${line.speaker === 'A' ? 'speaker-a' : 'speaker-b'}`;
-                    
-                    const speakerLabel = document.createElement('div');
-                    speakerLabel.className = 'speaker-name';
-                    speakerLabel.textContent = line.speaker === 'A' ? 'Osoba A' : 'Osoba B';
-
-                    const textSpan = document.createElement('div');
-                    textSpan.textContent = line.text;
-
-                    bubble.appendChild(speakerLabel);
-                    bubble.appendChild(textSpan);
-                    chatContainer.appendChild(bubble);
-                }
-            });
-
-            showPhrases(currentData.phrases);
-            document.getElementById('next-btn').style.display = 'block';
+                // KROK 4: Odsłaniamy dodatkowe tłumaczenia i przycisk dalej
+                showPhrases(currentData.phrases);
+                document.getElementById('next-btn').style.display = 'block';
+            }, 300);
         }
 
         function showPhrases(phrasesArray) {
