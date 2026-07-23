@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moduł 2 – Test Podsumowujący</title>
+    <title>Moduł 2 – Etap 4: Dialogi</title>
     <style>
         :root {
             --primary-salmon: #f49c96;
@@ -16,7 +16,6 @@
             --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             --success-color: #27ae60;
-            --error-color: #e74c3c;
         }
 
         * {
@@ -72,66 +71,81 @@
             transition: width 0.3s ease;
         }
 
-        .quiz-card {
+        .dialog-card {
             background-color: var(--card-bg);
             border-radius: 20px;
-            padding: 2.5rem 2rem;
+            padding: 2rem;
             box-shadow: var(--shadow-soft);
             border: 2px solid var(--border-light);
+            margin-bottom: 1.5rem;
         }
 
-        .question-title {
+        .dialog-title {
             font-size: 1.3rem;
             font-weight: 800;
             color: var(--text-dark);
             margin-bottom: 1.5rem;
-        }
-
-        /* Układanka słowna */
-        .words-bank, .sentence-builder {
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid #fdf0ef;
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.6rem;
-            margin-bottom: 1.2rem;
-            min-height: 52px;
-            padding: 0.6rem;
-            border-radius: 12px;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .sentence-builder {
-            border: 2px dashed var(--border-light);
-            background-color: #fffaf9;
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
 
-        .word-chip {
-            background-color: #ffffff;
-            border: 2px solid var(--border-light);
-            padding: 0.5rem 1rem;
-            border-radius: 12px;
+        .chat-bubble {
+            max-width: 85%;
+            padding: 0.9rem 1.2rem;
+            border-radius: 18px;
+            font-size: 1.05rem;
+            line-height: 1.4;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .chat-bubble.speaker-a {
+            align-self: flex-start;
+            background-color: #f1f5f9;
+            color: var(--text-dark);
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-bubble.speaker-b {
+            align-self: flex-end;
+            background-color: #fdf0ef;
+            color: #b0463e;
+            font-weight: 600;
+            border-bottom-right-radius: 4px;
+        }
+
+        .speaker-name {
+            font-size: 0.75rem;
             font-weight: 700;
-            cursor: pointer;
-            user-select: none;
-            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.2rem;
+            color: var(--text-muted);
         }
 
-        .word-chip:hover {
-            border-color: var(--primary-salmon);
-            background-color: #fffaf9;
-        }
-
-        .options-grid {
+        .options-container {
             display: flex;
             flex-direction: column;
             gap: 0.8rem;
-            margin-bottom: 1.5rem;
+            margin-top: 1rem;
         }
 
         .option-btn {
             background-color: #ffffff;
             border: 2px solid var(--border-light);
-            padding: 1rem 1.2rem;
+            padding: 1rem;
             border-radius: 14px;
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 600;
             color: var(--text-dark);
             text-align: left;
@@ -139,24 +153,14 @@
             transition: all 0.2s ease;
         }
 
-        .option-btn:hover:not(:disabled) {
+        .option-btn:hover {
             border-color: var(--primary-salmon);
             background-color: #fffaf9;
+            transform: translateY(-2px);
         }
 
-        .option-btn.correct {
-            border-color: var(--success-color);
-            background-color: #eafaf1;
-            color: var(--success-color);
-        }
-
-        .option-btn.incorrect {
-            border-color: var(--error-color);
-            background-color: #fdf2f2;
-            color: var(--error-color);
-        }
-
-        .explanation-box {
+        /* Sekcja kluczowych fraz pod dialogiem */
+        .phrases-box {
             margin-top: 1.5rem;
             padding: 1.2rem;
             background-color: #fffaf9;
@@ -165,21 +169,45 @@
             display: none;
         }
 
-        .explanation-box.visible {
+        .phrases-box.visible {
             display: block;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.4s ease;
         }
 
-        .explanation-title {
+        .phrases-title {
+            font-size: 1.05rem;
             font-weight: 800;
             color: #d96b63;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
         }
 
-        .explanation-text {
-            font-size: 0.98rem;
+        .phrase-item {
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .phrase-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .phrase-head {
+            font-weight: 700;
             color: var(--text-dark);
-            line-height: 1.5;
+        }
+
+        .phrase-en {
+            font-style: italic;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .phrase-ex {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            margin-top: 0.2rem;
         }
 
         .next-btn {
@@ -236,287 +264,306 @@
     <div class="container">
         <div class="header">
             <a href="module-2-vocab.html" class="back-link">← Powrót do listy etapów</a>
-            <span id="step-counter" style="font-weight: 700; color: var(--text-muted);">Pytanie 1 / 7</span>
+            <span id="step-counter" style="font-weight: 700; color: var(--text-muted);">Dialog 1 / 6</span>
         </div>
 
         <div class="progress-bar-container">
             <div class="progress-fill" id="progress-bar"></div>
         </div>
 
-        <!-- Karta Testu -->
-        <div class="quiz-card" id="quiz-card">
-            <div class="question-title" id="question-title">---</div>
+        <!-- Karta Dialogu -->
+        <div class="dialog-card" id="dialog-card">
+            <div class="dialog-title" id="dialog-title">💬 Rozmowa...</div>
+            
+            <div class="chat-container" id="chat-container"></div>
 
-            <!-- Kontener na budowanie zdania (jeśli dotyczy) -->
-            <div id="sentence-container" style="display: none;">
-                <div class="sentence-builder" id="sentence-builder"></div>
-                <div class="words-bank" id="words-bank"></div>
+            <div class="options-container" id="options-container"></div>
+
+            <!-- Sekcja fraz i definicji -->
+            <div class="phrases-box" id="phrases-box">
+                <div class="phrases-title">💡 Kluczowe frazy i słownictwo:</div>
+                <div id="phrases-list"></div>
             </div>
 
-            <!-- Kontener na opcje (ABC lub Prawda/Fałsz) -->
-            <div class="options-grid" id="options-grid"></div>
-
-            <!-- Wyjaśnienie / Słowniczek -->
-            <div class="explanation-box" id="explanation-box">
-                <div class="explanation-title" id="explanation-title">💡 Objaśnienie:</div>
-                <div class="explanation-text" id="explanation-text"></div>
-            </div>
-
-            <button class="next-btn" id="next-btn" onclick="nextQuestion()">Następne pytanie →</button>
+            <button class="next-btn" id="next-btn" onclick="nextDialog()">Następny dialog →</button>
         </div>
 
         <!-- Ekran Końcowy -->
         <div class="completion-screen" id="completion-screen">
-            <h2>🎉 Gratukacje! Test ukończony</h2>
-            <div class="score-badge" id="final-score">0 / 7</div>
-            <p id="completion-desc">Świetny wynik! Opanowałeś cały Moduł 2.</p>
+            <h2>🎉 Świetna robota! Dialogi ukończone</h2>
+            <div class="score-badge">100%</div>
+            <p>Przećwiczyłeś wszystkie sytuacje konwersacyjne z Modułu 2.</p>
             <a href="module-2-vocab.html" class="btn-finish" onclick="markStageComplete()">Zapisz i wróć do modułu</a>
         </div>
     </div>
 
     <script>
-        const testQuestions = [
+        const dialoguesData = [
             {
-                type: "builder",
-                title: "Ułóż poprawne zdanie:",
-                targetSentence: ["Moja", "mama", "piecze", "pyszne", "ciasta"],
-                distractors: ["gotuje", "zupa"],
-                explanationTitle: "💡 Różnica: PIEC a GOTOWAĆ",
-                explanationText: `
-                    <strong>PIEC</strong> (infinitive: <em>piec</em>) – używamy do ciast, chleba, mięs w piekarniku.<br>
-                    <u>Odmiana:</u> ja piekę, ty pieczesz, on/ona piecze, my pieczemy, wy pieczecie, oni/one pieką.<br>
-                    <strong>Przykłady z PIEC:</strong> piec ciasto, piec tort, piec chleb, piec kurczaka w piekarniku.<br><br>
-                    <strong>GOTOWAĆ</strong> (infinitive: <em>gotować</em>) – używamy w wodzie/garnku lub ogólnie do posiłków.<br>
-                    <strong>Przykłady z GOTOWAĆ:</strong> gotować obiad, gotować dla całej rodziny, ugotować makaron, ugotować zupę.
-                `
-            },
-            {
-                type: "choice",
-                title: "Kto upiekł ten pyszny tort?",
-                options: [
-                    "Upiekła go moja ciocia.",
-                    "Kupiłem go w sklepie odzieżowym.",
-                    "Zrobił go mój pies."
+                title: "Kto odbiera Wasze dzieci ze szkoły?",
+                dialogue: [
+                    { speaker: "A", text: "Kto zwykle odbiera Wasze dzieci ze szkoły w tygodniu?" },
+                    { speaker: "B", text: "Najczęściej robi to moja żona, ale czasami pomaga nam też babcia.", isChoice: true },
+                    { speaker: "A", text: "To bardzo wygodne rozwiązanie!" }
                 ],
-                correct: 0,
-                explanationTitle: "💡 Słowniczek: Cukiernia",
-                explanationText: "Miejsce, w którym kupuje się ciasta, torty i pączki to <strong>cukiernia</strong> (🇬🇧 <em>pastry shop / bakery / cake shop</em>)."
-            },
-            {
-                type: "builder",
-                title: "Ułóż poprawne zdanie:",
-                targetSentence: ["Moja", "żona", "jedzie", "po", "dzieci"],
-                distractors: ["dziadek", "szkoła"],
-                explanationTitle: "💡 Objaśnienie zwrotu:",
-                explanationText: "Zwrot <strong>«jechać po dzieci»</strong> oznacza odebranie dzieci (np. ze szkoły lub przedszkola)."
-            },
-            {
-                type: "choice",
-                title: "Jedynak to osoba, która nie ma rodzeństwa.",
-                options: [
-                    "Prawda",
-                    "Fałsz"
+                choices: [
+                    "Najczęściej robi to moja żona, ale czasami pomaga nam też babcia.",
+                    "Moje dzieci chodzą do szkoły na piechotę z kolegami."
                 ],
-                correct: 0,
-                explanationTitle: "💡 Słowniczek:",
-                explanationText: "<strong>Jedynak</strong> (męski) / <strong>Jedynaczka</strong> (żeński) to dziecko, które nie ma brata ani siostry (🇬🇧 <em>only child</em>)."
+                phrases: [
+                    {
+                        phrase: "odbierać dzieci",
+                        en: "to pick up children",
+                        example: "Codziennie o godzinie 15:00 muszę odbierać dzieci ze szkoły."
+                    },
+                    {
+                        phrase: "wygodne rozwiązanie",
+                        en: "convenient solution",
+                        example: "Praca zdalna z domu to dla naszej rodziny bardzo wygodne rozwiązanie."
+                    }
+                ]
             },
             {
-                type: "choice",
-                title: "Brat mojego ojca to mój dziadek.",
-                options: [
-                    "Prawda",
-                    "Fałsz"
-                ],
-                correct: 1,
-                explanationTitle: "💡 Poprawna relacja rodzinna:",
-                explanationText: "To zdanie jest nieprawdziwe. Brat mojego ojca (lub mojej matki) to mój <strong>wujek</strong> (🇬🇧 <em>uncle</em>)."
-            },
-            {
-                type: "choice",
-                title: "Lubię mojego ______ brata.",
-                options: [
-                    "starsi",
-                    "starszego",
-                    "starszym"
-                ],
-                correct: 1,
-                explanationTitle: "💡 Gramatyka (Biernik):",
-                explanationText: "Czasownik «lubić» wymaga Biernika. W liczbie pojedynczej dla przymiotnika męskoosobowego stosujemy końcówkę <strong>-ego</strong>: <em>starszego brata</em>."
-            },
-            {
-                type: "choice",
                 title: "Czym zajmuje się Twoja mama?",
-                options: [
-                    "Jest nauczycielką w szkole.",
-                    "Ona ma na imię Anna.",
-                    "Moja mama mieszka w Krakowie."
+                dialogue: [
+                    { speaker: "A", text: "Czym zajmuje się Twoja mama?" },
+                    { speaker: "B", text: "Moja mama jest nauczycielką. Naucza matematyki i fizyki w szkole.", isChoice: true },
+                    { speaker: "A", text: "Uczenie matematyki brzmi jak bardzo trudne zadanie!" }
                 ],
-                correct: 0,
-                explanationTitle: "💡 Znaczenie zwrotu: «zajmować się»",
-                explanationText: "Pytanie <strong>„Czym zajmuje się...?”</strong> odnosi się do zawodu, pracy lub głównych obowiązków danej osoby (🇬🇧 <em>What does she do for a living / What is her job?</em>)."
+                choices: [
+                    "Moja mama jest nauczycielką. Naucza matematyki i fizyki w szkole.",
+                    "Moja mama pracowała dawniej w biurze, ale teraz jest na emeryturze."
+                ],
+                phrases: [
+                    {
+                        phrase: "zajmować się",
+                        en: "to deal with / to do for a living",
+                        example: "Czym zajmujesz się w wolnym czasie po pracy?"
+                    },
+                    {
+                        phrase: "trudne",
+                        en: "difficult / hard",
+                        example: "To zadanie domowe jest bardzo trudne, potrzebuję pomocy."
+                    }
+                ]
+            },
+            {
+                title: "Kto Ciebie nauczył tak dobrze mówić po polsku?",
+                dialogue: [
+                    { speaker: "A", text: "Kto Ciebie nauczył tak dobrze mówić po polsku?" },
+                    { speaker: "B", text: "Mój dziadek! Często ze mną rozmawiał, kiedy byłem mały." },
+                    { speaker: "A", text: "Mówisz naprawdę świetnie i wspaniale porozumiewasz się po polsku." }
+                ],
+                phrases: [
+                    {
+                        phrase: "świetnie",
+                        en: "greatly / excellently",
+                        example: "Twój brat świetnie gra w piłkę nożną."
+                    },
+                    {
+                        phrase: "wspaniale",
+                        en: "wonderfully / fantastically",
+                        example: "Spędziliśmy wspaniale czas podczas wakacji u dziadków."
+                    }
+                ]
+            },
+            {
+                title: "Kto upiekł ten pyszny tort?",
+                dialogue: [
+                    { speaker: "A", text: "Kto upiekł ten pyszny tort na Twoje urodziny?" },
+                    { speaker: "B", text: "Moja ciocia! Ona uwielbia piec ciasta dla całej rodziny." },
+                    { speaker: "A", text: "Jest naprawdę wyśmienity! Muszę poprosić ją o przepis." }
+                ],
+                phrases: [
+                    {
+                        phrase: "wyśmienity",
+                        en: "delicious / exquisite",
+                        example: "Obiad przygotowany przez moją babcię jest wyśmienity."
+                    },
+                    {
+                        phrase: "przepis",
+                        en: "recipe",
+                        example: "Czy możesz dać mi przepis na ten pyszny sernik?"
+                    }
+                ]
+            },
+            {
+                title: "Czy masz rodzeństwo?",
+                dialogue: [
+                    { speaker: "A", text: "Czy masz rodzeństwo?" },
+                    { speaker: "B", text: "Tak, mam brata i siostrę." },
+                    { speaker: "A", text: "Często się spotykacie?" },
+                    { speaker: "B", text: "Tak, w każdy weekend odwiedzamy rodziców, którzy są już na emeryturze." }
+                ],
+                phrases: [
+                    {
+                        phrase: "emerytura",
+                        en: "retirement",
+                        example: "Mój dziadek jest już na emeryturze i ma dużo wolnego czasu."
+                    },
+                    {
+                        phrase: "Często się spotykacie?",
+                        en: "Do you meet often?",
+                        example: "Mieszkamy w tym samym mieście. Często się spotykacie z przyjaciółmi?"
+                    }
+                ]
+            },
+            {
+                title: "Jak wygląda Twój najlepszy przyjaciel?",
+                dialogue: [
+                    { speaker: "A", text: "Jak wygląda Twój najlepszy przyjaciel?" },
+                    { speaker: "B", text: "Jest wysoki, ma krótkie ciemne włosy i nosi okulary." },
+                    { speaker: "A", text: "Wydaje się bardzo miłą i sympatyczną osobą!" }
+                ],
+                phrases: [
+                    {
+                        phrase: "wygląda",
+                        en: "looks like / appears",
+                        example: "Jak wygląda Twój nowy dom w Warszawie?"
+                    },
+                    {
+                        phrase: "Wydaje się",
+                        en: "It seems / He seems",
+                        example: "Ten nowy nauczyciel wydaje się bardzo sympatyczny."
+                    }
+                ]
             }
         ];
 
-        let currentQuestionIndex = 0;
-        let totalScore = 0;
-        let selectedSentence = [];
+        let currentDialogIndex = 0;
 
-        function renderQuestion() {
-            const current = testQuestions[currentQuestionIndex];
+        function renderDialogue() {
+            const currentData = dialoguesData[currentDialogIndex];
             
-            document.getElementById('question-title').textContent = current.title;
+            document.getElementById('dialog-title').textContent = `💬 ${currentData.title}`;
             
-            const sentenceContainer = document.getElementById('sentence-container');
-            const optionsGrid = document.getElementById('options-grid');
-            const explanationBox = document.getElementById('explanation-box');
+            const chatContainer = document.getElementById('chat-container');
+            const optionsContainer = document.getElementById('options-container');
+            const phrasesBox = document.getElementById('phrases-box');
             const nextBtn = document.getElementById('next-btn');
 
-            sentenceContainer.style.display = 'none';
-            optionsGrid.style.display = 'none';
-            optionsGrid.innerHTML = '';
-            explanationBox.classList.remove('visible');
+            chatContainer.innerHTML = '';
+            optionsContainer.innerHTML = '';
+            phrasesBox.classList.remove('visible');
             nextBtn.style.display = 'none';
 
-            if (current.type === 'builder') {
-                sentenceContainer.style.display = 'block';
-                setupSentenceBuilder(current);
-            } else if (current.type === 'choice') {
-                optionsGrid.style.display = 'flex';
-                setupChoiceOptions(current);
+            let hasChoices = !!currentData.choices;
+
+            if (hasChoices) {
+                // Dodajemy tylko pierwszą wypowiedź (pytanie Osoby A)
+                const firstLine = currentData.dialogue[0];
+                addBubble(firstLine.speaker, firstLine.text);
+
+                // Tworzymy przyciski wyboru dla Osoby B
+                currentData.choices.forEach((choiceText) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.textContent = choiceText;
+                    btn.onclick = () => selectChoice(choiceText);
+                    optionsContainer.appendChild(btn);
+                });
+            } else {
+                // Jeśli dialog statyczny, renderujemy całość
+                currentData.dialogue.forEach(line => {
+                    addBubble(line.speaker, line.text);
+                });
+                showPhrases(currentData.phrases);
+                nextBtn.style.display = 'block';
             }
 
             updateProgress();
         }
 
-        function setupSentenceBuilder(questionData) {
-            selectedSentence = [];
-            const builderElem = document.getElementById('sentence-builder');
-            const bankElem = document.getElementById('words-bank');
+        function addBubble(speaker, text) {
+            const chatContainer = document.getElementById('chat-container');
+            const bubble = document.createElement('div');
+            bubble.className = `chat-bubble ${speaker === 'A' ? 'speaker-a' : 'speaker-b'}`;
+            
+            const speakerLabel = document.createElement('div');
+            speakerLabel.className = 'speaker-name';
+            speakerLabel.textContent = speaker === 'A' ? 'Osoba A' : 'Osoba B';
 
-            builderElem.innerHTML = '';
-            bankElem.innerHTML = '';
+            const textSpan = document.createElement('div');
+            textSpan.textContent = text;
 
-            const pool = [...questionData.targetSentence, ...questionData.distractors].sort(() => Math.random() - 0.5);
+            bubble.appendChild(speakerLabel);
+            bubble.appendChild(textSpan);
+            chatContainer.appendChild(bubble);
+        }
 
-            pool.forEach((word) => {
-                const chip = document.createElement('div');
-                chip.className = 'word-chip';
-                chip.textContent = word;
-                chip.onclick = () => handleChipClick(chip, word, questionData);
-                bankElem.appendChild(chip);
+        function selectChoice(selectedText) {
+            const currentData = dialoguesData[currentDialogIndex];
+            const optionsContainer = document.getElementById('options-container');
+            
+            optionsContainer.innerHTML = ''; // Usuwamy opcje po dokonaniu wyboru
+
+            // Dodajemy odpowiedź Osoby B
+            addBubble('B', selectedText);
+
+            // Dodajemy pozostałe wypowiedzi po odpowiedzi (np. podsumowujący komentarz Osoby A)
+            let choiceFound = false;
+            currentData.dialogue.forEach((line) => {
+                if (choiceFound) {
+                    addBubble(line.speaker, line.text);
+                }
+                if (line.isChoice) {
+                    choiceFound = true;
+                }
             });
-        }
 
-        function handleChipClick(chip, word, questionData) {
-            const builderElem = document.getElementById('sentence-builder');
-            const bankElem = document.getElementById('words-bank');
-
-            if (chip.parentElement === bankElem) {
-                builderElem.appendChild(chip);
-                selectedSentence.push(word);
-            } else {
-                bankElem.appendChild(chip);
-                const index = selectedSentence.indexOf(word);
-                if (index > -1) selectedSentence.splice(index, 1);
-            }
-
-            // Automatyczne sprawdzenie, gdy użytkownik ułoży całe zdanie
-            if (selectedSentence.length === questionData.targetSentence.length) {
-                checkSentenceAnswer(questionData);
-            }
-        }
-
-        function checkSentenceAnswer(questionData) {
-            const isCorrect = selectedSentence.join(' ') === questionData.targetSentence.join(' ');
-            
-            if (isCorrect) {
-                totalScore++;
-            }
-
-            showExplanation(questionData.explanationTitle, questionData.explanationText);
-            
-            // Zablokuj kafelki
-            const chips = document.querySelectorAll('.word-chip');
-            chips.forEach(c => c.onclick = null);
-
+            // PO wyświetleniu pełnego dialogu odsłaniamy tłumaczenia oraz przycisk przejścia dalej
+            showPhrases(currentData.phrases);
             document.getElementById('next-btn').style.display = 'block';
         }
 
-        function setupChoiceOptions(questionData) {
-            const optionsGrid = document.getElementById('options-grid');
+        function showPhrases(phrasesArray) {
+            const phrasesList = document.getElementById('phrases-list');
+            phrasesList.innerHTML = '';
 
-            questionData.options.forEach((optText, index) => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.textContent = optText;
-                btn.onclick = () => selectChoiceAnswer(btn, index, questionData);
-                optionsGrid.appendChild(btn);
+            phrasesArray.forEach(item => {
+                const phraseDiv = document.createElement('div');
+                phraseDiv.className = 'phrase-item';
+                phraseDiv.innerHTML = `
+                    <div class="phrase-head">🔹 ${item.phrase} <span class="phrase-en">(${item.en})</span></div>
+                    <div class="phrase-ex">✏️ Przykład: „${item.example}”</div>
+                `;
+                phrasesList.appendChild(phraseDiv);
             });
+
+            document.getElementById('phrases-box').classList.add('visible');
         }
 
-        function selectChoiceAnswer(selectedBtn, selectedIndex, questionData) {
-            const allBtns = document.querySelectorAll('.option-btn');
-            allBtns.forEach(btn => btn.disabled = true);
-
-            if (selectedIndex === questionData.correct) {
-                selectedBtn.classList.add('correct');
-                totalScore++;
-            } else {
-                selectedBtn.classList.add('incorrect');
-                allBtns[questionData.correct].classList.add('correct');
-            }
-
-            showExplanation(questionData.explanationTitle, questionData.explanationText);
-            document.getElementById('next-btn').style.display = 'block';
-        }
-
-        function showExplanation(title, text) {
-            const box = document.getElementById('explanation-box');
-            document.getElementById('explanation-title').innerHTML = title;
-            document.getElementById('explanation-text').innerHTML = text;
-            box.classList.add('visible');
-        }
-
-        function nextQuestion() {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < testQuestions.length) {
-                renderQuestion();
+        function nextDialog() {
+            currentDialogIndex++;
+            if (currentDialogIndex < dialoguesData.length) {
+                renderDialogue();
             } else {
                 showCompletion();
             }
         }
 
         function updateProgress() {
-            const total = testQuestions.length;
-            const progressPct = (currentQuestionIndex / total) * 100;
+            const total = dialoguesData.length;
+            const progressPct = (currentDialogIndex / total) * 100;
             document.getElementById('progress-bar').style.width = `${progressPct}%`;
-            document.getElementById('step-counter').textContent = `Pytanie ${currentQuestionIndex + 1} / ${total}`;
+            document.getElementById('step-counter').textContent = `Dialog ${currentDialogIndex + 1} / ${total}`;
         }
 
         function showCompletion() {
-            document.getElementById('quiz-card').style.display = 'none';
+            document.getElementById('dialog-card').style.display = 'none';
             document.getElementById('completion-screen').style.display = 'block';
             document.getElementById('progress-bar').style.width = '100%';
-            document.getElementById('final-score').textContent = `${totalScore} / ${testQuestions.length}`;
-            
-            const desc = document.getElementById('completion-desc');
-            if (totalScore >= 5) {
-                desc.textContent = "Świetny wynik! Wszystkie zagadnienia z Modułu 2 są opanowane.";
-            } else {
-                desc.textContent = "Dobry krok! Warto przejrzeć jeszcze raz niektóre etapy, aby utrwalić wiedzę.";
-            }
         }
 
         function markStageComplete() {
             const MODULE_KEY = 'm2_progress';
             let progress = JSON.parse(localStorage.getItem(MODULE_KEY)) || {};
-            progress.stage7 = true;
+            progress.stage4 = true;
             localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
         }
 
         // Start
-        renderQuestion();
+        renderDialogue();
     </script>
 </body>
 </html>
