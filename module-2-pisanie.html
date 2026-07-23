@@ -194,6 +194,16 @@
             margin-bottom: 0;
         }
 
+        .grammar-note {
+            background-color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 0.6rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+            color: #78350f;
+        }
+
         /* Nawigacja Dolna */
         .nav-controls {
             display: flex;
@@ -325,7 +335,7 @@
 
         <!-- Karta Ćwiczenia -->
         <div class="quiz-card" id="quiz-card">
-            <div class="question-title" id="question-title">Tekst 1: Babcia i pierogi</div>
+            <div class="question-title" id="question-title">Tekst 1: Babcia w Krakowie</div>
 
             <div class="text-display" id="text-display"></div>
 
@@ -344,7 +354,7 @@
             <!-- Nawigacja -->
             <div class="nav-controls">
                 <button class="prev-btn" id="prev-btn" onclick="prevQuestion()">← Wstecz</button>
-                <button class="next-btn" id="next-btn" onclick="nextQuestion()">Następny tekst →</button>
+                <button class="next-btn" id="next-btn" onclick="nextQuestion()">Następny tekst (Enter) →</button>
             </div>
         </div>
 
@@ -392,7 +402,8 @@
                 textAfter: " w Stanach Zjednoczonych i często do nas dzwoni.",
                 correct: "studiuje",
                 verbsInfo: [
-                    { verb: "studiować", en: "to study (at university)", ex: "Moja siostra studiuje medycynę na uniwersytecie." }
+                    { verb: "studiować", en: "to study (at university)", ex: "Moja siostra studiuje medycynę na uniwersytecie." },
+                    { verb: "dzwonić", en: "to call / ring", ex: "Często dzwonię do babci w niedzielę." }
                 ]
             },
             {
@@ -408,13 +419,18 @@
             },
             {
                 title: "Tekst 5: Praca i mieszkanie",
-                textBefore: "Mój brat pracować w korporacji, a razem z żoną ",
+                textBefore: "Mój brat pracuje w korporacji, i razem z żoną ",
                 baseVerb: "wynajmować",
                 textAfter: " ładne mieszkanie w centrum miasta.",
                 correct: "wynajmują",
                 verbsInfo: [
                     { verb: "pracować", en: "to work", ex: "Mój tata pracuje jako inżynier." },
-                    { verb: "wynajmować", en: "to rent", ex: "Młode małżeństwo wynajmuje przytulne kawalerki." }
+                    { 
+                        verb: "wynajmować", 
+                        en: "to rent", 
+                        ex: "Młode małżeństwo wynajmuje przytulną kawalerkę.",
+                        note: "💡 <strong>Grammar Note:</strong> Even though it says 'Mój brat [...] z żoną', together they form <em>they</em> (oni - he + she), so we use the plural form: <strong>wynajmują</strong>."
+                    }
                 ]
             },
             {
@@ -424,7 +440,12 @@
                 textAfter: " w ogrodzie i pije ciepłą kawę.",
                 correct: "odpoczywa",
                 verbsInfo: [
-                    { verb: "odpoczywać", en: "to rest / relax", ex: "Po ciężkim tygodniu w pracy chętnie odpoczywamy w domu." }
+                    { 
+                        verb: "odpoczywać", 
+                        en: "to rest / relax", 
+                        ex: "Po ciężkim tygodniu w pracy chętnie odpoczywamy w domu.",
+                        note: "💡 <strong>Grammar Note:</strong> Although 'rodzina' (family) refers to a group of people, the noun <strong>rodzina</strong> itself is grammatically singular (she / ona). Therefore, we use the singular verb form: <strong>odpoczywa</strong>."
+                    }
                 ]
             },
             {
@@ -434,7 +455,12 @@
                 textAfter: " piec ciasta dla całej rodziny na urodziny.",
                 correct: "lubi",
                 verbsInfo: [
-                    { verb: "lubić", en: "to like", ex: "Moja ciocia lubi czytać książki w wolnym czasie." }
+                    { verb: "lubić", en: "to like", ex: "Moja ciocia lubi czytać książki w wolnym czasie." },
+                    { 
+                        verb: "piec", 
+                        en: "to bake", 
+                        ex: "Ja <strong>piekę</strong> tort, ty <strong>pieczesz</strong> chleb, a wujek <strong>piecze</strong> pyszne ciasto czekoladowe. Razem <strong>pieczemy</strong> dla rodziny." 
+                    }
                 ]
             }
         ];
@@ -448,7 +474,6 @@
 
             document.getElementById('question-title').textContent = `${currentIndex + 1}. ${data.title}`;
             
-            // Formatowanie tekstu z zaznaczonym słowem w nawiasie
             const textDisplay = document.getElementById('text-display');
             const savedAns = userAnswers[currentIndex];
             
@@ -530,18 +555,19 @@
                     feedback.textContent = `❌ Niepoprawnie (Próba ${attempts}/3). Podpowiedź: pierwsza litera to "${firstLetter}"`;
                     feedback.className = 'feedback-msg incorrect';
                 } else {
+                    // Po 3 nieudanych próbach wpisujemy poprawną odpowiedź i przechodzimy dalej
+                    inputElem.value = data.correct;
                     inputElem.disabled = true;
                     btnSubmit.disabled = true;
                     feedback.textContent = `❌ Brak prób. Prawidłowa forma to: "${data.correct}"`;
                     feedback.className = 'feedback-msg incorrect';
 
-                    userAnswers[currentIndex] = { completed: true, isCorrect: false, val: userVal };
+                    userAnswers[currentIndex] = { completed: true, isCorrect: false, val: data.correct };
                     showExplanation(data.verbsInfo);
                     enableNextButton(true);
                 }
             }
 
-            // Aktualizacja opisu ze zmienionym słowem
             renderQuestionTextOnly();
         }
 
@@ -566,6 +592,7 @@
                     <div class="verb-item">
                         🔹 <strong>${item.verb}</strong> (🇬🇧 <em>${item.en}</em>)<br>
                         ✏️ Przykład: „${item.ex}”
+                        ${item.note ? `<div class="grammar-note">${item.note}</div>` : ''}
                     </div>
                 `;
             });
@@ -637,10 +664,20 @@
             localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
         }
 
-        // Obsługa klawisza Enter
-        document.getElementById('user-input').addEventListener('keypress', function (e) {
+        // Obsługa klawisza Enter do sprawdzania i przechodzenia dalej
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Enter') {
-                checkAnswer();
+                const savedAns = userAnswers[currentIndex];
+                // Jeżeli odpowiedź na ten tekst jest już udzielona/zakończona, Enter przechodzi dalej
+                if (savedAns && savedAns.completed) {
+                    const nextBtn = document.getElementById('next-btn');
+                    if (!nextBtn.disabled) {
+                        nextQuestion();
+                    }
+                } else {
+                    // W przeciwnym razie Enter sprawdza wpisaną odpowiedź
+                    checkAnswer();
+                }
             }
         });
 
