@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moduł 2 – Etap 7: Test Końcowy</title>
+    <title>Moduł 2 – Test Podsumowujący</title>
     <style>
         :root {
             --primary-salmon: #f49c96;
@@ -34,7 +34,7 @@
         }
 
         .container {
-            max-width: 700px;
+            max-width: 680px;
             margin: 0 auto;
         }
 
@@ -72,38 +72,58 @@
             transition: width 0.3s ease;
         }
 
-        .test-card {
+        .quiz-card {
             background-color: var(--card-bg);
             border-radius: 20px;
-            padding: 2rem;
+            padding: 2.5rem 2rem;
             box-shadow: var(--shadow-soft);
             border: 2px solid var(--border-light);
-            margin-bottom: 1.5rem;
         }
 
-        .type-badge {
-            display: inline-block;
-            padding: 0.2rem 0.6rem;
-            background-color: #fdf0ef;
-            color: #d96b63;
-            font-size: 0.8rem;
-            font-weight: 700;
-            border-radius: 8px;
-            margin-bottom: 0.8rem;
-            text-transform: uppercase;
-        }
-
-        .question-text {
-            font-size: 1.2rem;
+        .question-title {
+            font-size: 1.3rem;
             font-weight: 800;
             color: var(--text-dark);
             margin-bottom: 1.5rem;
         }
 
-        .options-container {
+        /* Układanka słowna */
+        .words-bank, .sentence-builder {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 1.2rem;
+            min-height: 52px;
+            padding: 0.6rem;
+            border-radius: 12px;
+        }
+
+        .sentence-builder {
+            border: 2px dashed var(--border-light);
+            background-color: #fffaf9;
+        }
+
+        .word-chip {
+            background-color: #ffffff;
+            border: 2px solid var(--border-light);
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .word-chip:hover {
+            border-color: var(--primary-salmon);
+            background-color: #fffaf9;
+        }
+
+        .options-grid {
             display: flex;
             flex-direction: column;
             gap: 0.8rem;
+            margin-bottom: 1.5rem;
         }
 
         .option-btn {
@@ -111,11 +131,11 @@
             border: 2px solid var(--border-light);
             padding: 1rem 1.2rem;
             border-radius: 14px;
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 600;
             color: var(--text-dark);
-            cursor: pointer;
             text-align: left;
+            cursor: pointer;
             transition: all 0.2s ease;
         }
 
@@ -136,76 +156,33 @@
             color: var(--error-color);
         }
 
-        .option-btn:disabled {
-            cursor: default;
-        }
-
-        /* Sekcja budowania zdania z klocków */
-        .sentence-builder {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .drop-zone {
-            min-height: 54px;
-            border: 2px dashed var(--primary-salmon);
-            border-radius: 12px;
-            padding: 0.5rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            align-items: center;
-            background-color: #fffaf9;
-        }
-
-        .word-pool {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .word-chip {
-            background-color: #ffffff;
-            border: 2px solid var(--border-light);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: 700;
-            cursor: pointer;
-            user-select: none;
-            transition: all 0.2s ease;
-        }
-
-        .word-chip:hover {
-            border-color: var(--primary-salmon);
-        }
-
-        .word-chip.used {
-            opacity: 0.3;
-            pointer-events: none;
-        }
-
-        .confirm-btn {
+        .explanation-box {
             margin-top: 1.5rem;
-            width: 100%;
-            background-color: var(--primary-salmon);
-            color: white;
-            border: none;
-            padding: 1rem;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
+            padding: 1.2rem;
+            background-color: #fffaf9;
+            border-radius: 16px;
+            border: 2px dashed var(--primary-salmon);
+            display: none;
         }
 
-        .confirm-btn:hover {
-            background-color: var(--primary-salmon-hover);
+        .explanation-box.visible {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .explanation-title {
+            font-weight: 800;
+            color: #d96b63;
+            margin-bottom: 0.5rem;
+        }
+
+        .explanation-text {
+            font-size: 0.98rem;
+            color: var(--text-dark);
+            line-height: 1.5;
         }
 
         .next-btn {
-            margin-top: 1.5rem;
             width: 100%;
             background-color: var(--primary-salmon);
             color: white;
@@ -215,7 +192,13 @@
             font-size: 1.1rem;
             font-weight: 700;
             cursor: pointer;
+            margin-top: 1.5rem;
             display: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .next-btn:hover {
+            background-color: var(--primary-salmon-hover);
         }
 
         .completion-screen {
@@ -224,18 +207,11 @@
             display: none;
         }
 
-        .score-circle {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background-color: var(--primary-salmon);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
+        .score-badge {
+            font-size: 3rem;
             font-weight: 800;
-            margin: 0 auto 1.5rem auto;
+            color: var(--primary-salmon);
+            margin-bottom: 1rem;
         }
 
         .btn-finish {
@@ -248,360 +224,263 @@
             font-weight: 700;
             margin-top: 1.5rem;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div class="header">
-            <a href="module-2-vocab.html" class="back-link">← Powrót do modułu</a>
-            <span id="step-counter" style="font-weight: 700; color: var(--text-muted);">Pytanie 1 / 15</span>
+            <a href="module-2-vocab.html" class="back-link">← Powrót do listy etapów</a>
+            <span id="step-counter" style="font-weight: 700; color: var(--text-muted);">Pytanie 1 / 7</span>
         </div>
 
         <div class="progress-bar-container">
             <div class="progress-fill" id="progress-bar"></div>
         </div>
 
-        <!-- Główna karta z pytaniem -->
-        <div class="test-card" id="test-card">
-            <span class="type-badge" id="type-badge">Pytanie</span>
-            <div class="question-text" id="question-text">...</div>
+        <!-- Karta Testu -->
+        <div class="quiz-card" id="quiz-card">
+            <div class="question-title" id="question-title">---</div>
 
-            <!-- Kontener dla zwykłego wyboru (ABC / Prawda-Fałsz) -->
-            <div class="options-container" id="options-container"></div>
-
-            <!-- Kontener dla układania zdań z klocków -->
-            <div class="sentence-builder" id="sentence-builder" style="display: none;">
-                <div class="drop-zone" id="drop-zone"></div>
-                <div class="word-pool" id="word-pool"></div>
-                <button class="confirm-btn" id="confirm-sentence-btn" onclick="checkSentenceAnswer()">Sprawdź</button>
+            <!-- Kontener na budowanie zdania (jeśli dotyczy) -->
+            <div id="sentence-container" style="display: none;">
+                <div class="sentence-builder" id="sentence-builder"></div>
+                <div class="words-bank" id="words-bank"></div>
             </div>
 
-            <button class="next-btn" id="next-btn" onclick="nextQuestion()">Kolejne pytanie →</button>
+            <!-- Kontener na opcje (ABC lub Prawda/Fałsz) -->
+            <div class="options-grid" id="options-grid"></div>
+
+            <!-- Wyjaśnienie / Słowniczek -->
+            <div class="explanation-box" id="explanation-box">
+                <div class="explanation-title" id="explanation-title">💡 Objaśnienie:</div>
+                <div class="explanation-text" id="explanation-text"></div>
+            </div>
+
+            <button class="next-btn" id="next-btn" onclick="nextQuestion()">Następne pytanie →</button>
         </div>
 
         <!-- Ekran Końcowy -->
         <div class="completion-screen" id="completion-screen">
-            <div class="score-circle" id="score-circle">0%</div>
-            <h2 id="result-title">Wynik testu</h2>
-            <p id="result-desc">Ukończyłeś Test Końcowy z Modułu 2!</p>
-            <a href="module-2-vocab.html" class="btn-finish" onclick="markStageComplete()">Zapisz wynik i wróć do modułu</a>
+            <h2>🎉 Gratukacje! Test ukończony</h2>
+            <div class="score-badge" id="final-score">0 / 7</div>
+            <p id="completion-desc">Świetny wynik! Opanowałeś cały Moduł 2.</p>
+            <a href="module-2-vocab.html" class="btn-finish" onclick="markStageComplete()">Zapisz i wróć do modułu</a>
         </div>
     </div>
 
     <script>
-        // Baza pytań do losowania (różne typy pytań)
-        const allQuestionsBank = [
-            // --- SŁOWNICTWO / TŁUMACZENIA (Zwięzłe formy) ---
+        const testQuestions = [
             {
-                type: 'choice',
-                badge: 'Słownictwo',
-                question: 'rodzice',
+                type: "builder",
+                title: "Ułóż poprawne zdanie:",
+                targetSentence: ["Moja", "mama", "piecze", "pyszne", "ciasta"],
+                distractors: ["gotuje", "zupa"],
+                explanationTitle: "💡 Różnica: PIEC a GOTOWAĆ",
+                explanationText: `
+                    <strong>PIEC</strong> (infinitive: <em>piec</em>) – używamy do ciast, chleba, mięs w piekarniku.<br>
+                    <u>Odmiana:</u> ja piekę, ty pieczesz, on/ona piecze, my pieczemy, wy pieczecie, oni/one pieką.<br>
+                    <strong>Przykłady z PIEC:</strong> piec ciasto, piec tort, piec chleb, piec kurczaka w piekarniku.<br><br>
+                    <strong>GOTOWAĆ</strong> (infinitive: <em>gotować</em>) – używamy w wodzie/garnku lub ogólnie do posiłków.<br>
+                    <strong>Przykłady z GOTOWAĆ:</strong> gotować obiad, gotować dla całej rodziny, ugotować makaron, ugotować zupę.
+                `
+            },
+            {
+                type: "choice",
+                title: "Kto upiekł ten pyszny tort?",
                 options: [
-                    { text: 'parents', correct: true },
-                    { text: 'grandparents', correct: false },
-                    { text: 'siblings', correct: false }
-                ]
+                    "Upiekła go moja ciocia.",
+                    "Kupiłem go w sklepie odzieżowym.",
+                    "Zrobił go mój pies."
+                ],
+                correct: 0,
+                explanationTitle: "💡 Słowniczek: Cukiernia",
+                explanationText: "Miejsce, w którym kupuje się ciasta, torty i pączki to <strong>cukiernia</strong> (🇬🇧 <em>pastry shop / bakery / cake shop</em>)."
             },
             {
-                type: 'choice',
-                badge: 'Słownictwo',
-                question: 'rodzeństwo',
+                type: "builder",
+                title: "Ułóż poprawne zdanie:",
+                targetSentence: ["Moja", "żona", "jedzie", "po", "dzieci"],
+                distractors: ["dziadek", "szkoła"],
+                explanationTitle: "💡 Objaśnienie zwrotu:",
+                explanationText: "Zwrot <strong>«jechać po dzieci»</strong> oznacza odebranie dzieci (np. ze szkoły lub przedszkola)."
+            },
+            {
+                type: "choice",
+                title: "Jedynak to osoba, która nie ma rodzeństwa.",
                 options: [
-                    { text: 'siblings', correct: true },
-                    { text: 'relatives', correct: false },
-                    { text: 'children', correct: false }
-                ]
+                    "Prawda",
+                    "Fałsz"
+                ],
+                correct: 0,
+                explanationTitle: "💡 Słowniczek:",
+                explanationText: "<strong>Jedynak</strong> (męski) / <strong>Jedynaczka</strong> (żeński) to dziecko, które nie ma brata ani siostry (🇬🇧 <em>only child</em>)."
             },
             {
-                type: 'choice',
-                badge: 'Tłumaczenie',
-                question: '„Mój brat mieszka w Krakowie.”',
+                type: "choice",
+                title: "Brat mojego ojca to mój dziadek.",
                 options: [
-                    { text: 'My brother lives in Krakow.', correct: true },
-                    { text: 'My brother works in Krakow.', correct: false },
-                    { text: 'My uncle lives in Krakow.', correct: false }
-                ]
+                    "Prawda",
+                    "Fałsz"
+                ],
+                correct: 1,
+                explanationTitle: "💡 Poprawna relacja rodzinna:",
+                explanationText: "To zdanie jest nieprawdziwe. Brat mojego ojca (lub mojej matki) to mój <strong>wujek</strong> (🇬🇧 <em>uncle</em>)."
             },
             {
-                type: 'choice',
-                badge: 'Słownictwo',
-                question: 'to visit',
+                type: "choice",
+                title: "Lubię mojego ______ brata.",
                 options: [
-                    { text: 'odwiedzać', correct: true },
-                    { text: 'mieszkać', correct: false },
-                    { text: 'pomagać', correct: false }
-                ]
+                    "starsi",
+                    "starszego",
+                    "starszym"
+                ],
+                correct: 1,
+                explanationTitle: "💡 Gramatyka (Biernik):",
+                explanationText: "Czasownik «lubić» wymaga Biernika. W liczbie pojedynczej dla przymiotnika męskoosobowego stosujemy końcówkę <strong>-ego</strong>: <em>starszego brata</em>."
             },
             {
-                type: 'choice',
-                badge: 'Słownictwo',
-                question: 'siostrzenica',
+                type: "choice",
+                title: "Czym zajmuje się Twoja mama?",
                 options: [
-                    { text: 'sister’s daughter', correct: true },
-                    { text: 'brother’s son', correct: false },
-                    { text: 'cousin', correct: false }
-                ]
-            },
-            {
-                type: 'choice',
-                badge: 'Słownictwo',
-                question: 'wujek',
-                options: [
-                    { text: 'uncle', correct: true },
-                    { text: 'grandfather', correct: false },
-                    { text: 'nephew', correct: false }
-                ]
-            },
-
-            // --- PRAWDA / FAŁSZ ---
-            {
-                type: 'choice',
-                badge: 'Prawda czy Fałsz?',
-                question: 'Córka mojej siostry to moja siostrzenica.',
-                options: [
-                    { text: 'Prawda', correct: true },
-                    { text: 'Fałsz', correct: false }
-                ]
-            },
-            {
-                type: 'choice',
-                badge: 'Prawda czy Fałsz?',
-                question: 'Brat mojego ojca to mój dziadek.',
-                options: [
-                    { text: 'Prawda', correct: false },
-                    { text: 'Fałsz', correct: true }
-                ]
-            },
-            {
-                type: 'choice',
-                badge: 'Prawda czy Fałsz?',
-                question: 'Słowo „jedynak” oznacza osobę, która nie ma rodzeństwa.',
-                options: [
-                    { text: 'Prawda', correct: true },
-                    { text: 'Fałsz', correct: false }
-                ]
-            },
-
-            // --- DIALOGI ---
-            {
-                type: 'choice',
-                badge: 'Dokończ dialog',
-                question: '– Kto odbiera dzisiaj dzieci ze szkoły?\n– ... po pracy jedzie po dzieci.',
-                options: [
-                    { text: 'Moja żona', correct: true },
-                    { text: 'Moje dziecko', correct: false },
-                    { text: 'Mój nauczyciel', correct: false }
-                ]
-            },
-            {
-                type: 'choice',
-                badge: 'Dokończ dialog',
-                question: '– Czym zajmuje się Twoja mama?\n– Moja mama jest ... i uczy matematyki.',
-                options: [
-                    { text: 'nauczycielką', correct: true },
-                    { text: 'cukiernikiem', correct: false },
-                    { text: 'emerytem', correct: false }
-                ]
-            },
-            {
-                type: 'choice',
-                badge: 'Dokończ dialog',
-                question: '– Kto upiekł ten pyszny tort?\n– Moja mama, ona pracuje w ...',
-                options: [
-                    { text: 'cukierni', correct: true },
-                    { text: 'szkole', correct: false },
-                    { text: 'szpitalu', correct: false }
-                ]
-            },
-
-            // --- GRAMATYKA / DOPASOWANIE FORMY ---
-            {
-                type: 'choice',
-                badge: 'Gramatyka',
-                question: 'Lubię mojego (starsi / starszego) brata.',
-                options: [
-                    { text: 'starszego', correct: true },
-                    { text: 'starsi', correct: false },
-                    { text: 'starszym', correct: false }
-                ]
-            },
-            {
-                type: 'choice',
-                badge: 'Gramatyka',
-                question: 'Moja babcia urodziła się ... Polsce.',
-                options: [
-                    { text: 'w', correct: true },
-                    { text: 'na', correct: false },
-                    { text: 'do', correct: false }
-                ]
-            },
-
-            // --- UŁÓŻ ZDANIE (UKŁADANKA ZE SŁÓW) ---
-            {
-                type: 'sentence',
-                badge: 'Ułóż zdanie',
-                question: 'Ułóż poprawne zdanie:',
-                correctOrder: ['Moja', 'żona', 'jedzie', 'po', 'dzieci.'],
-                pool: ['jedzie', 'Moja', 'dzieci.', 'po', 'żona', 'mama']
-            },
-            {
-                type: 'sentence',
-                badge: 'Ułóż zdanie',
-                question: 'Ułóż poprawne zdanie:',
-                correctOrder: ['Nasza', 'babcia', 'urodziła', 'się', 'w', 'Polsce.'],
-                pool: ['urodziła', 'w', 'Nasza', 'się', 'Polsce.', 'babcia', 'jest']
-            },
-            {
-                type: 'sentence',
-                badge: 'Ułóż zdanie',
-                question: 'Ułóż poprawne zdanie:',
-                correctOrder: ['Moja', 'mama', 'piecze', 'pyszne', 'ciasta.'],
-                pool: ['piecze', 'pyszne', 'mama', 'Moja', 'ciasta.', 'gotuje']
+                    "Jest nauczycielką w szkole.",
+                    "Ona ma na imię Anna.",
+                    "Moja mama mieszka w Krakowie."
+                ],
+                correct: 0,
+                explanationTitle: "💡 Znaczenie zwrotu: «zajmować się»",
+                explanationText: "Pytanie <strong>„Czym zajmuje się...?”</strong> odnosi się do zawodu, pracy lub głównych obowiązków danej osoby (🇬🇧 <em>What does she do for a living / What is her job?</em>)."
             }
         ];
 
-        let selectedQuestions = [];
-        let currentIndex = 0;
-        let score = 0;
-        let currentSentenceSelected = [];
-
-        // Losowanie N pytań z bazy
-        function initTest() {
-            const shuffled = [...allQuestionsBank].sort(() => Math.random() - 0.5);
-            selectedQuestions = shuffled.slice(0, 15); // Losujemy 15 pytań do testu
-            currentIndex = 0;
-            score = 0;
-            renderQuestion();
-        }
+        let currentQuestionIndex = 0;
+        let totalScore = 0;
+        let selectedSentence = [];
 
         function renderQuestion() {
-            const current = selectedQuestions[currentIndex];
-            const badge = document.getElementById('type-badge');
-            const qText = document.getElementById('question-text');
-            const optionsContainer = document.getElementById('options-container');
-            const sentenceBuilder = document.getElementById('sentence-builder');
+            const current = testQuestions[currentQuestionIndex];
+            
+            document.getElementById('question-title').textContent = current.title;
+            
+            const sentenceContainer = document.getElementById('sentence-container');
+            const optionsGrid = document.getElementById('options-grid');
+            const explanationBox = document.getElementById('explanation-box');
             const nextBtn = document.getElementById('next-btn');
 
-            badge.textContent = current.badge;
-            qText.innerText = current.question;
-            optionsContainer.innerHTML = '';
+            sentenceContainer.style.display = 'none';
+            optionsGrid.style.display = 'none';
+            optionsGrid.innerHTML = '';
+            explanationBox.classList.remove('visible');
             nextBtn.style.display = 'none';
 
-            if (current.type === 'choice') {
-                optionsContainer.style.display = 'flex';
-                sentenceBuilder.style.display = 'none';
-
-                const shuffledOptions = [...current.options].sort(() => Math.random() - 0.5);
-                shuffledOptions.forEach(opt => {
-                    const btn = document.createElement('button');
-                    btn.className = 'option-btn';
-                    btn.textContent = opt.text;
-                    btn.onclick = () => selectChoiceOption(btn, opt.correct);
-                    optionsContainer.appendChild(btn);
-                });
-            } else if (current.type === 'sentence') {
-                optionsContainer.style.display = 'none';
-                sentenceBuilder.style.display = 'flex';
-
-                currentSentenceSelected = [];
-                renderSentenceBuilder(current);
+            if (current.type === 'builder') {
+                sentenceContainer.style.display = 'block';
+                setupSentenceBuilder(current);
+            } else if (current.type === 'choice') {
+                optionsGrid.style.display = 'flex';
+                setupChoiceOptions(current);
             }
 
             updateProgress();
         }
 
-        function selectChoiceOption(selectedBtn, isCorrect) {
+        function setupSentenceBuilder(questionData) {
+            selectedSentence = [];
+            const builderElem = document.getElementById('sentence-builder');
+            const bankElem = document.getElementById('words-bank');
+
+            builderElem.innerHTML = '';
+            bankElem.innerHTML = '';
+
+            const pool = [...questionData.targetSentence, ...questionData.distractors].sort(() => Math.random() - 0.5);
+
+            pool.forEach((word) => {
+                const chip = document.createElement('div');
+                chip.className = 'word-chip';
+                chip.textContent = word;
+                chip.onclick = () => handleChipClick(chip, word, questionData);
+                bankElem.appendChild(chip);
+            });
+        }
+
+        function handleChipClick(chip, word, questionData) {
+            const builderElem = document.getElementById('sentence-builder');
+            const bankElem = document.getElementById('words-bank');
+
+            if (chip.parentElement === bankElem) {
+                builderElem.appendChild(chip);
+                selectedSentence.push(word);
+            } else {
+                bankElem.appendChild(chip);
+                const index = selectedSentence.indexOf(word);
+                if (index > -1) selectedSentence.splice(index, 1);
+            }
+
+            // Automatyczne sprawdzenie, gdy użytkownik ułoży całe zdanie
+            if (selectedSentence.length === questionData.targetSentence.length) {
+                checkSentenceAnswer(questionData);
+            }
+        }
+
+        function checkSentenceAnswer(questionData) {
+            const isCorrect = selectedSentence.join(' ') === questionData.targetSentence.join(' ');
+            
+            if (isCorrect) {
+                totalScore++;
+            }
+
+            showExplanation(questionData.explanationTitle, questionData.explanationText);
+            
+            // Zablokuj kafelki
+            const chips = document.querySelectorAll('.word-chip');
+            chips.forEach(c => c.onclick = null);
+
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        function setupChoiceOptions(questionData) {
+            const optionsGrid = document.getElementById('options-grid');
+
+            questionData.options.forEach((optText, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = optText;
+                btn.onclick = () => selectChoiceAnswer(btn, index, questionData);
+                optionsGrid.appendChild(btn);
+            });
+        }
+
+        function selectChoiceAnswer(selectedBtn, selectedIndex, questionData) {
             const allBtns = document.querySelectorAll('.option-btn');
             allBtns.forEach(btn => btn.disabled = true);
 
-            if (isCorrect) {
+            if (selectedIndex === questionData.correct) {
                 selectedBtn.classList.add('correct');
-                score++;
+                totalScore++;
             } else {
                 selectedBtn.classList.add('incorrect');
-                // Podświetl też poprawną
-                allBtns.forEach(btn => {
-                    const currentQ = selectedQuestions[currentIndex];
-                    const match = currentQ.options.find(o => o.text === btn.textContent);
-                    if (match && match.correct) btn.classList.add('correct');
-                });
+                allBtns[questionData.correct].classList.add('correct');
             }
 
+            showExplanation(questionData.explanationTitle, questionData.explanationText);
             document.getElementById('next-btn').style.display = 'block';
         }
 
-        // --- Obsługa układania zdań z klocków ---
-        function renderSentenceBuilder(questionData) {
-            const dropZone = document.getElementById('drop-zone');
-            const wordPool = document.getElementById('word-pool');
-            const confirmBtn = document.getElementById('confirm-sentence-btn');
-            confirmBtn.disabled = false;
-            confirmBtn.style.display = 'block';
-
-            dropZone.innerHTML = '';
-            wordPool.innerHTML = '';
-
-            // Renderuj wybrane klocki
-            currentSentenceSelected.forEach((word, idx) => {
-                const chip = document.createElement('div');
-                chip.className = 'word-chip';
-                chip.textContent = word;
-                chip.onclick = () => removeWordFromSentence(idx);
-                dropZone.appendChild(chip);
-            });
-
-            // Renderuj pulę klocków
-            questionData.pool.forEach((word) => {
-                const chip = document.createElement('div');
-                chip.className = 'word-chip';
-                chip.textContent = word;
-
-                // Sprawdź ile razy słowo występuje w wybranych
-                const countInSelected = currentSentenceSelected.filter(w => w === word).length;
-                const countInPool = questionData.pool.filter(w => w === word).length;
-
-                if (countInSelected >= countInPool) {
-                    chip.classList.add('used');
-                } else {
-                    chip.onclick = () => addWordToSentence(word);
-                }
-
-                wordPool.appendChild(chip);
-            });
-        }
-
-        function addWordToSentence(word) {
-            currentSentenceSelected.push(word);
-            renderSentenceBuilder(selectedQuestions[currentIndex]);
-        }
-
-        function removeWordFromSentence(index) {
-            currentSentenceSelected.splice(index, 1);
-            renderSentenceBuilder(selectedQuestions[currentIndex]);
-        }
-
-        function checkSentenceAnswer() {
-            const current = selectedQuestions[currentIndex];
-            const confirmBtn = document.getElementById('confirm-sentence-btn');
-            confirmBtn.style.display = 'none';
-
-            const userSentence = currentSentenceSelected.join(' ');
-            const targetSentence = current.correctOrder.join(' ');
-
-            if (userSentence === targetSentence) {
-                score++;
-                document.getElementById('drop-zone').style.borderColor = 'var(--success-color)';
-            } else {
-                document.getElementById('drop-zone').style.borderColor = 'var(--error-color)';
-            }
-
-            document.getElementById('next-btn').style.display = 'block';
+        function showExplanation(title, text) {
+            const box = document.getElementById('explanation-box');
+            document.getElementById('explanation-title').innerHTML = title;
+            document.getElementById('explanation-text').innerHTML = text;
+            box.classList.add('visible');
         }
 
         function nextQuestion() {
-            currentIndex++;
-            if (currentIndex < selectedQuestions.length) {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < testQuestions.length) {
                 renderQuestion();
             } else {
                 showCompletion();
@@ -609,28 +488,23 @@
         }
 
         function updateProgress() {
-            const total = selectedQuestions.length;
-            const progressPct = (currentIndex / total) * 100;
+            const total = testQuestions.length;
+            const progressPct = (currentQuestionIndex / total) * 100;
             document.getElementById('progress-bar').style.width = `${progressPct}%`;
-            document.getElementById('step-counter').textContent = `Pytanie ${currentIndex + 1} / ${total}`;
+            document.getElementById('step-counter').textContent = `Pytanie ${currentQuestionIndex + 1} / ${total}`;
         }
 
         function showCompletion() {
-            document.getElementById('test-card').style.display = 'none';
+            document.getElementById('quiz-card').style.display = 'none';
             document.getElementById('completion-screen').style.display = 'block';
             document.getElementById('progress-bar').style.width = '100%';
-
-            const total = selectedQuestions.length;
-            const finalPct = Math.round((score / total) * 100);
-
-            document.getElementById('score-circle').textContent = `${finalPct}%`;
+            document.getElementById('final-score').textContent = `${totalScore} / ${testQuestions.length}`;
             
-            if (finalPct >= 70) {
-                document.getElementById('result-title').textContent = '🎉 Gratulacje!';
-                document.getElementById('result-desc').textContent = `Zdobyłeś ${score} z ${total} punktów. Test zaliczony!`;
+            const desc = document.getElementById('completion-desc');
+            if (totalScore >= 5) {
+                desc.textContent = "Świetny wynik! Wszystkie zagadnienia z Modułu 2 są opanowane.";
             } else {
-                document.getElementById('result-title').textContent = 'Spróbuj ponownie';
-                document.getElementById('result-desc').textContent = `Twój wynik to ${score} z ${total} punktów. Potrzebujesz min. 70%, aby zaliczyć.`;
+                desc.textContent = "Dobry krok! Warto przejrzeć jeszcze raz niektóre etapy, aby utrwalić wiedzę.";
             }
         }
 
@@ -642,7 +516,7 @@
         }
 
         // Start
-        initTest();
+        renderQuestion();
     </script>
 </body>
 </html>
