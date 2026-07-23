@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moduł 1 – Test Końcowy</title>
+    <title>Moduł 1 – Test końcowy</title>
     <style>
         :root {
-            --primary-green: #2ecc71;
-            --primary-hover: #27ae60;
+            --primary-salmon: #f49c96;
+            --primary-salmon-hover: #e0857f;
             --bg-color: #f8f9fa;
             --card-bg: #ffffff;
             --text-dark: #2c3e50;
             --text-muted: #7f8c8d;
-            --border-color: #e2e8f0;
-            --error-color: #e74c3c;
+            --border-light: #e2e8f0;
             --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
         }
 
         * {
@@ -33,12 +34,11 @@
         }
 
         .container {
-            max-width: 750px;
+            max-width: 680px;
             margin: 0 auto;
         }
 
-        /* Top Bar */
-        .top-nav {
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -49,417 +49,646 @@
             color: var(--text-muted);
             text-decoration: none;
             font-weight: 600;
+            transition: color 0.2s ease;
         }
 
         .back-link:hover {
-            color: var(--primary-green);
-        }
-
-        /* Test Card */
-        .test-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: var(--shadow-soft);
-        }
-
-        .test-header {
-            margin-bottom: 2rem;
-            text-align: center;
+            color: var(--primary-salmon);
         }
 
         .progress-bar-container {
             width: 100%;
             height: 10px;
-            background: var(--border-color);
-            border-radius: 10px;
+            background-color: var(--border-light);
+            border-radius: 5px;
             overflow: hidden;
-            margin-top: 1rem;
+            margin-bottom: 2rem;
         }
 
-        .progress-bar {
+        .progress-fill {
             height: 100%;
+            background-color: var(--primary-salmon);
             width: 0%;
-            background: var(--primary-green);
             transition: width 0.3s ease;
         }
 
-        /* Question Box */
-        .question-box {
-            display: none;
-        }
-
-        .question-box.active {
-            display: block;
+        .quiz-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-light);
         }
 
         .question-title {
-            font-size: 1.3rem;
-            font-weight: 700;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-dark);
             margin-bottom: 1.2rem;
         }
 
-        .question-desc {
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
-        }
-
-        /* Options & Inputs */
-        .options-grid {
+        .options-container {
             display: flex;
             flex-direction: column;
             gap: 0.8rem;
+            margin-bottom: 1.2rem;
         }
 
         .option-btn {
-            background: #fff;
-            border: 2px solid var(--border-color);
-            padding: 1rem;
+            background-color: #ffffff;
+            border: 2px solid var(--border-light);
             border-radius: 12px;
+            padding: 0.9rem 1.2rem;
             font-size: 1rem;
             font-weight: 600;
             color: var(--text-dark);
-            cursor: pointer;
             text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary-salmon);
+            background-color: #fffaf9;
+        }
+
+        .option-btn.selected {
+            border-color: var(--primary-salmon);
+            background-color: #fde8e7;
+        }
+
+        .option-btn.correct {
+            border-color: var(--success-color);
+            background-color: #eafaf1;
+            color: var(--success-color);
+        }
+
+        .option-btn.incorrect {
+            border-color: var(--error-color);
+            background-color: #fdf2f2;
+            color: var(--error-color);
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .checkbox-item {
+            background-color: #ffffff;
+            border: 2px solid var(--border-light);
+            border-radius: 12px;
+            padding: 0.9rem 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            user-select: none;
             transition: all 0.2s ease;
         }
 
-        .option-btn:hover {
-            border-color: var(--primary-green);
-            background: #f4fbf7;
+        .checkbox-item:hover {
+            border-color: var(--primary-salmon);
         }
 
-        .text-input {
-            width: 100%;
-            padding: 1rem;
-            font-size: 1.1rem;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            outline: none;
+        .checkbox-item.selected {
+            border-color: var(--primary-salmon);
+            background-color: #fffaf9;
         }
 
-        .text-input:focus {
-            border-color: var(--primary-green);
-        }
-
-        /* Sentence Building Area */
-        .word-pool, .sentence-builder {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            padding: 1rem;
-            border-radius: 12px;
-            min-height: 60px;
-        }
-
-        .sentence-builder {
-            border: 2px dashed var(--border-color);
-            margin-bottom: 1rem;
-            background: #fafafa;
-        }
-
-        .word-chip {
-            background: #fff;
-            border: 1px solid var(--border-color);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        /* Checkbox Group (Owoce) */
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            padding: 0.8rem 1rem;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .checkbox-label input {
+        .checkbox-item input {
+            accent-color: var(--primary-salmon);
             width: 18px;
             height: 18px;
         }
 
-        /* Action Buttons */
-        .action-area {
-            margin-top: 2rem;
+        .input-box {
             display: flex;
-            justify-content: flex-end;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
         }
 
-        .btn {
-            background: var(--primary-green);
+        .input-field {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 2px solid var(--border-light);
+            border-radius: 12px;
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary-salmon);
+        }
+
+        .input-field.correct {
+            border-color: var(--success-color);
+            background-color: #eafaf1;
+        }
+
+        .input-field.incorrect {
+            border-color: var(--error-color);
+            background-color: #fdf2f2;
+        }
+
+        .btn-check {
+            background-color: var(--primary-salmon);
             color: white;
             border: none;
-            padding: 0.9rem 2rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
             font-size: 1rem;
             font-weight: 700;
-            border-radius: 30px;
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: background-color 0.2s ease;
         }
 
-        .btn:hover {
-            background: var(--primary-hover);
+        .btn-check:hover:not(:disabled) {
+            background-color: var(--primary-salmon-hover);
         }
 
-        /* Results Card */
-        .results-box {
+        .btn-check:disabled {
+            background-color: var(--border-light);
+            cursor: not-allowed;
+        }
+
+        .feedback-msg {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+
+        .feedback-msg.correct { color: var(--success-color); }
+        .feedback-msg.incorrect { color: var(--error-color); }
+
+        .nav-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .prev-btn {
+            flex: 1;
+            background-color: #ffffff;
+            color: var(--text-dark);
+            border: 2px solid var(--border-light);
+            padding: 0.9rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .prev-btn:hover:not(:disabled) {
+            border-color: var(--text-muted);
+            background-color: #f1f5f9;
+        }
+
+        .prev-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .next-btn {
+            flex: 2;
+            background-color: var(--primary-salmon);
+            color: white;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .next-btn:hover:not(:disabled) {
+            background-color: var(--primary-salmon-hover);
+        }
+
+        .next-btn:disabled {
+            background-color: var(--border-light);
+            cursor: not-allowed;
+        }
+
+        .completion-screen {
             text-align: center;
+            padding: 3rem 1rem;
             display: none;
         }
 
-        .results-score {
-            font-size: 3rem;
+        .score-badge {
+            font-size: 3.5rem;
             font-weight: 800;
-            color: var(--primary-green);
-            margin: 1rem 0;
+            color: var(--primary-salmon);
+            margin-bottom: 0.5rem;
+        }
+
+        .score-percent {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-action-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 2rem;
+            align-items: center;
+        }
+
+        .btn-restart {
+            background-color: #ffffff;
+            color: var(--text-dark);
+            border: 2px solid var(--border-light);
+            padding: 0.9rem 2rem;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        .btn-restart:hover {
+            border-color: var(--primary-salmon);
+            color: var(--primary-salmon);
+        }
+
+        .btn-finish {
+            display: inline-block;
+            background-color: var(--primary-salmon);
+            color: white;
+            text-decoration: none;
+            padding: 0.9rem 2rem;
+            border-radius: 30px;
+            font-weight: 700;
+            width: 100%;
+            max-width: 280px;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="top-nav">
-        <a href="module-1.html" class="back-link">← Przerwij i wróć do modułu</a>
-        <span id="question-counter" style="font-weight:700; color:var(--text-muted);">Pytanie 1 z 6</span>
-    </div>
+    <div class="container">
+        <div class="header">
+            <a href="module-2-vocab.html" class="back-link">← Powrót do modułu</a>
+            <span id="step-counter" style="font-weight: 700; color: var(--text-muted);">Pytanie 1 / 5</span>
+        </div>
 
-    <div class="test-card">
         <div class="progress-bar-container">
-            <div class="progress-bar" id="progress-bar"></div>
+            <div class="progress-fill" id="progress-bar"></div>
         </div>
-        <br>
 
-        <!-- Q1: Wybór Wielokrotny (Owoce) -->
-        <div class="question-box active" id="q1">
-            <h2 class="question-title">1. Zaznacz wszystkie owoce z poniższej listy:</h2>
-            <p class="question-desc">Wybierz poprawne odpowiedzi (może być więcej niż jedna).</p>
-            <div class="checkbox-group">
-                <label class="checkbox-label"><input type="checkbox" value="truskawki"> Truskawki 🍓</label>
-                <label class="checkbox-label"><input type="checkbox" value="chleb"> Chleb 🍞</label>
-                <label class="checkbox-label"><input type="checkbox" value="borówki"> Borówki 🫐</label>
-                <label class="checkbox-label"><input type="checkbox" value="ser"> Ser żółty 🧀</label>
+        <!-- Karta Pytania -->
+        <div class="quiz-card" id="quiz-card">
+            <div class="question-title" id="question-title"></div>
+            <div id="quiz-content"></div>
+            <div id="input-feedback" class="feedback-msg"></div>
+
+            <div class="nav-controls">
+                <button class="prev-btn" id="prev-btn" onclick="prevQuestion()">← Wstecz</button>
+                <button class="next-btn" id="next-btn" onclick="nextQuestion()">Następne pytanie (Enter) →</button>
             </div>
         </div>
 
-        <!-- Q2: Pisanie ze słownika -->
-        <div class="question-box" id="q2">
-            <h2 class="question-title">2. Przetłumacz i wpisz po polsku odpowiednik słowa:</h2>
-            <p class="question-desc">Słowo do przetłumaczenia: <strong>"Apple pie"</strong></p>
-            <p style="margin-bottom: 0.5rem; font-weight: 600;">Zdanie: "Poproszę kawałek..."</p>
-            <input type="text" id="q2-input" class="text-input" placeholder="Wpisz np. ciasto jabłkowe" autocomplete="off">
-        </div>
+        <!-- Ekran Końcowy -->
+        <div class="completion-screen" id="completion-screen">
+            <h2>🎉 Test Ukończony!</h2>
+            <div class="score-badge" id="final-score">0 / 5</div>
+            <div class="score-percent" id="final-percent">0%</div>
+            <p id="completion-desc">Świetnie! Ukończyłeś test sprawdzający Moduł 1.</p>
 
-        <!-- Q3: Układanie wyrazów w kolejności -->
-        <div class="question-box" id="q3">
-            <h2 class="question-title">3. Ułóż słowa we właściwej kolejności:</h2>
-            <p class="question-desc">Klikaj słowa, aby ułożyć poprawne zdanie.</p>
-            
-            <div class="sentence-builder" id="sentence-target"></div>
-            <div class="word-pool" id="sentence-source">
-                <span class="word-chip" onclick="moveWord(this)">lodówce.</span>
-                <span class="word-chip" onclick="moveWord(this)">Mleko</span>
-                <span class="word-chip" onclick="moveWord(this)">w</span>
-                <span class="word-chip" onclick="moveWord(this)">jest</span>
+            <div class="btn-action-group">
+                <button class="btn-restart" onclick="restartQuiz()">🔄 Powtórz test</button>
+                <a href="module-2-vocab.html" class="btn-finish" onclick="markStageComplete()">Przejdź do Modułu 2</a>
             </div>
-        </div>
-
-        <!-- Q4: Przypadek gramatyczny -->
-        <div class="question-box" id="q4">
-            <h2 class="question-title">4. Określ przypadek wyróżnionego słowa:</h2>
-            <p class="question-desc">Zdanie: "Kawa stoi na <strong>stole</strong>."</p>
-            <div class="options-grid">
-                <button class="option-btn" onclick="selectRadio('q4', 'mianownik')">A) Mianownik (Kto? Co?)</button>
-                <button class="option-btn" onclick="selectRadio('q4', 'biernik')">B) Biernik (Kogo? Co?)</button>
-                <button class="option-btn" onclick="selectRadio('q4', 'miejscownik')">C) Miejscownik (O kim? O czym? / Gdzie?)</button>
-                <button class="option-btn" onclick="selectRadio('q4', 'dopelniacz')">D) Dopełniacz (Kogo? Czego?)</button>
-            </div>
-        </div>
-
-        <!-- Q5: Gramatyka / Wybór zdania -->
-        <div class="question-box" id="q5">
-            <h2 class="question-title">5. Wybierz poprawną formę zdania:</h2>
-            <p class="question-desc">Chcesz zamówić zimny napój. Które zdanie jest poprawne?</p>
-            <div class="options-grid">
-                <button class="option-btn" onclick="selectRadio('q5', 'A')">A) Poproszę woda z lodem.</button>
-                <button class="option-btn" onclick="selectRadio('q5', 'B')">B) Poproszę wodę z lodem.</button>
-                <button class="option-btn" onclick="selectRadio('q5', 'C')">C) Poproszę wodę z lodu.</button>
-            </div>
-        </div>
-
-        <!-- Q6: Dopasowanie kontekstowe -->
-        <div class="question-box" id="q6">
-            <h2 class="question-title">6. Dokąd włożysz te produkty po zakupach?</h2>
-            <p class="question-desc">Uzupełnij lukę w zdaniu: "Sery, mleko i masło muszę schować do ________."</p>
-            <input type="text" id="q6-input" class="text-input" placeholder="Wpisz słowo..." autocomplete="off">
-        </div>
-
-        <!-- Ekran Wyników -->
-        <div class="results-box" id="results">
-            <h2>🎉 Gratulacje! Test ukończony!</h2>
-            <p class="question-desc">Twój wynik końcowy:</p>
-            <div class="results-score" id="score-text">0 / 6</div>
-            <p id="feedback-text" style="margin-bottom: 2rem; font-weight: 600; color: var(--text-muted);"></p>
-            <a href="module-1.html" class="btn">Wróć do strony modułu</a>
-        </div>
-
-        <!-- Przycisk Dalej -->
-        <div class="action-area" id="action-area">
-            <button class="btn" id="next-btn" onclick="nextQuestion()">Następne pytanie →</button>
         </div>
     </div>
-</div>
 
-<script>
-    let currentStep = 1;
-    const totalSteps = 6;
-    let score = 0;
-    
-    // Odpowiedzi tymczasowe
-    let answers = {
-        q4: null,
-        q5: null
-    };
+    <script>
+        const testQuestions = [
+            {
+                type: "checkbox",
+                title: "1. Owoce to:",
+                options: ["Jabłko", "Chleb", "Truskawka", "Ser", "Banan", "Pomidor"],
+                correctIndices: [0, 2, 4]
+            },
+            {
+                type: "text",
+                title: "2. „Apple pie” po polsku to?",
+                correct: "szarlotka"
+            },
+            {
+                type: "radio",
+                title: "3. Poproszę ...",
+                options: ["zimna woda", "zimniej wody", "zimną wodę"],
+                correctIndex: 2
+            },
+            {
+                type: "radio",
+                title: "4. Sery, mleko i masło muszę spakować do ________.",
+                options: ["torby", "torba", "torbą"],
+                correctIndex: 0
+            },
+            {
+                type: "text",
+                title: "5. Co pijemy rano na pobudzenie? (wpisz słowo)",
+                correct: "kawa"
+            }
+        ];
 
-    function updateProgress() {
-        const percent = ((currentStep - 1) / totalSteps) * 100;
-        document.getElementById('progress-bar').style.width = percent + '%';
-        if(currentStep <= totalSteps) {
-            document.getElementById('question-counter').textContent = `Pytanie ${currentStep} z ${totalSteps}`;
-        } else {
-            document.getElementById('question-counter').textContent = `Koniec testu`;
-        }
-    }
+        let currentIndex = 0;
+        let attempts = 0;
+        let userAnswers = new Array(testQuestions.length).fill(null);
 
-    // Obsługa układania wyrazów (Q3)
-    function moveWord(chip) {
-        const target = document.getElementById('sentence-target');
-        const source = document.getElementById('sentence-source');
-        
-        if (chip.parentElement === source) {
-            target.appendChild(chip);
-        } else {
-            source.appendChild(chip);
-        }
-    }
+        function renderQuestion() {
+            const q = testQuestions[currentIndex];
+            document.getElementById('question-title').textContent = q.title;
+            const container = document.getElementById('quiz-content');
+            const feedback = document.getElementById('input-feedback');
+            const prevBtn = document.getElementById('prev-btn');
 
-    // Obsługa wyboru z przycisków (Q4 i Q5)
-    function selectRadio(qKey, value) {
-        answers[qKey] = value;
-        const container = document.getElementById(qKey);
-        const btns = container.querySelectorAll('.option-btn');
-        btns.forEach(btn => btn.style.borderColor = 'var(--border-color)');
-        event.currentTarget.style.borderColor = 'var(--primary-green)';
-    }
+            feedback.textContent = '';
+            container.innerHTML = '';
+            prevBtn.disabled = (currentIndex === 0);
 
-    function calculateScore() {
-        // Q1: Owoce (truskawki + borówki)
-        const q1Checked = Array.from(document.querySelectorAll('#q1 input[type="checkbox"]:checked')).map(c => c.value);
-        if (q1Checked.length === 2 && q1Checked.includes('truskawki') && q1Checked.includes('borówki')) {
-            score++;
-        }
+            const saved = userAnswers[currentIndex];
 
-        // Q2: Pisanie (ciasto jabłkowe)
-        const q2Val = document.getElementById('q2-input').value.trim().toLowerCase();
-        if (q2Val === 'ciasto jabłkowe' || q2Val === 'jabłkowe') {
-            score++;
-        }
+            if (q.type === 'text') {
+                const box = document.createElement('div');
+                box.className = 'input-box';
 
-        // Q3: Zdanie "Mleko jest w lodówce."
-        const constructedSentence = Array.from(document.getElementById('sentence-target').children)
-            .map(c => c.textContent).join(' ');
-        if (constructedSentence === 'Mleko jest w lodówce.') {
-            score++;
-        }
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = 'user-input';
+                input.className = 'input-field';
+                input.placeholder = 'Wpisz odpowiedź...';
+                input.autocomplete = 'off';
 
-        // Q4: Miejscownik
-        if (answers.q4 === 'miejscownik') {
-            score++;
-        }
+                const btn = document.createElement('button');
+                btn.className = 'btn-check';
+                btn.id = 'btn-submit';
+                btn.textContent = 'Sprawdź odpowiedź';
+                btn.onclick = checkTextAnswer;
 
-        // Q5: Poprawna forma "wodę z lodem"
-        if (answers.q5 === 'B') {
-            score++;
-        }
+                box.appendChild(input);
+                box.appendChild(btn);
+                container.appendChild(box);
 
-        // Q6: Lodówka
-        const q6Val = document.getElementById('q6-input').value.trim().toLowerCase();
-        if (q6Val === 'lodówki' || q6Val === 'lodówka' || q6Val === 'lodowki') {
-            score++;
-        }
-    }
+                if (saved && saved.completed) {
+                    input.value = saved.val;
+                    input.disabled = true;
+                    btn.disabled = true;
+                    if (saved.isCorrect) {
+                        input.className = 'input-field correct';
+                        feedback.textContent = '✨ Poprawnie!';
+                        feedback.className = 'feedback-msg correct';
+                    } else {
+                        input.className = 'input-field incorrect';
+                        feedback.textContent = `❌ Prawidłowa odpowiedź: "${q.correct}"`;
+                        feedback.className = 'feedback-msg incorrect';
+                    }
+                    enableNextButton(true);
+                } else {
+                    attempts = 0;
+                    enableNextButton(false);
+                    setTimeout(() => input.focus(), 50);
+                }
+            } else if (q.type === 'radio') {
+                const list = document.createElement('div');
+                list.className = 'options-container';
 
-    function nextQuestion() {
-        // Schowaj obecne pytanie
-        document.getElementById(`q${currentStep}`).classList.remove('active');
-        
-        currentStep++;
+                q.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.textContent = opt;
 
-        if (currentStep <= totalSteps) {
-            document.getElementById(`q${currentStep}`).classList.add('active');
+                    if (saved && saved.completed) {
+                        btn.disabled = true;
+                        if (idx === q.correctIndex) {
+                            btn.className = 'option-btn correct';
+                        } else if (saved.selected === idx) {
+                            btn.className = 'option-btn incorrect';
+                        }
+                    } else {
+                        btn.onclick = () => selectRadioAnswer(idx);
+                    }
+
+                    list.appendChild(btn);
+                });
+
+                container.appendChild(list);
+
+                if (saved && saved.completed) {
+                    feedback.textContent = saved.isCorrect ? '✨ Poprawnie!' : `❌ Prawidłowa odpowiedź: ${q.options[q.correctIndex]}`;
+                    feedback.className = `feedback-msg ${saved.isCorrect ? 'correct' : 'incorrect'}`;
+                    enableNextButton(true);
+                } else {
+                    enableNextButton(false);
+                }
+            } else if (q.type === 'checkbox') {
+                const grid = document.createElement('div');
+                grid.className = 'checkbox-grid';
+
+                q.options.forEach((opt, idx) => {
+                    const label = document.createElement('label');
+                    label.className = 'checkbox-item';
+
+                    const chk = document.createElement('input');
+                    chk.type = 'checkbox';
+                    chk.value = idx;
+
+                    if (saved && saved.completed) {
+                        chk.disabled = true;
+                        chk.checked = saved.selected.includes(idx);
+                        if (q.correctIndices.includes(idx)) {
+                            label.style.borderColor = 'var(--success-color)';
+                            label.style.backgroundColor = '#eafaf1';
+                        } else if (saved.selected.includes(idx)) {
+                            label.style.borderColor = 'var(--error-color)';
+                            label.style.backgroundColor = '#fdf2f2';
+                        }
+                    } else {
+                        chk.onchange = () => {
+                            if (chk.checked) label.classList.add('selected');
+                            else label.classList.remove('selected');
+                        };
+                    }
+
+                    label.appendChild(chk);
+                    label.appendChild(document.createTextNode(opt));
+                    grid.appendChild(label);
+                });
+
+                container.appendChild(grid);
+
+                if (!saved || !saved.completed) {
+                    const btn = document.createElement('button');
+                    btn.className = 'btn-check';
+                    btn.style.width = '100%';
+                    btn.textContent = 'Sprawdź wybrane';
+                    btn.onclick = checkCheckboxAnswer;
+                    container.appendChild(btn);
+                    enableNextButton(false);
+                } else {
+                    feedback.textContent = saved.isCorrect ? '✨ Wszystkie poprawne zaznaczone!' : '❌ Niezupełnie dobrze.';
+                    feedback.className = `feedback-msg ${saved.isCorrect ? 'correct' : 'incorrect'}`;
+                    enableNextButton(true);
+                }
+            }
+
             updateProgress();
-            
-            if (currentStep === totalSteps) {
-                document.getElementById('next-btn').textContent = "Zakończ test 🏆";
-            }
-        } else {
-            // Koniec testu
-            calculateScore();
-            document.getElementById('action-area').style.display = 'none';
-            document.getElementById('results').style.display = 'block';
-            document.getElementById('progress-bar').style.width = '100%';
-            
-            document.getElementById('score-text').textContent = `${score} / ${totalSteps}`;
-            
-            const feedback = document.getElementById('feedback-text');
-            if (score >= 4) {
-                feedback.textContent = "Wspaniale! Świetnie opanowałeś słownictwo i gramatykę z tego modułu!";
+        }
+
+        function checkTextAnswer() {
+            const q = testQuestions[currentIndex];
+            const input = document.getElementById('user-input');
+            const btn = document.getElementById('btn-submit');
+            const feedback = document.getElementById('input-feedback');
+
+            const val = input.value.trim().toLowerCase();
+            const correctVal = q.correct.toLowerCase();
+
+            if (!val) return;
+
+            if (val === correctVal) {
+                input.className = 'input-field correct';
+                input.disabled = true;
+                btn.disabled = true;
+                feedback.textContent = '✨ Poprawnie!';
+                feedback.className = 'feedback-msg correct';
+
+                userAnswers[currentIndex] = { completed: true, isCorrect: true, val: input.value };
+                enableNextButton(true);
             } else {
-                feedback.textContent = "Dobra robota, ale warto jeszcze powtórzyć niektóre etapy.";
+                attempts++;
+                input.className = 'input-field incorrect';
+
+                if (attempts < 3) {
+                    feedback.textContent = `❌ Niepoprawnie (Próba ${attempts}/3). Spróbuj ponownie!`;
+                    feedback.className = 'feedback-msg incorrect';
+                } else {
+                    input.value = q.correct;
+                    input.disabled = true;
+                    btn.disabled = true;
+                    feedback.textContent = `❌ Brak prób. Prawidłowa odpowiedź to: "${q.correct}"`;
+                    feedback.className = 'feedback-msg incorrect';
+
+                    userAnswers[currentIndex] = { completed: true, isCorrect: false, val: q.correct };
+                    enableNextButton(true);
+                }
             }
-
-            // ZAPIS POSTĘPU W LOCALSTORAGE (Zaliczenie Etapu 6)
-            saveCompletion();
-        }
-    }
-
-    function saveCompletion() {
-        const MODULE_KEY = 'm1_progress';
-        let progress = {
-            stage1: true,
-            stage2: true,
-            stage3: true,
-            stage4: true,
-            stage5: true,
-            stage6: false
-        };
-
-        const saved = localStorage.getItem(MODULE_KEY);
-        if (saved) {
-            try { progress = JSON.parse(saved); } catch(e) {}
         }
 
-        // Oznaczenie Etapu 6 jako zaliczony
-        progress.stage6 = true;
-        localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
-    }
+        function selectRadioAnswer(idx) {
+            const q = testQuestions[currentIndex];
+            const isCorrect = (idx === q.correctIndex);
+            userAnswers[currentIndex] = { completed: true, isCorrect: isCorrect, selected: idx };
+            renderQuestion();
+        }
 
-    // Inicjalizacja
-    updateProgress();
-</script>
+        function checkCheckboxAnswer() {
+            const q = testQuestions[currentIndex];
+            const checkedInputs = Array.from(document.querySelectorAll('.checkbox-grid input:checked')).map(i => parseInt(i.value));
 
+            const isCorrect = q.correctIndices.length === checkedInputs.length &&
+                q.correctIndices.every(val => checkedInputs.includes(val));
+
+            userAnswers[currentIndex] = { completed: true, isCorrect: isCorrect, selected: checkedInputs };
+            renderQuestion();
+        }
+
+        function enableNextButton(enable) {
+            document.getElementById('next-btn').disabled = !enable;
+        }
+
+        function nextQuestion() {
+            if (currentIndex < testQuestions.length - 1) {
+                currentIndex++;
+                renderQuestion();
+            } else {
+                showCompletion();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        function updateProgress() {
+            const total = testQuestions.length;
+            const pct = ((currentIndex + 1) / total) * 100;
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+            document.getElementById('step-counter').textContent = `Pytanie ${currentIndex + 1} / ${total}`;
+        }
+
+        function calculateScore() {
+            let total = 0;
+            userAnswers.forEach(ans => {
+                if (ans && ans.isCorrect) total++;
+            });
+            return total;
+        }
+
+        function showCompletion() {
+            document.getElementById('quiz-card').style.display = 'none';
+            document.getElementById('completion-screen').style.display = 'block';
+            document.getElementById('progress-bar').style.width = '100%';
+
+            const score = calculateScore();
+            const total = testQuestions.length;
+            const percent = Math.round((score / total) * 100);
+
+            document.getElementById('final-score').textContent = `${score} / ${total}`;
+            document.getElementById('final-percent').textContent = `${percent}%`;
+        }
+
+        function restartQuiz() {
+            currentIndex = 0;
+            userAnswers = new Array(testQuestions.length).fill(null);
+            document.getElementById('completion-screen').style.display = 'none';
+            document.getElementById('quiz-card').style.display = 'block';
+            renderQuestion();
+        }
+
+        function markStageComplete() {
+            const MODULE_KEY = 'm1_progress';
+            let progress = JSON.parse(localStorage.getItem(MODULE_KEY)) || {};
+            progress.test = true;
+            localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                const saved = userAnswers[currentIndex];
+                if (saved && saved.completed) {
+                    const nextBtn = document.getElementById('next-btn');
+                    if (!nextBtn.disabled) {
+                        nextQuestion();
+                    }
+                } else if (testQuestions[currentIndex].type === 'text') {
+                    checkTextAnswer();
+                }
+            }
+        });
+
+        renderQuestion();
+    </script>
 </body>
 </html>
