@@ -81,7 +81,7 @@
         }
 
         .question-title {
-            font-size: 1.25rem;
+            font-size: 1.35rem;
             font-weight: 800;
             color: var(--text-dark);
             margin-bottom: 1.2rem;
@@ -328,7 +328,7 @@
 
             <!-- Sekcja Objaśnień / Tłumaczeń -->
             <div class="explanation-box" id="explanation-box">
-                <div class="explanation-title" id="explanation-title">💡 Objaśnienie:</div>
+                <div class="explanation-title" id="explanation-title">💡 Przykład użycia w kontekście:</div>
                 <div class="explanation-text" id="explanation-text"></div>
             </div>
 
@@ -381,38 +381,38 @@
             // --- CZEŚĆ 2: DOPASOWAĆ PARY - ZESTAW 1 (5 PYTAŃ) ---
             {
                 type: "pair",
-                title: "Wybierz poprawne tłumaczenie dla: „gotować obiad”",
+                title: "Gotować obiad?",
                 options: ["to cook dinner", "to drink coffee", "to eat fruit"],
                 correct: 0,
-                explanation: "«gotować obiad» = to cook dinner"
+                explanation: "<strong>Przykłady w kontekście:</strong><br>• W niedzielę lubię gotować obiad dla całej rodziny.<br>• Moja mama gotuje pyszny obiad na urodziny."
             },
             {
                 type: "pair",
-                title: "Wybierz poprawne tłumaczenie dla: „pić kawę”",
+                title: "Pić kawę?",
                 options: ["to buy a gift", "to drink coffee", "to have siblings"],
                 correct: 1,
-                explanation: "«pić kawę» = to drink coffee"
+                explanation: "<strong>Przykłady w kontekście:</strong><br>• Każdego ranka lubię pić kawę z mlekiem.<br>• Pijemy kawę i rozmawiamy o pracy."
             },
             {
                 type: "pair",
-                title: "Wybierz poprawne tłumaczenie dla: „jeść owoce”",
+                title: "Jeść owoce?",
                 options: ["to eat fruit", "to cook dinner", "to buy a gift"],
                 correct: 0,
-                explanation: "«jeść owoce» = to eat fruit"
+                explanation: "<strong>Przykłady w kontekście:</strong><br>• Dzieci powinny codziennie jeść owoce i warzywa.<br>• Latem najchętniej jem świeże owoce z ogrodu."
             },
             {
                 type: "pair",
-                title: "Wybierz poprawne tłumaczenie dla: „kupować prezent”",
+                title: "Kupować prezent?",
                 options: ["to have siblings", "to buy a gift", "to drink coffee"],
                 correct: 1,
-                explanation: "«kupować prezent» = to buy a gift"
+                explanation: "<strong>Przykłady w kontekście:</strong><br>• Idziemy do sklepu kupować prezent dla babci.<br>• Uwielbiam kupować prezenty na Święta."
             },
             {
                 type: "pair",
-                title: "Wybierz poprawne tłumaczenie dla: „mieć rodzeństwo”",
+                title: "Mieć rodzeństwo?",
                 options: ["to eat fruit", "to cook dinner", "to have siblings"],
                 correct: 2,
-                explanation: "«mieć rodzeństwo» = to have siblings"
+                explanation: "<strong>Przykłady w kontekście:</strong><br>• Czy masz rodzeństwo, czy jesteś jedynakiem?<br>• Mam duże rodzeństwo – dwóch braci i siostrę."
             },
 
             // --- CZEŚĆ 3: DOPASOWAĆ PARY - ZESTAW 2 (5 PYTAŃ) ---
@@ -611,8 +611,8 @@
             {
                 type: "pair",
                 title: "Mamy fantastyczną ______.",
-                options: ["sąsiadka", "sąsiadkę", "sąsiadki"],
-                correct: 1,
+                options: ["sąsiadkę", "sąsiadka", "sąsiadki"],
+                correct: 0,
                 explanation: "Mieć + Biernik r. żeńskiego = fantastyczną sąsiadkę."
             },
             {
@@ -715,7 +715,6 @@
                     feedback.textContent = `❌ Spróbuj ponownie (Próba ${attempts}/3). Zaczyna się na "${firstLetter}"`;
                     feedback.className = 'feedback-msg incorrect';
                 } else {
-                    // Po 3 nieudanych próbach przechodzimy dalej
                     inputElem.disabled = true;
                     document.getElementById('btn-submit-input').disabled = true;
                     feedback.textContent = `❌ Poprawna odpowiedź to: "${current.correctWord}"`;
@@ -738,7 +737,7 @@
                 allBtns[current.correct].classList.add('correct');
             }
 
-            showExplanation("💡 Objaśnienie:", current.explanation);
+            showExplanation("💡 Objaśnienie / Kontekst:", current.explanation);
             document.getElementById('next-btn').style.display = 'block';
         }
 
