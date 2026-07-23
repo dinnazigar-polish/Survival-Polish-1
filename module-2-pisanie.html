@@ -1,47 +1,651 @@
-function checkAnswer() {
-            const current = writingVocabulary[currentIndex];
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 2 – Odmiana Czasowników (Pisanie)</title>
+    <style>
+        :root {
+            --primary-salmon: #f49c96;
+            --primary-salmon-hover: #e0857f;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --text-muted: #7f8c8d;
+            --border-light: #e2e8f0;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--primary-salmon);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background-color: var(--border-light);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-salmon);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .quiz-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-light);
+        }
+
+        .question-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 1.2rem;
+        }
+
+        .text-display {
+            background-color: #f1f5f9;
+            border-radius: 14px;
+            padding: 1.2rem;
+            margin-bottom: 1.2rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .verb-target {
+            font-weight: 800;
+            color: #b0463e;
+            border-bottom: 2px dashed #b0463e;
+            padding: 0 0.2rem;
+        }
+
+        .input-box {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 2px solid var(--border-light);
+            border-radius: 12px;
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-field:focus {
+            border-color: var(--primary-salmon);
+        }
+
+        .input-field.correct {
+            border-color: var(--success-color);
+            background-color: #eafaf1;
+        }
+
+        .input-field.incorrect {
+            border-color: var(--error-color);
+            background-color: #fdf2f2;
+        }
+
+        .btn-check {
+            background-color: var(--primary-salmon);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-check:hover:not(:disabled) {
+            background-color: var(--primary-salmon-hover);
+        }
+
+        .btn-check:disabled {
+            background-color: var(--border-light);
+            cursor: not-allowed;
+        }
+
+        .feedback-msg {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+
+        .feedback-msg.correct { color: var(--success-color); }
+        .feedback-msg.incorrect { color: var(--error-color); }
+
+        /* Sekcja Tłumaczeń i Objaśnień */
+        .explanation-box {
+            margin-top: 1.5rem;
+            padding: 1.2rem;
+            background-color: #fffaf9;
+            border-radius: 16px;
+            border: 2px dashed var(--primary-salmon);
+            display: none;
+        }
+
+        .explanation-box.visible {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .explanation-title {
+            font-weight: 800;
+            color: #d96b63;
+            margin-bottom: 0.8rem;
+            font-size: 1.05rem;
+        }
+
+        .verb-item {
+            margin-bottom: 0.8rem;
+        }
+
+        .verb-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Nawigacja Dolna */
+        .nav-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .prev-btn {
+            flex: 1;
+            background-color: #ffffff;
+            color: var(--text-dark);
+            border: 2px solid var(--border-light);
+            padding: 0.9rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .prev-btn:hover:not(:disabled) {
+            border-color: var(--text-muted);
+            background-color: #f1f5f9;
+        }
+
+        .prev-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .next-btn {
+            flex: 2;
+            background-color: var(--primary-salmon);
+            color: white;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .next-btn:hover:not(:disabled) {
+            background-color: var(--primary-salmon-hover);
+        }
+
+        .next-btn:disabled {
+            background-color: var(--border-light);
+            cursor: not-allowed;
+        }
+
+        .completion-screen {
+            text-align: center;
+            padding: 3rem 1rem;
+            display: none;
+        }
+
+        .score-badge {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--primary-salmon);
+            margin-bottom: 0.5rem;
+        }
+
+        .score-percent {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-action-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 2rem;
+            align-items: center;
+        }
+
+        .btn-restart {
+            background-color: #ffffff;
+            color: var(--text-dark);
+            border: 2px solid var(--border-light);
+            padding: 0.9rem 2rem;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        .btn-restart:hover {
+            border-color: var(--primary-salmon);
+            color: var(--primary-salmon);
+        }
+
+        .btn-finish {
+            display: inline-block;
+            background-color: var(--primary-salmon);
+            color: white;
+            text-decoration: none;
+            padding: 0.9rem 2rem;
+            border-radius: 30px;
+            font-weight: 700;
+            width: 100%;
+            max-width: 280px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <a href="module-2-vocab.html" class="back-link">← Powrót do modułu</a>
+            <span id="step-counter" style="font-weight: 700; color: var(--text-muted);">Tekst 1 / 7</span>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+
+        <!-- Karta Ćwiczenia -->
+        <div class="quiz-card" id="quiz-card">
+            <div class="question-title" id="question-title">Tekst 1: Babcia i pierogi</div>
+
+            <div class="text-display" id="text-display"></div>
+
+            <div class="input-box">
+                <input type="text" id="user-input" class="input-field" placeholder="Wpisz poprawnie odmieniony czasownik..." autocomplete="off">
+                <button class="btn-check" id="btn-submit" onclick="checkAnswer()">Sprawdź odpowiedź</button>
+            </div>
+            <div id="input-feedback" class="feedback-msg"></div>
+
+            <!-- Objaśnienia czasowników i przykłady po odpowiedzi -->
+            <div class="explanation-box" id="explanation-box">
+                <div class="explanation-title">💡 Słowniczek i przykłady użycia w kontekście:</div>
+                <div id="explanation-text"></div>
+            </div>
+
+            <!-- Nawigacja -->
+            <div class="nav-controls">
+                <button class="prev-btn" id="prev-btn" onclick="prevQuestion()">← Wstecz</button>
+                <button class="next-btn" id="next-btn" onclick="nextQuestion()">Następny tekst →</button>
+            </div>
+        </div>
+
+        <!-- Ekran Końcowy -->
+        <div class="completion-screen" id="completion-screen">
+            <h2>🎉 Pisanie Ukończone!</h2>
+            <div class="score-badge" id="final-score">0 / 7</div>
+            <div class="score-percent" id="final-percent">0%</div>
+            <p id="completion-desc">Świetna robota! Opanowałeś odmianę czasowników w kontekście rodzinnym.</p>
+
+            <div class="btn-action-group">
+                <button class="btn-restart" onclick="restartExercise()">🔄 Powtórz ćwiczenie</button>
+                <a href="module-2-vocab.html" class="btn-finish" onclick="markStageComplete()">Wróć do modułu</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const writingTasks = [
+            {
+                title: "Tekst 1: Babcia w Krakowie",
+                textBefore: "Moja babcia ",
+                baseVerb: "mieszkać",
+                textAfter: " w Krakowie i gotuje pyszne pierogi.",
+                correct: "mieszka",
+                verbsInfo: [
+                    { verb: "mieszkać", en: "to live / reside", ex: "Moi rodzice mieszkają w małym domku pod Warszawą." },
+                    { verb: "gotować", en: "to cook", ex: "Moja mama chętnie gotuje obiad dla całej rodziny." }
+                ]
+            },
+            {
+                title: "Tekst 2: Nauka języka",
+                textBefore: "To babcia ",
+                baseVerb: "uczyć",
+                textAfter: " mnie mówić po polsku i pomaga mi każdego dnia.",
+                correct: "uczy",
+                verbsInfo: [
+                    { verb: "uczyć", en: "to teach", ex: "Mój dziadek uczy mojego brata grać w szachy." }
+                ]
+            },
+            {
+                title: "Tekst 3: Studia za granicą",
+                textBefore: "Moja kuzynka Ania ",
+                baseVerb: "studiować",
+                textAfter: " w Stanach Zjednoczonych i często do nas dzwoni.",
+                correct: "studiuje",
+                verbsInfo: [
+                    { verb: "studiować", en: "to study (at university)", ex: "Moja siostra studiuje medycynę na uniwersytecie." }
+                ]
+            },
+            {
+                title: "Tekst 4: Relacje z sąsiadem",
+                textBefore: "Mój sąsiad ",
+                baseVerb: "mieć",
+                textAfter: " dwoje dzieci. Nasze dzieci często bawią się razem na podwórku.",
+                correct: "ma",
+                verbsInfo: [
+                    { verb: "mieć", en: "to have", ex: "Czy Twoje rodzeństwo ma psa lub kota?" },
+                    { verb: "bawić się", en: "to play", ex: "Moje dzieci bawią się w ogrodzie." }
+                ]
+            },
+            {
+                title: "Tekst 5: Praca i mieszkanie",
+                textBefore: "Mój brat pracować w korporacji, a razem z żoną ",
+                baseVerb: "wynajmować",
+                textAfter: " ładne mieszkanie w centrum miasta.",
+                correct: "wynajmują",
+                verbsInfo: [
+                    { verb: "pracować", en: "to work", ex: "Mój tata pracuje jako inżynier." },
+                    { verb: "wynajmować", en: "to rent", ex: "Młode małżeństwo wynajmuje przytulne kawalerki." }
+                ]
+            },
+            {
+                title: "Tekst 6: Weekendowy relaks",
+                textBefore: "W niedzielę cała nasza rodzina ",
+                baseVerb: "odpoczywać",
+                textAfter: " w ogrodzie i pije ciepłą kawę.",
+                correct: "odpoczywa",
+                verbsInfo: [
+                    { verb: "odpoczywać", en: "to rest / relax", ex: "Po ciężkim tygodniu w pracy chętnie odpoczywamy w domu." }
+                ]
+            },
+            {
+                title: "Tekst 7: Wspólne hobby",
+                textBefore: "Mój wujek bardzo ",
+                baseVerb: "lubić",
+                textAfter: " piec ciasta dla całej rodziny na urodziny.",
+                correct: "lubi",
+                verbsInfo: [
+                    { verb: "lubić", en: "to like", ex: "Moja ciocia lubi czytać książki w wolnym czasie." }
+                ]
+            }
+        ];
+
+        let currentIndex = 0;
+        let attempts = 0;
+        let userAnswers = new Array(writingTasks.length).fill(null);
+
+        function renderQuestion() {
+            const data = writingTasks[currentIndex];
+
+            document.getElementById('question-title').textContent = `${currentIndex + 1}. ${data.title}`;
+            
+            // Formatowanie tekstu z zaznaczonym słowem w nawiasie
+            const textDisplay = document.getElementById('text-display');
+            const savedAns = userAnswers[currentIndex];
+            
+            let insertedWord = `(${data.baseVerb})`;
+            if (savedAns && savedAns.completed) {
+                insertedWord = `<span class="verb-target" style="color: ${savedAns.isCorrect ? 'var(--success-color)' : 'var(--error-color)'}">${savedAns.val}</span>`;
+            } else {
+                insertedWord = `<span class="verb-target">(${data.baseVerb})</span>`;
+            }
+
+            textDisplay.innerHTML = `${data.textBefore}${insertedWord}${data.textAfter}`;
+
+            const inputElem = document.getElementById('user-input');
+            const feedback = document.getElementById('input-feedback');
+            const btnSubmit = document.getElementById('btn-submit');
+            const explanationBox = document.getElementById('explanation-box');
+
+            feedback.textContent = '';
+            explanationBox.classList.remove('visible');
+
+            document.getElementById('prev-btn').disabled = (currentIndex === 0);
+
+            if (savedAns && savedAns.completed) {
+                inputElem.value = savedAns.val;
+                inputElem.disabled = true;
+                btnSubmit.disabled = true;
+
+                if (savedAns.isCorrect) {
+                    inputElem.className = 'input-field correct';
+                    feedback.textContent = '✨ Poprawnie!';
+                    feedback.className = 'feedback-msg correct';
+                } else {
+                    inputElem.className = 'input-field incorrect';
+                    feedback.textContent = `❌ Prawidłowa forma to: "${data.correct}"`;
+                    feedback.className = 'feedback-msg incorrect';
+                }
+
+                showExplanation(data.verbsInfo);
+                enableNextButton(true);
+            } else {
+                attempts = 0;
+                inputElem.value = '';
+                inputElem.disabled = false;
+                inputElem.className = 'input-field';
+                btnSubmit.disabled = false;
+                enableNextButton(false);
+                inputElem.focus();
+            }
+
+            updateProgress();
+        }
+
+        function checkAnswer() {
+            const data = writingTasks[currentIndex];
+            const inputElem = document.getElementById('user-input');
+            const feedback = document.getElementById('input-feedback');
+            const btnSubmit = document.getElementById('btn-submit');
             const userVal = inputElem.value.trim().toLowerCase();
-            const correctVal = current.word.trim().toLowerCase();
-            const feedback = document.getElementById('feedback-msg');
-            const actionBtn = document.getElementById('action-btn');
+            const correctVal = data.correct.toLowerCase();
 
             if (!userVal) return;
 
             if (userVal === correctVal) {
-                // Poprawna odpowiedź
-                isAnswered = true;
-                inputElem.disabled = true;
                 inputElem.className = 'input-field correct';
-                feedback.textContent = '✨ Świetnie! Poprawna odpowiedź.';
+                inputElem.disabled = true;
+                btnSubmit.disabled = true;
+                feedback.textContent = '✨ Poprawnie!';
                 feedback.className = 'feedback-msg correct';
 
-                showExampleBox(current.examplePL, current.exampleEN);
-
-                actionBtn.textContent = 'Następne słowo →';
-                actionBtn.setAttribute('onclick', 'nextWord()');
+                userAnswers[currentIndex] = { completed: true, isCorrect: true, val: userVal };
+                showExplanation(data.verbsInfo);
+                enableNextButton(true);
             } else {
-                // Błędna odpowiedź
                 attempts++;
                 inputElem.className = 'input-field incorrect';
 
-                if (attempts === 1) {
-                    // Pierwszy błąd -> podajemy pierwszą literę w nowym formacie
-                    const firstLetter = current.word.charAt(0).toUpperCase();
-                    feedback.textContent = `💡 Zaczyna się na "${firstLetter}"`;
+                if (attempts < 3) {
+                    const firstLetter = data.correct.charAt(0).toUpperCase();
+                    feedback.textContent = `❌ Niepoprawnie (Próba ${attempts}/3). Podpowiedź: pierwsza litera to "${firstLetter}"`;
                     feedback.className = 'feedback-msg incorrect';
-                    inputElem.focus();
-                    inputElem.select();
-                } else if (attempts >= 2) {
-                    // Drugi błąd -> podajemy pełną odpowiedź i odblokowujemy przejście dalej
-                    isAnswered = true;
+                } else {
                     inputElem.disabled = true;
-                    feedback.textContent = `❌ Poprawna odpowiedź to: "${current.word}"`;
+                    btnSubmit.disabled = true;
+                    feedback.textContent = `❌ Brak prób. Prawidłowa forma to: "${data.correct}"`;
                     feedback.className = 'feedback-msg incorrect';
 
-                    showExampleBox(current.examplePL, current.exampleEN);
-
-                    actionBtn.textContent = 'Następne słowo →';
-                    actionBtn.setAttribute('onclick', 'nextWord()');
+                    userAnswers[currentIndex] = { completed: true, isCorrect: false, val: userVal };
+                    showExplanation(data.verbsInfo);
+                    enableNextButton(true);
                 }
             }
+
+            // Aktualizacja opisu ze zmienionym słowem
+            renderQuestionTextOnly();
         }
+
+        function renderQuestionTextOnly() {
+            const data = writingTasks[currentIndex];
+            const textDisplay = document.getElementById('text-display');
+            const savedAns = userAnswers[currentIndex];
+            
+            if (savedAns) {
+                const color = savedAns.isCorrect ? 'var(--success-color)' : 'var(--error-color)';
+                textDisplay.innerHTML = `${data.textBefore}<span class="verb-target" style="color: ${color}">${savedAns.val}</span>${data.textAfter}`;
+            }
+        }
+
+        function showExplanation(verbsInfo) {
+            const box = document.getElementById('explanation-box');
+            const textContainer = document.getElementById('explanation-text');
+            
+            let html = "";
+            verbsInfo.forEach(item => {
+                html += `
+                    <div class="verb-item">
+                        🔹 <strong>${item.verb}</strong> (🇬🇧 <em>${item.en}</em>)<br>
+                        ✏️ Przykład: „${item.ex}”
+                    </div>
+                `;
+            });
+
+            textContainer.innerHTML = html;
+            box.classList.add('visible');
+        }
+
+        function enableNextButton(enable) {
+            document.getElementById('next-btn').disabled = !enable;
+        }
+
+        function nextQuestion() {
+            if (currentIndex < writingTasks.length - 1) {
+                currentIndex++;
+                renderQuestion();
+            } else {
+                showCompletion();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderQuestion();
+            }
+        }
+
+        function updateProgress() {
+            const total = writingTasks.length;
+            const pct = ((currentIndex + 1) / total) * 100;
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+            document.getElementById('step-counter').textContent = `Tekst ${currentIndex + 1} / ${total}`;
+        }
+
+        function calculateScore() {
+            let total = 0;
+            userAnswers.forEach(ans => {
+                if (ans && ans.isCorrect) total++;
+            });
+            return total;
+        }
+
+        function showCompletion() {
+            document.getElementById('quiz-card').style.display = 'none';
+            document.getElementById('completion-screen').style.display = 'block';
+            document.getElementById('progress-bar').style.width = '100%';
+
+            const score = calculateScore();
+            const total = writingTasks.length;
+            const percent = Math.round((score / total) * 100);
+
+            document.getElementById('final-score').textContent = `${score} / ${total}`;
+            document.getElementById('final-percent').textContent = `${percent}%`;
+        }
+
+        function restartExercise() {
+            currentIndex = 0;
+            userAnswers = new Array(writingTasks.length).fill(null);
+            document.getElementById('completion-screen').style.display = 'none';
+            document.getElementById('quiz-card').style.display = 'block';
+            renderQuestion();
+        }
+
+        function markStageComplete() {
+            const MODULE_KEY = 'm2_progress';
+            let progress = JSON.parse(localStorage.getItem(MODULE_KEY)) || {};
+            progress.writing = true;
+            localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
+        }
+
+        // Obsługa klawisza Enter
+        document.getElementById('user-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Start
+        renderQuestion();
+    </script>
+</body>
+</html>
