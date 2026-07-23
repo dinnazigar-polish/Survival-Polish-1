@@ -3,904 +3,431 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moduł 1 – Test końcowy</title>
+    <title>Polski Module 1 - Test</title>
     <style>
         :root {
-            --primary-green: #22c55e;
-            --primary-green-hover: #16a34a;
-            --primary-green-light: #f0fdf4;
-            --bg-color: #f8fafc;
+            --primary: #2b5c8f;
+            --secondary: #e76f51;
+            --bg: #f4f7f6;
             --card-bg: #ffffff;
-            --text-dark: #1e293b;
-            --text-muted: #64748b;
-            --border-light: #e2e8f0;
-            --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            --success-color: #16a34a;
-            --error-color: #ef4444;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+            --text: #2c3e50;
+            --correct: #2a9d8f;
+            --incorrect: #e76f51;
+            --info-bg: #eef5fc;
         }
 
         body {
-            font-family: var(--font-family);
-            background-color: var(--bg-color);
-            color: var(--text-dark);
-            line-height: 1.6;
-            padding: 2rem 1rem;
-        }
-
-        .container {
-            max-width: 720px;
-            margin: 0 auto;
-        }
-
-        .header {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
+            justify-content: center;
         }
 
-        .back-link {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.2s ease;
-        }
-
-        .back-link:hover {
-            color: var(--primary-green);
-        }
-
-        .progress-bar-container {
+        .quiz-container {
             width: 100%;
-            height: 12px;
-            background-color: var(--border-light);
-            border-radius: 6px;
-            overflow: hidden;
-            margin-bottom: 2rem;
+            max-width: 780px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
 
-        .progress-fill {
-            height: 100%;
-            background-color: var(--primary-green);
-            width: 0%;
-            transition: width 0.3s ease;
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
         }
 
-        .quiz-card {
-            background-color: var(--card-bg);
-            border-radius: 20px;
-            padding: 2.5rem;
-            box-shadow: var(--shadow-soft);
-            border: 2px solid var(--border-light);
+        .question-card {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
         }
 
         .question-title {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--text-dark);
-            margin-bottom: 1.5rem;
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            color: #1a365d;
         }
 
-        .options-container {
+        .options {
             display: flex;
             flex-direction: column;
-            gap: 0.8rem;
-            margin-bottom: 1.2rem;
+            gap: 10px;
         }
 
-        .option-btn {
-            background-color: #ffffff;
-            border: 2px solid var(--border-light);
-            border-radius: 14px;
-            padding: 1rem 1.2rem;
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-dark);
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .option-btn:hover:not(:disabled) {
-            border-color: var(--primary-green);
-            background-color: var(--primary-green-light);
-        }
-
-        .option-btn.selected {
-            border-color: var(--primary-green);
-            background-color: var(--primary-green-light);
-        }
-
-        .option-btn.correct {
-            border-color: var(--success-color);
-            background-color: #dcfce7;
-            color: var(--success-color);
-        }
-
-        .option-btn.incorrect {
-            border-color: var(--error-color);
-            background-color: #fee2e2;
-            color: var(--error-color);
-        }
-
-        .checkbox-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 0.8rem;
-            margin-bottom: 1.2rem;
-        }
-
-        .checkbox-item {
-            background-color: #ffffff;
-            border: 2px solid var(--border-light);
-            border-radius: 12px;
-            padding: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            user-select: none;
-            transition: all 0.2s ease;
-        }
-
-        .checkbox-item:hover {
-            border-color: var(--primary-green);
-        }
-
-        .checkbox-item.selected {
-            border-color: var(--primary-green);
-            background-color: var(--primary-green-light);
-        }
-
-        .checkbox-item input {
-            accent-color: var(--primary-green);
-            width: 20px;
-            height: 20px;
-        }
-
-        .input-box {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 1rem 1.2rem;
-            border: 2px solid var(--border-light);
-            border-radius: 12px;
-            font-size: 1.1rem;
-            outline: none;
-            transition: border-color 0.2s ease;
-        }
-
-        .input-field:focus {
-            border-color: var(--primary-green);
-        }
-
-        .input-field.correct {
-            border-color: var(--success-color);
-            background-color: #dcfce7;
-        }
-
-        .input-field.incorrect {
-            border-color: var(--error-color);
-            background-color: #fee2e2;
-        }
-
-        .btn-check {
-            background-color: var(--primary-green);
-            color: white;
-            border: none;
-            padding: 0.9rem 1.5rem;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-
-        .btn-check:hover:not(:disabled) {
-            background-color: var(--primary-green-hover);
-        }
-
-        .btn-check:disabled {
-            background-color: var(--border-light);
-            cursor: not-allowed;
-        }
-
-        /* Sekcja Dialogów z Lukami */
-        .dialog-container {
-            background-color: #f1f5f9;
-            padding: 1.5rem;
-            border-radius: 14px;
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-            line-height: 2;
-        }
-
-        .dialog-select {
-            padding: 0.4rem 0.8rem;
-            border: 2px solid var(--border-light);
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 700;
-            background-color: #fff;
-            outline: none;
-            cursor: pointer;
-            color: var(--text-dark);
-        }
-
-        .dialog-select:focus {
-            border-color: var(--primary-green);
-        }
-
-        .word-bank {
-            background-color: var(--primary-green-light);
-            border: 2px dashed var(--primary-green);
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
-            color: var(--text-dark);
-        }
-
-        .word-bank span {
-            display: inline-block;
-            background-color: #fff;
-            padding: 0.2rem 0.6rem;
-            margin: 0.2rem;
+        .btn-option {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            padding: 12px 16px;
             border-radius: 6px;
-            border: 1px solid var(--border-light);
-            font-weight: 700;
-        }
-
-        .feedback-msg {
-            font-weight: 700;
-            font-size: 0.95rem;
-            margin-top: 0.5rem;
-        }
-
-        .feedback-msg.correct { color: var(--success-color); }
-        .feedback-msg.incorrect { color: var(--error-color); }
-
-        .nav-controls {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .prev-btn {
-            flex: 1;
-            background-color: #ffffff;
-            color: var(--text-dark);
-            border: 2px solid var(--border-light);
-            padding: 0.9rem;
-            border-radius: 30px;
-            font-size: 1rem;
-            font-weight: 700;
             cursor: pointer;
+            text-align: left;
+            font-size: 1em;
             transition: all 0.2s ease;
         }
 
-        .prev-btn:hover:not(:disabled) {
-            border-color: var(--text-muted);
-            background-color: #f1f5f9;
+        .btn-option:hover {
+            background: #f1f5f9;
+            border-color: var(--primary);
         }
 
-        .prev-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .btn-option.correct {
+            background-color: #d1fae5;
+            border-color: var(--correct);
+            color: #065f46;
+            font-weight: bold;
         }
 
-        .next-btn {
-            flex: 2;
-            background-color: var(--primary-green);
+        .btn-option.incorrect {
+            background-color: #fee2e2;
+            border-color: var(--incorrect);
+            color: #991b1b;
+        }
+
+        .explanation-box {
+            margin-top: 15px;
+            padding: 14px;
+            background-color: var(--info-bg);
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .explanation-box strong {
+            color: var(--primary);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        .btn-submit {
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 0.9rem;
-            border-radius: 30px;
-            font-size: 1rem;
-            font-weight: 700;
+            padding: 10px 20px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            font-size: 0.95em;
         }
 
-        .next-btn:hover:not(:disabled) {
-            background-color: var(--primary-green-hover);
+        .btn-submit:hover {
+            opacity: 0.9;
         }
 
-        .next-btn:disabled {
-            background-color: var(--border-light);
-            cursor: not-allowed;
+        .dialogue-block {
+            background: #ffffff;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px dashed #cbd5e1;
+            margin-bottom: 12px;
         }
 
-        .completion-screen {
-            text-align: center;
-            padding: 3rem 1.5rem;
-            display: none;
-            background: #fff;
-            border-radius: 20px;
-            box-shadow: var(--shadow-soft);
-            border: 2px solid var(--border-light);
-        }
-
-        .score-badge {
-            font-size: 3.5rem;
-            font-weight: 800;
-            color: var(--primary-green);
-            margin-bottom: 0.2rem;
-        }
-
-        .score-percent {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-        }
-
-        .btn-action-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            margin-top: 2rem;
-            align-items: center;
-        }
-
-        .btn-restart {
-            background-color: #ffffff;
-            color: var(--text-dark);
-            border: 2px solid var(--border-light);
-            padding: 0.9rem 2rem;
-            border-radius: 30px;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-            width: 100%;
-            max-width: 300px;
-        }
-
-        .btn-restart:hover {
-            border-color: var(--primary-green);
-            color: var(--primary-green);
-        }
-
-        .btn-finish {
-            display: inline-block;
-            background-color: var(--primary-green);
-            color: white;
-            text-decoration: none;
-            padding: 0.9rem 2rem;
-            border-radius: 30px;
-            font-weight: 700;
-            width: 100%;
-            max-width: 300px;
-            text-align: center;
-        }
-
-        .btn-finish:hover {
-            background-color: var(--primary-green-hover);
+        .dialogue-line {
+            margin: 6px 0;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <a href="module-2-vocab.html" class="back-link">← Powrót do modułu</a>
-            <span id="step-counter" style="font-weight: 700; color: var(--text-muted);">Pytanie 1 / 20</span>
+<div class="quiz-container">
+    <h1>Module 1: Dom i Jedzenie – Test</h1>
+
+    <!-- Pytanie 2 -->
+    <div class="question-card" id="q2">
+        <div class="question-title">2. „Apple pie” po polsku to? (Wybierz poprawną odpowiedź)</div>
+        <div class="options">
+            <button class="btn-option" onclick="checkQ2(this, true, 'szarlotka')">szarlotka</button>
+            <button class="btn-option" onclick="checkQ2(this, true, 'ciasto jabłkowe')">ciasto jabłkowe</button>
+            <button class="btn-option" onclick="checkQ2(this, false, 'sernik')">sernik</button>
+            <button class="btn-option" onclick="checkQ2(this, false, 'pączek')">pączek</button>
         </div>
+        <div id="q2-explain" class="explanation-box" style="display:none;"></div>
+    </div>
 
-        <div class="progress-bar-container">
-            <div class="progress-fill" id="progress-bar"></div>
+    <!-- Pytanie 4 -->
+    <div class="question-card" id="q4">
+        <div class="question-title">4. Sery, mleko i masło muszę spakować do ________.</div>
+        <div class="options">
+            <button class="btn-option" onclick="checkQ4(this, 'torba')">torba</button>
+            <button class="btn-option" onclick="checkQ4(this, 'torbą')">torbą</button>
+            <button class="btn-option" onclick="checkQ4(this, 'torby')">torby</button>
         </div>
+        <div id="q4-explain" class="explanation-box" style="display:none;"></div>
+    </div>
 
-        <!-- Karta Pytania -->
-        <div class="quiz-card" id="quiz-card">
-            <div class="question-title" id="question-title"></div>
-            <div id="quiz-content"></div>
-            <div id="input-feedback" class="feedback-msg"></div>
-
-            <div class="nav-controls">
-                <button class="prev-btn" id="prev-btn" onclick="prevQuestion()">← Wstecz</button>
-                <button class="next-btn" id="next-btn" onclick="nextQuestion()">Następne pytanie (Enter) →</button>
-            </div>
-        </div>
-
-        <!-- Ekran Końcowy -->
-        <div class="completion-screen" id="completion-screen">
-            <h2>🎉 Test Ukończony!</h2>
-            <div class="score-badge" id="final-score">0 / 20</div>
-            <div class="score-percent" id="final-percent">0%</div>
-            <p id="completion-desc">Świetna robota! Sprawdź swój wynik końcowy poniżej.</p>
-
-            <div class="btn-action-group">
-                <button class="btn-restart" onclick="restartQuiz()">🔄 Powtórz test</button>
-                <a href="module-2-vocab.html" class="btn-finish" onclick="markStageComplete()">Przejdź do Modułu 2</a>
-            </div>
+    <!-- Pytanie 5 -->
+    <div class="question-card" id="q5">
+        <div class="question-title">5. Co pijemy rano ze śniadaniem?</div>
+        <div class="options">
+            <button class="btn-option" onclick="checkSimple(this, true)">kawa / herbata</button>
+            <button class="btn-option" onclick="checkSimple(this, false)">zupa</button>
+            <button class="btn-option" onclick="checkSimple(this, false)">owoce</button>
+            <button class="btn-option" onclick="checkSimple(this, false)">sos pomidorowy</button>
         </div>
     </div>
 
-    <script>
-        const testQuestions = [
-            {
-                type: "checkbox",
-                title: "1. Owoce to:",
-                options: ["Jabłko", "Chleb", "Truskawka", "Ser", "Banan", "Pomidor"],
-                correctIndices: [0, 2, 4]
-            },
-            {
-                type: "text",
-                title: "2. „Apple pie” po polsku to?",
-                correct: "szarlotka"
-            },
-            {
-                type: "radio",
-                title: "3. Poproszę ...",
-                options: ["zimna woda", "zimniej wody", "zimną wodę"],
-                correctIndex: 2
-            },
-            {
-                type: "radio",
-                title: "4. Sery, mleko i masło muszę spakować do ________.",
-                options: ["torby", "torba", "torbą"],
-                correctIndex: 0
-            },
-            {
-                type: "checkbox",
-                title: "5. Co pijemy rano ze śniadaniem?",
-                options: ["Sok", "Woda", "Kawa"],
-                correctIndices: [0, 1, 2]
-            },
-            {
-                type: "text",
-                title: "6. Gdzie parkujemy samochód? (Wpisz słowo w odpowiedniej formie: do...)",
-                correct: "garażu"
-            },
-            {
-                type: "radio",
-                title: "7. Dopasowanie: W którym pomieszczeniu śpimy?",
-                options: ["Kuchnia", "Sypialnia", "Łazienka"],
-                correctIndex: 1
-            },
-            {
-                type: "dialog",
-                title: "8. Dialog w kuchni: Uzupełnij luki w zdaniach.",
-                wordBank: ["lodówka", "lodówki", "obiad", "obiadu", "kuchnia"],
-                text: "– Gdzie jest mleko?<br>– Mleko jest w {0}. Zaraz zrobimy pyszny {1}!",
-                correctAnswers: ["lodówce", "obiad"],
-                options: [
-                    ["lodówce", "lodówka", "lodówki"],
-                    ["obiad", "obiadu", "obiadem"]
-                ]
-            },
-            {
-                type: "radio",
-                title: "9. Wybierz poprawną odmianę: Mieszkam w dużym ________.",
-                options: ["domu", "dom", "domem"],
-                correctIndex: 0
-            },
-            {
-                type: "text",
-                title: "10. Przetłumacz słowo „Living room” na język polski:",
-                correct: "salon"
-            },
-            {
-                type: "checkbox",
-                title: "11. Zaznacz meble znajdujące się w pokoju:",
-                options: ["Kanapa", "Piekarnik", "Szafa", "Wanna", "Stół"],
-                correctIndices: [0, 2, 4]
-            },
-            {
-                type: "radio",
-                title: "12. Tłumaczenie: Jak powiesz po polsku „Garden”?",
-                options: ["Garaż", "Ogród", "Balkon"],
-                correctIndex: 1
-            },
-            {
-                type: "text",
-                title: "13. Odmiana: Chcę kupić nową ________ (kanapa). Wpisz w poprawnej formie:",
-                correct: "kanapę"
-            },
-            {
-                type: "radio",
-                title: "14. Gdzie myjemy zęby i bierzemy prysznic?",
-                options: ["W łazience", "W kuchni", "W piwnicy"],
-                correctIndex: 0
-            },
-            {
-                type: "dialog",
-                title: "15. Dialog w mieszkaniu: Uzupełnij wypowiedź.",
-                wordBank: ["mieszkanie", "mieszkania", "balkon", "balkonu"],
-                text: "– Czy twoje {0} jest duże?<br>– Tak, i mam piękny {1} z widokiem na park.",
-                correctAnswers: ["mieszkanie", "balkon"],
-                options: [
-                    ["mieszkanie", "mieszkania", "mieszkaniu"],
-                    ["balkon", "balkonu", "balkonie"]
-                ]
-            },
-            {
-                type: "text",
-                title: "16. Gdzie przechowujemy lody i mrożonki? Wpisz słowo:",
-                correct: "zamrażarka"
-            },
-            {
-                type: "radio",
-                title: "17. Wybierz poprawną formę: Na stole stoi gorąca ________.",
-                options: ["zupa", "zupę", "zupy"],
-                correctIndex: 0
-            },
-            {
-                type: "checkbox",
-                title: "18. Wybierz produkty, które trzymamy w lodówce:",
-                options: ["Masło", "Chleb", "Jogurt", "Mleko"],
-                correctIndices: [0, 2, 3]
-            },
-            {
-                type: "text",
-                title: "19. Odmiana: Przetłumacz i wpisz w odpowiedniej formie: On siedzi na ________ (chair).",
-                correct: "krześle"
-            },
-            {
-                type: "radio",
-                title: "20. Co robimy w jadalni?",
-                options: ["Jemy posiłki", "Grajmy w piłkę", "Myjemy auto"],
-                correctIndex: 0
-            }
-        ];
+    <!-- Pytanie 6 -->
+    <div class="question-card" id="q6">
+        <div class="question-title">6. Gdzie parkujemy samochód?</div>
+        <div class="options">
+            <button class="btn-option" onclick="checkSimple(this, false)">w salonie</button>
+            <button class="btn-option" onclick="checkSimple(this, true)">w garażu</button>
+            <button class="btn-option" onclick="checkSimple(this, false)">w kuchni</button>
+            <button class="btn-option" onclick="checkSimple(this, false)">w łazience</button>
+        </div>
+    </div>
 
-        let currentIndex = 0;
-        let attempts = 0;
-        let userAnswers = new Array(testQuestions.length).fill(null);
+    <!-- Pytanie 7 -->
+    <div class="question-card" id="q7">
+        <div class="question-title">7. Gdzie zwykle śpimy?</div>
+        <div class="options">
+            <button class="btn-option" onclick="checkSimple(this, true)">w sypialni</button>
+            <button class="btn-option" onclick="checkSimple(this, false)">w garażu</button>
+            <button class="btn-option" onclick="checkSimple(this, false)">w ogrodzie</button>
+            <button class="btn-option" onclick="checkSimple(this, false)">w sklepie</button>
+        </div>
+    </div>
 
-        function renderQuestion() {
-            const q = testQuestions[currentIndex];
-            document.getElementById('question-title').textContent = q.title;
-            const container = document.getElementById('quiz-content');
-            const feedback = document.getElementById('input-feedback');
-            const prevBtn = document.getElementById('prev-btn');
+    <!-- Pytanie 8: Dialogi -->
+    <div class="question-card" id="q8">
+        <div class="question-title">8. Uzupełnij dialogi (Tematyka: Dom i Jedzenie):</div>
+        
+        <div class="dialogue-block">
+            <div class="dialogue-line"><strong>Dialog 1:</strong> — Gdzie jest pies? — Pies biega w ________ (ogród).</div>
+            <input type="text" id="d1_input" placeholder="Wpisz słowo...">
+            <button class="btn-submit" onclick="checkText('d1_input', ['ogrodzie'], 'd1_feedback')">Sprawdź</button>
+            <span id="d1_feedback"></span>
+        </div>
 
-            feedback.textContent = '';
-            container.innerHTML = '';
-            prevBtn.disabled = (currentIndex === 0);
+        <div class="dialogue-block">
+            <div class="dialogue-line"><strong>Dialog 2:</strong> — Gdzie oglądamy telewizję? — Oglądamy film w ________ (salon).</div>
+            <input type="text" id="d2_input" placeholder="Wpisz słowo...">
+            <button class="btn-submit" onclick="checkText('d2_input', ['salonie'], 'd2_feedback')">Sprawdź</button>
+            <span id="d2_feedback"></span>
+        </div>
 
-            const saved = userAnswers[currentIndex];
+        <div class="dialogue-block">
+            <div class="dialogue-line"><strong>Dialog 3:</strong> — Gdzie stawiamy talerz? — Talerz stoi na ________ (stół).</div>
+            <input type="text" id="d3_input" placeholder="Wpisz słowo...">
+            <button class="btn-submit" onclick="checkText('d3_input', ['stole'], 'd3_feedback')">Sprawdź</button>
+            <span id="d3_feedback"></span>
+        </div>
 
-            if (q.type === 'text') {
-                const box = document.createElement('div');
-                box.className = 'input-box';
+        <div class="dialogue-block">
+            <div class="dialogue-line"><strong>Dialog 4:</strong> — Gdzie jest auto? — Auto stoi w ________ (garaż).</div>
+            <input type="text" id="d4_input" placeholder="Wpisz słowo...">
+            <button class="btn-submit" onclick="checkText('d4_input', ['garażu'], 'd4_feedback')">Sprawdź</button>
+            <span id="d4_feedback"></span>
+        </div>
 
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.id = 'user-input';
-                input.className = 'input-field';
-                input.placeholder = 'Wpisz odpowiedź...';
-                input.autocomplete = 'off';
+        <div class="dialogue-block">
+            <div class="dialogue-line"><strong>Dialog 5:</strong> — Na czym siedzisz? — Siedzę na wygodnym ________ (krzesło).</div>
+            <input type="text" id="d5_input" placeholder="Wpisz słowo...">
+            <button class="btn-submit" onclick="checkText('d5_input', ['krześle'], 'd5_feedback')">Sprawdź</button>
+            <span id="d5_feedback"></span>
+        </div>
 
-                const btn = document.createElement('button');
-                btn.className = 'btn-check';
-                btn.id = 'btn-submit';
-                btn.textContent = 'Sprawdź odpowiedź';
-                btn.onclick = checkTextAnswer;
+        <div class="dialogue-block">
+            <div class="dialogue-line"><strong>Dialog 6:</strong> — Kto stoi obok ________ (drzwi)? — To nasz sąsiad.</div>
+            <input type="text" id="d6_input" placeholder="Wpisz słowo...">
+            <button class="btn-submit" onclick="checkText('d6_input', ['drzwi'], 'd6_feedback')">Sprawdź</button>
+            <span id="d6_feedback"></span>
+        </div>
+    </div>
 
-                box.appendChild(input);
-                box.appendChild(btn);
-                container.appendChild(box);
+    <!-- Pytanie 9 -->
+    <div class="question-card" id="q9">
+        <div class="question-title">9. Mieszkam w dużym ________.</div>
+        <div class="options">
+            <button class="btn-option" onclick="checkSimple(this, true)">domu</button>
+            <button class="btn-option" onclick="checkSimple(this, false)">dom</button>
+            <button class="btn-option" onclick="checkSimple(this, false)">domem</button>
+        </div>
+    </div>
 
-                if (saved && saved.completed) {
-                    input.value = saved.val;
-                    input.disabled = true;
-                    btn.disabled = true;
-                    if (saved.isCorrect) {
-                        input.className = 'input-field correct';
-                        feedback.textContent = '✨ Poprawnie!';
-                        feedback.className = 'feedback-msg correct';
-                    } else {
-                        input.className = 'input-field incorrect';
-                        feedback.textContent = `❌ Prawidłowa odpowiedź: "${q.correct}"`;
-                        feedback.className = 'feedback-msg incorrect';
-                    }
-                    enableNextButton(true);
-                } else {
-                    attempts = 0;
-                    enableNextButton(false);
-                    setTimeout(() => input.focus(), 50);
-                }
-            } else if (q.type === 'radio') {
-                const list = document.createElement('div');
-                list.className = 'options-container';
+    <!-- Pytanie 10 -->
+    <div class="question-card" id="q10">
+        <div class="question-title">10. „Living room” po polsku to?</div>
+        <div class="options">
+            <button class="btn-option" onclick="checkSimple(this, true)">salon</button>
+            <button class="btn-option" onclick="checkSimple(this, false)">kuchnia</button>
+            <button class="btn-option" onclick="checkSimple(this, false)">łazienka</button>
+        </div>
+    </div>
 
-                q.options.forEach((opt, idx) => {
-                    const btn = document.createElement('button');
-                    btn.className = 'option-btn';
-                    btn.textContent = opt;
+    <!-- Pytanie 11 -->
+    <div class="question-card" id="q11">
+        <div class="question-title">11. Meble to?</div>
+        <div class="options">
+            <button class="btn-option" onclick="checkQ11(this, true)">szafa, stół, krzesło, kanapa</button>
+            <button class="btn-option" onclick="checkQ11(this, false)">wanna, piekarnik, prysznic</button>
+        </div>
+        <div id="q11-explain" class="explanation-box" style="display:none;"></div>
+    </div>
 
-                    if (saved && saved.completed) {
-                        btn.disabled = true;
-                        if (idx === q.correctIndex) {
-                            btn.className = 'option-btn correct';
-                        } else if (saved.selected === idx) {
-                            btn.className = 'option-btn incorrect';
-                        }
-                    } else {
-                        btn.onclick = () => selectRadioAnswer(idx);
-                    }
+    <!-- Pytanie 12 -->
+    <div class="question-card" id="q12">
+        <div class="question-title">12. „Garden” po polsku to?</div>
+        <div class="options">
+            <button class="btn-option" onclick="checkQ12(this, true)">ogród</button>
+            <button class="btn-option" onclick="checkQ12(this, false)">balkon</button>
+            <button class="btn-option" onclick="checkQ12(this, false)">taras</button>
+        </div>
+        <div id="q12-explain" class="explanation-box" style="display:none;"></div>
+    </div>
 
-                    list.appendChild(btn);
-                });
+    <!-- Pytanie 13 -->
+    <div class="question-card" id="q13">
+        <div class="question-title">13. Chcę kupić nową ________ (kanapa).</div>
+        <input type="text" id="q13_input" placeholder="Wpisz poprawną formę...">
+        <button class="btn-submit" onclick="checkText('q13_input', ['kanapę'], 'q13_feedback')">Sprawdź</button>
+        <span id="q13_feedback"></span>
+    </div>
 
-                container.appendChild(list);
+    <!-- Pytanie 16 -->
+    <div class="question-card" id="q16">
+        <div class="question-title">16. Mleko i jajka są w ________.</div>
+        <div class="options">
+            <button class="btn-option" onclick="checkSimple(this, true)">lodówce</button>
+            <button class="btn-option" onclick="checkSimple(this, false)">lodówka</button>
+            <button class="btn-option" onclick="checkSimple(this, false)">lodówki</button>
+        </div>
+    </div>
 
-                if (saved && saved.completed) {
-                    feedback.textContent = saved.isCorrect ? '✨ Poprawnie!' : `❌ Prawidłowa odpowiedź: ${q.options[q.correctIndex]}`;
-                    feedback.className = `feedback-msg ${saved.isCorrect ? 'correct' : 'incorrect'}`;
-                    enableNextButton(true);
-                } else {
-                    enableNextButton(false);
-                }
-            } else if (q.type === 'checkbox') {
-                const grid = document.createElement('div');
-                grid.className = 'checkbox-grid';
+    <!-- Pytanie 17 -->
+    <div class="question-card" id="q17">
+        <div class="question-title">17. Na stole stoi gorąca ________.</div>
+        <div class="options">
+            <button class="btn-option" onclick="checkQ17(this, true, 'herbata')">herbata</button>
+            <button class="btn-option" onclick="checkQ17(this, false, 'chleb')">chleb</button>
+            <button class="btn-option" onclick="checkQ17(this, false, 'jabłko')">jabłko</button>
+        </div>
+        <div id="q17-explain" class="explanation-box" style="display:none;"></div>
+    </div>
 
-                q.options.forEach((opt, idx) => {
-                    const label = document.createElement('label');
-                    label.className = 'checkbox-item';
+    <!-- Pytanie 18 -->
+    <div class="question-card" id="q18">
+        <div class="question-title">18. Co mamy w lodówce?</div>
+        <div class="options">
+            <button class="btn-option" onclick="checkSimple(this, true)">masło, ser, jajka i mleko</button>
+            <button class="btn-option" onclick="checkSimple(this, false)">krzesło, stół i szafę</button>
+            <button class="btn-option" onclick="checkSimple(this, false)">książki, długopis i zeszyt</button>
+        </div>
+    </div>
 
-                    const chk = document.createElement('input');
-                    chk.type = 'checkbox';
-                    chk.value = idx;
+    <!-- Pytanie 19 -->
+    <div class="question-card" id="q19">
+        <div class="question-title">19. On siedzi na ________ (chair).</div>
+        <input type="text" id="q19_input" placeholder="Wpisz po polsku w poprawnej formie...">
+        <button class="btn-submit" onclick="checkText('q19_input', ['krześle'], 'q19_feedback')">Sprawdź</button>
+        <span id="q19_feedback"></span>
+    </div>
 
-                    if (saved && saved.completed) {
-                        chk.disabled = true;
-                        chk.checked = saved.selected.includes(idx);
-                        if (q.correctIndices.includes(idx)) {
-                            label.style.borderColor = 'var(--success-color)';
-                            label.style.backgroundColor = '#dcfce7';
-                        } else if (saved.selected.includes(idx)) {
-                            label.style.borderColor = 'var(--error-color)';
-                            label.style.backgroundColor = '#fee2e2';
-                        }
-                    } else {
-                        chk.onchange = () => {
-                            if (chk.checked) label.classList.add('selected');
-                            else label.classList.remove('selected');
-                        };
-                    }
+</div>
 
-                    label.appendChild(chk);
-                    label.appendChild(document.createTextNode(opt));
-                    grid.appendChild(label);
-                });
+<script>
+    function checkSimple(btn, isCorrect) {
+        const parent = btn.parentElement;
+        const buttons = parent.querySelectorAll('.btn-option');
+        buttons.forEach(b => b.classList.remove('correct', 'incorrect'));
+        btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+    }
 
-                container.appendChild(grid);
-
-                if (!saved || !saved.completed) {
-                    const btn = document.createElement('button');
-                    btn.className = 'btn-check';
-                    btn.style.width = '100%';
-                    btn.textContent = 'Sprawdź wybrane';
-                    btn.onclick = checkCheckboxAnswer;
-                    container.appendChild(btn);
-                    enableNextButton(false);
-                } else {
-                    feedback.textContent = saved.isCorrect ? '✨ Wszystkie poprawne zaznaczone!' : '❌ Niezupełnie dobrze.';
-                    feedback.className = `feedback-msg ${saved.isCorrect ? 'correct' : 'incorrect'}`;
-                    enableNextButton(true);
-                }
-            } else if (q.type === 'dialog') {
-                const bank = document.createElement('div');
-                bank.className = 'word-bank';
-                bank.innerHTML = '<strong>Bank słów do wyboru:</strong><br>' + q.wordBank.map(w => `<span>${w}</span>`).join(' ');
-                container.appendChild(bank);
-
-                const dialogBox = document.createElement('div');
-                dialogBox.className = 'dialog-container';
-
-                let formattedText = q.text;
-                q.options.forEach((opts, slotIdx) => {
-                    let selectHTML = `<select class="dialog-select" id="slot-${slotIdx}" ${saved && saved.completed ? 'disabled' : ''}>`;
-                    selectHTML += `<option value="">--wybierz--</option>`;
-                    opts.forEach(opt => {
-                        selectHTML += `<option value="${opt}">${opt}</option>`;
-                    });
-                    selectHTML += `</select>`;
-                    formattedText = formattedText.replace(`{${slotIdx}}`, selectHTML);
-                });
-
-                dialogBox.innerHTML = formattedText;
-                container.appendChild(dialogBox);
-
-                if (!saved || !saved.completed) {
-                    const btn = document.createElement('button');
-                    btn.className = 'btn-check';
-                    btn.style.width = '100%';
-                    btn.textContent = 'Sprawdź dialog';
-                    btn.onclick = checkDialogAnswer;
-                    container.appendChild(btn);
-                    enableNextButton(false);
-                } else {
-                    q.options.forEach((_, slotIdx) => {
-                        const sel = document.getElementById(`slot-${slotIdx}`);
-                        sel.value = saved.selected[slotIdx] || '';
-                    });
-                    feedback.textContent = saved.isCorrect ? '✨ Świetnie! Dialog skompletowany.' : `❌ Prawidłowe słowa: ${q.correctAnswers.join(', ')}`;
-                    feedback.className = `feedback-msg ${saved.isCorrect ? 'correct' : 'incorrect'}`;
-                    enableNextButton(true);
-                }
-            }
-
-            updateProgress();
+    function checkQ2(btn, isCorrect, chosenWord) {
+        checkSimple(btn, isCorrect);
+        const exp = document.getElementById('q2-explain');
+        exp.style.display = 'block';
+        if (isCorrect) {
+            exp.innerHTML = `<strong>Świetnie!</strong> Znałeś słowo <em>"${chosenWord}"</em>.<br>
+            Warto wiedzieć, że w języku polskim mówimy też: <strong>szarlotka</strong>, <strong>ciasto jabłkowe</strong> oraz <strong>jabłecznik</strong>.<br><br>
+            <em>Grammar & Culture Note (EN):</em> In Poland, all three terms refer to apple pastry/pie variations. Because apple orchards and apple growing form a huge part of Polish agriculture and culinary heritage, Polish has several specialized terms for apple pie!`;
+        } else {
+            exp.innerHTML = `<strong>Spróbuj ponownie!</strong> Słowo "apple pie" to po polsku <em>szarlotka</em>, <em>ciasto jabłkowe</em> lub <em>jabłecznik</em>.`;
         }
+    }
 
-        function checkTextAnswer() {
-            const q = testQuestions[currentIndex];
-            const input = document.getElementById('user-input');
-            const btn = document.getElementById('btn-submit');
-            const feedback = document.getElementById('input-feedback');
+    function checkQ4(btn, option) {
+        const isCorrect = (option === 'torby');
+        checkSimple(btn, isCorrect);
+        const exp = document.getElementById('q4-explain');
+        exp.style.display = 'block';
+        exp.innerHTML = `
+            <strong>Wyjaśnienie form (Grammar Explanation):</strong><br>
+            • <strong>torba</strong> (Nominative / Mianownik) – basic dictionary form. <em>Example: To jest nowa torba. (This is a new bag.)</em><br>
+            • <strong>torbą</strong> (Instrumental / Narzędnik) – used with prepositions like "z" or for instruments. <em>Example: Idę na zakupy z torbą. (I go shopping with a bag.)</em><br>
+            • <strong>torby</strong> (Genitive / Dopełniacz) – required after the preposition <strong>do</strong>! <em>Example: Muszę spakować sery do torby. (I must pack cheeses into the bag.)</em>
+        `;
+    }
 
-            const val = input.value.trim().toLowerCase();
-            const correctVal = q.correct.toLowerCase();
+    function checkQ11(btn, isCorrect) {
+        checkSimple(btn, isCorrect);
+        const exp = document.getElementById('q11-explain');
+        exp.style.display = 'block';
+        exp.innerHTML = `
+            <strong>Grammar & Vocabulary Note (EN):</strong><br>
+            The word <strong>meble</strong> in Polish refers to <em>furniture</em>. Unlike in English where "furniture" is uncountable, in Polish <em>meble</em> is used in the plural form (plural-only concept when speaking generally about items of furniture).<br><br>
+            <strong>Examples in sentences:</strong><br>
+            • <em>Kupuję nowe meble do salonu.</em> (I am buying new furniture for the living room.)<br>
+            • <em>Te meble są bardzo wygodne.</em> (This furniture is very comfortable.)<br><br>
+            <strong>Inne urządzenia / Inne wyposażenie:</strong><br>
+            • <strong>szafa</strong> = wardrobe / closet<br>
+            • <strong>wanna</strong> = bathtub<br>
+            • <strong>piekarnik</strong> = oven
+        `;
+    }
 
-            if (!val) return;
+    function checkQ12(btn, isCorrect) {
+        checkSimple(btn, isCorrect);
+        const exp = document.getElementById('q12-explain');
+        exp.style.display = 'block';
+        exp.innerHTML = `
+            <strong>Pamiętaj!</strong><br>
+            • <strong>ogród</strong> = garden<br>
+            • Miejscownik (Locative): <em>W ogrodzie rosną kwiaty.</em> (Flowers grow in the garden.)
+        `;
+    }
 
-            if (val === correctVal) {
-                input.className = 'input-field correct';
-                input.disabled = true;
-                btn.disabled = true;
-                feedback.textContent = '✨ Poprawnie!';
-                feedback.className = 'feedback-msg correct';
+    function checkQ17(btn, isCorrect, word) {
+        checkSimple(btn, isCorrect);
+        const exp = document.getElementById('q17-explain');
+        exp.style.display = 'block';
+        exp.innerHTML = `
+            <strong>English Vocabulary Note:</strong><br>
+            The adjective <strong>gorący / gorąca / gorące</strong> means <strong>hot</strong>.<br>
+            • <strong>gorąca herbata</strong> = hot tea (feminine form)<br>
+            • <strong>gorący stek</strong> = hot steak (masculine form)<br>
+            • <strong>gorąca zupa</strong> = hot soup<br>
+            • <strong>gorące mleko</strong> = hot milk (neuter form)
+        `;
+    }
 
-                userAnswers[currentIndex] = { completed: true, isCorrect: true, val: input.value };
-                enableNextButton(true);
-            } else {
-                attempts++;
-                input.className = 'input-field incorrect';
-
-                if (attempts < 3) {
-                    feedback.textContent = `❌ Niepoprawnie (Próba ${attempts}/3). Spróbuj ponownie!`;
-                    feedback.className = 'feedback-msg incorrect';
-                } else {
-                    input.value = q.correct;
-                    input.disabled = true;
-                    btn.disabled = true;
-                    feedback.textContent = `❌ Brak prób. Prawidłowa odpowiedź to: "${q.correct}"`;
-                    feedback.className = 'feedback-msg incorrect';
-
-                    // Brak punktu po 3 nieudanych próbach
-                    userAnswers[currentIndex] = { completed: true, isCorrect: false, val: q.correct };
-                    enableNextButton(true);
-                }
-            }
+    function checkText(inputId, correctAnswers, feedbackId) {
+        const val = document.getElementById(inputId).value.trim().toLowerCase();
+        const fb = document.getElementById(feedbackId);
+        if (correctAnswers.includes(val)) {
+            fb.innerHTML = ' <span style="color:green; font-weight:bold;">✓ Dobrze!</span>';
+        } else {
+            fb.innerHTML = ' <span style="color:red; font-weight:bold;">✗ Spróbuj jeszcze raz!</span>';
         }
+    }
+</script>
 
-        function selectRadioAnswer(idx) {
-            const q = testQuestions[currentIndex];
-            const isCorrect = (idx === q.correctIndex);
-            userAnswers[currentIndex] = { completed: true, isCorrect: isCorrect, selected: idx };
-            renderQuestion();
-        }
-
-        function checkCheckboxAnswer() {
-            const q = testQuestions[currentIndex];
-            const checkedInputs = Array.from(document.querySelectorAll('.checkbox-grid input:checked')).map(i => parseInt(i.value));
-
-            const isCorrect = q.correctIndices.length === checkedInputs.length &&
-                q.correctIndices.every(val => checkedInputs.includes(val));
-
-            userAnswers[currentIndex] = { completed: true, isCorrect: isCorrect, selected: checkedInputs };
-            renderQuestion();
-        }
-
-        function checkDialogAnswer() {
-            const q = testQuestions[currentIndex];
-            const selectedValues = [];
-            let allSelected = true;
-
-            q.options.forEach((_, slotIdx) => {
-                const val = document.getElementById(`slot-${slotIdx}`).value;
-                if (!val) allSelected = false;
-                selectedValues.push(val);
-            });
-
-            if (!allSelected) return;
-
-            const isCorrect = selectedValues.every((val, idx) => val === q.correctAnswers[idx]);
-
-            userAnswers[currentIndex] = { completed: true, isCorrect: isCorrect, selected: selectedValues };
-            renderQuestion();
-        }
-
-        function enableNextButton(enable) {
-            document.getElementById('next-btn').disabled = !enable;
-        }
-
-        function nextQuestion() {
-            if (currentIndex < testQuestions.length - 1) {
-                currentIndex++;
-                renderQuestion();
-            } else {
-                showCompletion();
-            }
-        }
-
-        function prevQuestion() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                renderQuestion();
-            }
-        }
-
-        function updateProgress() {
-            const total = testQuestions.length;
-            const pct = ((currentIndex + 1) / total) * 100;
-            document.getElementById('progress-bar').style.width = `${pct}%`;
-            document.getElementById('step-counter').textContent = `Pytanie ${currentIndex + 1} / ${total}`;
-        }
-
-        function calculateScore() {
-            let total = 0;
-            userAnswers.forEach(ans => {
-                if (ans && ans.isCorrect) total++;
-            });
-            return total;
-        }
-
-        function showCompletion() {
-            document.getElementById('quiz-card').style.display = 'none';
-            document.getElementById('completion-screen').style.display = 'block';
-            document.getElementById('progress-bar').style.width = '100%';
-
-            const score = calculateScore();
-            const total = testQuestions.length;
-            const percent = Math.round((score / total) * 100);
-
-            document.getElementById('final-score').textContent = `${score} / ${total}`;
-            document.getElementById('final-percent').textContent = `${percent}%`;
-        }
-
-        function restartQuiz() {
-            currentIndex = 0;
-            userAnswers = new Array(testQuestions.length).fill(null);
-            document.getElementById('completion-screen').style.display = 'none';
-            document.getElementById('quiz-card').style.display = 'block';
-            renderQuestion();
-        }
-
-        function markStageComplete() {
-            const MODULE_KEY = 'm1_progress';
-            let progress = JSON.parse(localStorage.getItem(MODULE_KEY)) || {};
-            progress.test = true;
-            localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
-        }
-
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') {
-                const saved = userAnswers[currentIndex];
-                if (saved && saved.completed) {
-                    const nextBtn = document.getElementById('next-btn');
-                    if (!nextBtn.disabled) {
-                        nextQuestion();
-                    }
-                } else if (testQuestions[currentIndex].type === 'text') {
-                    checkTextAnswer();
-                }
-            }
-        });
-
-        renderQuestion();
-    </script>
 </body>
 </html>
