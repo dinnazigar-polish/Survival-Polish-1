@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 4 - Etap 2: Dopasowywanie</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #D0A03C;
+            --accent-hover: #b88a2e;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-radius: 16px;
+            --shadow: 0 10px 15px -3px rgba(0,0,0,0.08);
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background: var(--bg); color: var(--text-main); padding: 24px 16px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 800px; text-align: center; }
+
+        .top-nav { display: flex; justify-content: flex-start; margin-bottom: 20px; }
+        .back-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none; font-weight: 600; padding: 8px 16px; background: var(--card-bg); border-radius: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        
+        .matching-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .column { display: flex; flex-direction: column; gap: 10px; }
+
+        .match-btn { padding: 14px 18px; background: var(--card-bg); border: 2px solid #e2e8f0; border-radius: 12px; font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; box-shadow: var(--shadow); color: var(--text-main); }
+        .match-btn:hover { border-color: var(--accent); }
+        .match-btn.selected { border-color: var(--accent); background: #fef3c7; }
+        .match-btn.correct { background: #d1fae5; border-color: var(--success); color: #065f46; pointer-events: none; }
+        .match-btn.incorrect { background: #fee2e2; border-color: var(--error); color: #991b1b; }
+
+        .btn { padding: 12px 24px; border-radius: 30px; border: none; background: var(--accent); color: white; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; margin-top: 20px; }
+        .summary-card { background: var(--card-bg); padding: 30px; border-radius: var(--border-radius); box-shadow: var(--shadow); display: none; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="top-nav">
+        <a href="module-4-vocab.html" class="back-btn">← Powrót do Modułu 4</a>
+    </div>
+
+    <h1>Etap 2: Dopasowywanie Zwrotów</h1>
+    <p style="color: var(--text-muted); margin-top: 5px;">Połącz pierwszą i drugą część każdego wyrażenia</p>
+
+    <div id="quiz-area">
+        <div class="matching-grid">
+            <div class="column" id="left-col"></div>
+            <div class="column" id="right-col"></div>
+        </div>
+    </div>
+
+    <div class="summary-card" id="summary">
+        <h2>Podsumowanie Etapu 2</h2>
+        <p style="margin: 15px 0; font-size: 1.2rem;">Liczba zaliczonych par:</p>
+        <p style="font-size: 1.8rem; font-weight: bold; color: var(--accent); margin-bottom: 20px;" id="score-text">0 / 0 (0%)</p>
+        <button class="btn" onclick="initQuiz()">Powtórz</button>
+        <a href="module-4-vocab.html" class="btn" style="background: #94a3b8; margin-left: 10px;">Powrót do modułu</a>
+    </div>
+</div>
+
+<script>
+    const pairs = [
+        { id: 1, left: "nastawiać", right: "budzik / czajnik" },
+        { id: 2, left: "jechać na", right: "wakacje" },
+        { id: 3, left: "spakować", right: "walizkę" },
+        { id: 4, left: "wynająć", right: "auto / samochód" },
+        { id: 5, left: "czapka z", right: "daszkiem" },
+        { id: 6, left: "znak", right: "drogowy" },
+        { id: 7, left: "spać pod", right: "namiotem" },
+        { id: 8, left: "czytać w", right: "hamaku" },
+        { id: 9, left: "pływać w", right: "jeziorze" },
+        { id: 10, left: "jeździć na", right: "rowerze" },
+        { id: 11, left: "zbierać", right: "grzyby" },
+        { id: 12, left: "letnia", right: "burza" },
+        { id: 13, left: "biała", right: "flaga" },
+        { id: 14, left: "zamek z", right: "piasku" },
+        { id: 15, left: "dżem", right: "truskawkowy" },
+        { id: 16, left: "ciepła", right: "bluza" },
+        { id: 17, left: "spacerować w", right: "lesie" },
+        { id: 18, left: "robić", right: "zdjęcia" },
+        { id: 19, left: "ciepły", right: "koc" }
+    ];
+
+    let selectedLeft = null;
+    let selectedRight = null;
+    let attempts = {};
+    let correctMatches = 0;
+
+    function shuffle(arr) {
+        return [...arr].sort(() => Math.random() - 0.5);
+    }
+
+    function initQuiz() {
+        correctMatches = 0;
+        attempts = {};
+        document.getElementById('quiz-area').style.display = 'block';
+        document.getElementById('summary').style.display = 'none';
+
+        const leftCol = document.getElementById('left-col');
+        const rightCol = document.getElementById('right-col');
+        leftCol.innerHTML = '';
+        rightCol.innerHTML = '';
+
+        const shuffledLeft = shuffle(pairs);
+        const shuffledRight = shuffle(pairs);
+
+        shuffledLeft.forEach(p => {
+            attempts[p.id] = 0;
+            const btn = document.createElement('button');
+            btn.className = 'match-btn';
+            btn.innerText = p.left;
+            btn.dataset.id = p.id;
+            btn.onclick = () => selectPart(btn, 'left');
+            leftCol.appendChild(btn);
+        });
+
+        shuffledRight.forEach(p => {
+            const btn = document.createElement('button');
+            btn.className = 'match-btn';
+            btn.innerText = p.right;
+            btn.dataset.id = p.id;
+            btn.onclick = () => selectPart(btn, 'right');
+            rightCol.appendChild(btn);
+        });
+    }
+
+    function selectPart(btn, side) {
+        if (side === 'left') {
+            document.querySelectorAll('#left-col .match-btn').forEach(b => b.classList.remove('selected'));
+            selectedLeft = btn;
+            btn.classList.add('selected');
+        } else {
+            document.querySelectorAll('#right-col .match-btn').forEach(b => b.classList.remove('selected'));
+            selectedRight = btn;
+            btn.classList.add('selected');
+        }
+
+        if (selectedLeft && selectedRight) {
+            checkMatch();
+        }
+    }
+
+    function checkMatch() {
+        const leftId = selectedLeft.dataset.id;
+        const rightId = selectedRight.dataset.id;
+
+        if (leftId === rightId) {
+            selectedLeft.className = 'match-btn correct';
+            selectedRight.className = 'match-btn correct';
+            correctMatches++;
+            resetSelection();
+            checkCompletion();
+        } else {
+            attempts[leftId]++;
+            selectedLeft.classList.add('incorrect');
+            selectedRight.classList.add('incorrect');
+
+            const curLeft = selectedLeft;
+            const curRight = selectedRight;
+
+            setTimeout(() => {
+                curLeft.classList.remove('incorrect', 'selected');
+                curRight.classList.remove('incorrect', 'selected');
+
+                // Przepuszczanie po 3 nieudanych próbach
+                if (attempts[leftId] >= 3) {
+                    curLeft.className = 'match-btn correct';
+                    const targetRight = document.querySelector(`#right-col .match-btn[data-id="${leftId}"]`);
+                    if (targetRight) targetRight.className = 'match-btn correct';
+                    correctMatches++;
+                    checkCompletion();
+                }
+            }, 800);
+
+            resetSelection();
+        }
+    }
+
+    function resetSelection() {
+        selectedLeft = null;
+        selectedRight = null;
+    }
+
+    function checkCompletion() {
+        if (correctMatches >= pairs.length) {
+            setTimeout(finishStage, 600);
+        }
+    }
+
+    function finishStage() {
+        document.getElementById('quiz-area').style.display = 'none';
+        document.getElementById('summary').style.display = 'block';
+        
+        const pct = Math.round((correctMatches / pairs.length) * 100);
+        document.getElementById('score-text').innerText = `${correctMatches} / ${pairs.length} (${pct}%)`;
+
+        let progress = JSON.parse(localStorage.getItem('polish_module_4_progress')) || {};
+        if (!progress[2]) progress[2] = {};
+        progress[2].completed = true;
+        localStorage.setItem('polish_module_4_progress', JSON.stringify(progress));
+    }
+
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>

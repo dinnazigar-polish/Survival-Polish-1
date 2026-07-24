@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moduł 4 - Etap 5: Mini Wyzwanie</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #D0A03C;
+            --accent-hover: #b88a2e;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-radius: 16px;
+            --shadow: 0 10px 15px -3px rgba(0,0,0,0.08);
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background: var(--bg); color: var(--text-main); padding: 24px 16px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 650px; text-align: center; }
+
+        .top-nav { display: flex; justify-content: flex-start; margin-bottom: 20px; }
+        .back-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none; font-weight: 600; padding: 8px 16px; background: var(--card-bg); border-radius: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+        .card { background: var(--card-bg); padding: 30px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-top: 20px; }
+        .question-title { font-size: 1.2rem; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
+
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        .opt-btn { padding: 14px; background: #ffffff; border: 2px solid #cbd5e1; border-radius: 10px; font-size: 1rem; cursor: pointer; text-align: left; font-weight: 600; transition: all 0.2s; }
+        .opt-btn:hover { border-color: var(--accent); }
+        .opt-btn.correct { background: #d1fae5; border-color: var(--success); color: #065f46; }
+        .opt-btn.incorrect { background: #fee2e2; border-color: var(--error); color: #991b1b; }
+
+        .btn { padding: 12px 24px; border-radius: 30px; border: none; background: var(--accent); color: white; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; }
+        .summary-card { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="top-nav">
+        <a href="module-4-vocab.html" class="back-btn">← Powrót do Modułu 4</a>
+    </div>
+
+    <h1>Etap 5: Szybkie Wyzwanie</h1>
+    <p style="color: var(--text-muted); margin-top: 5px;">Mieszany zestaw pytań i zwrotów</p>
+
+    <div class="card" id="quiz-area">
+        <div style="color: var(--text-muted); margin-bottom: 10px;" id="q-num">Zadanie 1 / 6</div>
+        <div class="question-title" id="q-title">Ładowanie...</div>
+        <div class="options" id="options-container"></div>
+    </div>
+
+    <div class="card summary-card" id="summary">
+        <h2>Podsumowanie Etapu 5</h2>
+        <p style="margin: 15px 0; font-size: 1.2rem;">Twój wynik:</p>
+        <p style="font-size: 1.8rem; font-weight: bold; color: var(--accent); margin-bottom: 20px;" id="score-text">0 / 6 (0%)</p>
+        <button class="btn" onclick="initQuiz()">Powtórz</button>
+        <a href="module-4-vocab.html" class="btn" style="background: #94a3b8; margin-left: 10px;">Powrót do modułu</a>
+    </div>
+</div>
+
+<script>
+    const challenges = [
+        {
+            title: "Co robisz, kiedy nadchodzi nawałnica na plaży?",
+            options: [
+                { text: "Letnia burza", correct: true },
+                { text: "Biała flaga", correct: false },
+                { text: "Dżem truskawkowy", correct: false }
+            ]
+        },
+        {
+            title: "Jak powiesz po angielsku 'spakować walizkę'?",
+            options: [
+                { text: "To rent a car", correct: false },
+                { text: "To pack a suitcase", correct: true },
+                { text: "To sleep in a tent", correct: false }
+            ]
+        },
+        {
+            title: "Co budują dzieci na plaży?",
+            options: [
+                { text: "Znak drogowy", correct: false },
+                { text: "Zamek z piasku", correct: true },
+                { text: "Ciepłą bluzę", correct: false }
+            ]
+        },
+        {
+            title: "Co wkładasz na głowę w słoneczny dzień?",
+            options: [
+                { text: "Czapka z daszkiem", correct: true },
+                { text: "Ciepła bluza", correct: false },
+                { text: "Koc", correct: false }
+            ]
+        },
+        {
+            title: "Uzupełnij: 'Rano muszę nastawić ________.'",
+            options: [
+                { text: "budzik / czajnik", correct: true },
+                { text: "flaga", correct: false },
+                { text: "namiot", correct: false }
+            ]
+        },
+        {
+            title: "Co oznacza 'biała flaga' na kąpielisku?",
+            options: [
+                { text: "Kąpiel dozwolona", correct: true },
+                { text: "Zakaz kąpieli", correct: false },
+                { text: "Letnia burza", correct: false }
+            ]
+        }
+    ];
+
+    let currentIndex = 0;
+    let attempts = 0;
+    let correctCount = 0;
+
+    function initQuiz() {
+        currentIndex = 0;
+        correctCount = 0;
+        document.getElementById('quiz-area').style.display = 'block';
+        document.getElementById('summary').style.display = 'none';
+        showQuestion();
+    }
+
+    function showQuestion() {
+        attempts = 0;
+        const q = challenges[currentIndex];
+        document.getElementById('q-num').innerText = `Zadanie ${currentIndex + 1} / ${challenges.length}`;
+        document.getElementById('q-title').innerText = q.title;
+
+        const container = document.getElementById('options-container');
+        container.innerHTML = '';
+
+        q.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerText = opt.text;
+            btn.onclick = () => handleSelect(btn, opt.correct);
+            container.appendChild(btn);
+        });
+    }
+
+    function handleSelect(btn, isCorrect) {
+        if (isCorrect) {
+            btn.classList.add('correct');
+            correctCount++;
+            disableOptions();
+            setTimeout(nextQuestion, 1000);
+        } else {
+            attempts++;
+            btn.classList.add('incorrect');
+            btn.disabled = true;
+
+            if (attempts >= 3) {
+                disableOptions();
+                highlightCorrect();
+                setTimeout(nextQuestion, 1500);
+            }
+        }
+    }
+
+    function disableOptions() {
+        document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+    }
+
+    function highlightCorrect() {
+        const q = challenges[currentIndex];
+        document.querySelectorAll('.opt-btn').forEach((b, idx) => {
+            if (q.options[idx].correct) b.classList.add('correct');
+        });
+    }
+
+    function nextQuestion() {
+        currentIndex++;
+        if (currentIndex < challenges.length) {
+            showQuestion();
+        } else {
+            finishStage();
+        }
+    }
+
+    function finishStage() {
+        document.getElementById('quiz-area').style.display = 'none';
+        document.getElementById('summary').style.display = 'block';
+        
+        const pct = Math.round((correctCount / challenges.length) * 100);
+        document.getElementById('score-text').innerText = `${correctCount} / ${challenges.length} (${pct}%)`;
+
+        let progress = JSON.parse(localStorage.getItem('polish_module_4_progress')) || {};
+        if (!progress[5]) progress[5] = {};
+        progress[5].completed = true;
+        localStorage.setItem('polish_module_4_progress', JSON.stringify(progress));
+    }
+
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>
