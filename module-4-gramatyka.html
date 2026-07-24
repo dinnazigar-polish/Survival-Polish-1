@@ -7,8 +7,8 @@
     <style>
         :root {
             --primary: #2c3e50;
-            --accent: #D0A03C;
-            --accent-hover: #b88a2e;
+            --accent: #D05341;
+            --accent-hover: #b84332;
             --bg: #f8fafc;
             --card-bg: #ffffff;
             --text-main: #1e293b;
@@ -17,6 +17,8 @@
             --shadow: 0 10px 15px -3px rgba(0,0,0,0.08);
             --success: #10b981;
             --error: #ef4444;
+            --info-bg: #f0f9ff;
+            --info-border: #0284c7;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
@@ -26,14 +28,35 @@
         .top-nav { display: flex; justify-content: flex-start; margin-bottom: 20px; }
         .back-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none; font-weight: 600; padding: 8px 16px; background: var(--card-bg); border-radius: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
-        .card { background: var(--card-bg); padding: 30px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-top: 20px; }
-        .question-title { font-size: 1.2rem; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
+        .card { background: var(--card-bg); padding: 30px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-top: 20px; position: relative; }
+        .question-title { font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
 
         .options { display: flex; flex-direction: column; gap: 10px; }
-        .opt-btn { padding: 14px; background: #ffffff; border: 2px solid #cbd5e1; border-radius: 10px; font-size: 1rem; cursor: pointer; text-align: left; font-weight: 600; transition: all 0.2s; }
-        .opt-btn:hover { border-color: var(--accent); }
+        .opt-btn { padding: 14px; background: #ffffff; border: 2px solid #cbd5e1; border-radius: 10px; font-size: 1rem; cursor: pointer; text-align: center; font-weight: 600; transition: all 0.2s; }
+        .opt-btn:hover:not(:disabled) { border-color: var(--accent); background: #fff5f5; }
         .opt-btn.correct { background: #d1fae5; border-color: var(--success); color: #065f46; }
         .opt-btn.incorrect { background: #fee2e2; border-color: var(--error); color: #991b1b; }
+
+        /* Pasek nawigacji między pytaniami */
+        .nav-controls { display: flex; justify-content: space-between; margin-top: 25px; gap: 10px; }
+        .nav-btn { padding: 10px 18px; border-radius: 20px; border: 1px solid #cbd5e1; background: #ffffff; color: var(--text-main); font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .nav-btn:hover:not(:disabled) { background: #f1f5f9; border-color: var(--text-muted); }
+        .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Sekcja objaśnień / słowniczka */
+        .explanation-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--info-bg);
+            border-left: 4px solid var(--info-border);
+            border-radius: 8px;
+            text-align: left;
+            font-size: 0.95rem;
+            color: #0c4a6e;
+            display: none;
+        }
+        .explanation-box strong { color: #0369a1; }
+        .explanation-box ul { margin-left: 20px; margin-top: 5px; }
 
         .btn { padding: 12px 24px; border-radius: 30px; border: none; background: var(--accent); color: white; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; }
         .summary-card { display: none; }
@@ -47,13 +70,22 @@
     </div>
 
     <h1>Etap 4: Gramatyka Wakacyjna</h1>
-    <p style="color: var(--text-muted); margin-top: 5px;">Wybierz poprawne gramatycznie zdanie</p>
+    <p style="color: var(--text-muted); margin-top: 5px;">Wybierz poprawne słowo, aby uzupełnić zdanie</p>
 
     <div class="card" id="quiz-area">
         <div style="color: var(--text-muted); margin-bottom: 10px;" id="q-num">Pytanie 1 / 8</div>
-        <div class="question-title" id="q-title">Gdzie spędzasz wakacje?</div>
+        <div class="question-title" id="q-title">...</div>
         
         <div class="options" id="options-container"></div>
+
+        <!-- Box na dodatkowe objaśnienia -->
+        <div class="explanation-box" id="explanation-box"></div>
+
+        <!-- Nawigacja Poprzednie / Następne -->
+        <div class="nav-controls">
+            <button class="nav-btn" id="prev-btn" onclick="prevQuestion()">← Poprzednie</button>
+            <button class="nav-btn" id="next-btn" onclick="manualNextQuestion()">Następne →</button>
+        </div>
     </div>
 
     <div class="card summary-card" id="summary">
@@ -68,78 +100,101 @@
 <script>
     const questions = [
         {
-            title: "Wybierz poprawne zdanie (spać pod...):",
+            title: "Lubię spać pod...",
             options: [
-                { text: "Lubię spać pod namiotem.", correct: true },
-                { text: "Lubię spać pod namiot.", correct: false },
-                { text: "Lubię spać pod namiotu.", correct: false }
+                { text: "namiot", correct: false },
+                { text: "namiotem", correct: true },
+                { text: "namiotu", correct: false }
             ]
         },
         {
-            title: "Wybierz poprawne zdanie (pływać w...):",
+            title: "Chcę pływać w...",
             options: [
-                { text: "Chcę pływać w jezioro.", correct: false },
-                { text: "Chcę pływać w jeziorze.", correct: true },
-                { text: "Chcę pływać w jezioru.", correct: false }
+                { text: "jezioro", correct: false },
+                { text: "jeziorze", correct: true },
+                { text: "jeziorem", correct: false }
             ]
         },
         {
-            title: "Wybierz poprawne zdanie (jeździć na...):",
+            title: "Uwielbiam jeździć na...",
             options: [
-                { text: "Uwielbiam jeździć na rowerem.", correct: false },
-                { text: "Uwielbiam jeździć na rowerze.", correct: true },
-                { text: "Uwielbiam jeździć na rower.", correct: false }
+                { text: "rower", correct: false },
+                { text: "rowerze", correct: true },
+                { text: "rowerem", correct: false }
+            ],
+            // Zawsze widoczne objaśnienie dla pytania 3
+            explanationAlways: true,
+            explanation: `
+                <strong>💡 Słowniczek: uwielbiać</strong> = <em>to love / to adore doing something</em><br>
+                Przykłady użycia:
+                <ul>
+                    <li>Uwielbiam makaron z truskawkami.</li>
+                    <li>Uwielbiam ciepłe lato i morze.</li>
+                    <li>Ona uwielbia podróżować po świecie.</li>
+                </ul>
+            `
+        },
+        {
+            title: "Moja żona lubi spacerować w...",
+            options: [
+                { text: "las", correct: false },
+                { text: "lesie", correct: true },
+                { text: "lasu", correct: false }
             ]
         },
         {
-            title: "Wybierz poprawne zdanie (spacerować w...):",
+            title: "On czyta książkę w...",
             options: [
-                { text: "Spacerujemy w lesie.", correct: true },
-                { text: "Spacerujemy w las.", correct: false },
-                { text: "Spacerujemy w lesiem.", correct: false }
+                { text: "hamak", correct: false },
+                { text: "hamaku", correct: true },
+                { text: "hamaki", correct: false }
             ]
         },
         {
-            title: "Wybierz poprawne zdanie (czytać w...):",
+            title: "Muszę spakować...",
             options: [
-                { text: "On czyta książkę w hamak.", correct: false },
-                { text: "On czyta książkę w hamaku.", correct: true },
-                { text: "On czyta książkę w hamakiem.", correct: false }
+                { text: "walizka", correct: false },
+                { text: "walizkę", correct: true },
+                { text: "walizką", correct: false }
+            ],
+            // Objaśnienie pojawiające się PO wyborze odpowiedzi
+            explanationOnAnswer: true,
+            explanation: `
+                <strong>💡 Gramatyka: musieć</strong> = <em>must / to have to</em><br>
+                Odmiana i przykłady:
+                <ul>
+                    <li><strong>Ja muszę</strong> spakować walizkę.</li>
+                    <li><strong>Ty musisz</strong> kupić bilet.</li>
+                    <li><strong>On/Ona musi</strong> odpocząć.</li>
+                    <li><strong>My musimy</strong> wracać do domu.</li>
+                </ul>
+            `
+        },
+        {
+            title: "Chcemy wynająć...",
+            options: [
+                { text: "samochodów", correct: false },
+                { text: "samochodu", correct: false },
+                { text: "samochód", correct: true }
             ]
         },
         {
-            title: "Wybierz poprawne zdanie (spakować...):",
+            title: "Idziemy do... zbierać...",
             options: [
-                { text: "Muszę spakować walizka.", correct: false },
-                { text: "Muszę spakować walizkę.", correct: true },
-                { text: "Muszę spakować walizką.", correct: false }
-            ]
-        },
-        {
-            title: "Wybierz poprawne zdanie (wynająć...):",
-            options: [
-                { text: "Chcemy wynająć samochód.", correct: true },
-                { text: "Chcemy wynająć samochodem.", correct: false },
-                { text: "Chcemy wynająć samochodu.", correct: false }
-            ]
-        },
-        {
-            title: "Wybierz poprawne zdanie (zbierać...):",
-            options: [
-                { text: "Idziemy do lasu zbierać grzyby.", correct: true },
-                { text: "Idziemy do lasu zbierać grzybami.", correct: false },
-                { text: "Idziemy do lasu zbierać grzybach.", correct: false }
+                { text: "las / grzyby", correct: false },
+                { text: "lasu / grzyby", correct: true },
+                { text: "lasów / grzybów", correct: false }
             ]
         }
     ];
 
     let currentIndex = 0;
     let attempts = 0;
-    let correctCount = 0;
+    let answeredQuestions = {}; // Śledzenie udzielonych odpowiedzi { index: { answered: bool, correct: bool, selectedOpt: idx } }
 
     function initQuiz() {
         currentIndex = 0;
-        correctCount = 0;
+        answeredQuestions = {};
         document.getElementById('quiz-area').style.display = 'block';
         document.getElementById('summary').style.display = 'none';
         showQuestion();
@@ -148,37 +203,89 @@
     function showQuestion() {
         attempts = 0;
         const q = questions[currentIndex];
+        
+        // Aktualizacja numeru i tytułu
         document.getElementById('q-num').innerText = `Pytanie ${currentIndex + 1} / ${questions.length}`;
         document.getElementById('q-title').innerText = q.title;
 
+        // Nawigacja
+        document.getElementById('prev-btn').disabled = currentIndex === 0;
+        document.getElementById('next-btn').innerText = (currentIndex === questions.length - 1) ? 'Zakończ →' : 'Następne →';
+
+        // Kontener opcji
         const container = document.getElementById('options-container');
         container.innerHTML = '';
 
-        q.options.forEach(opt => {
+        const userState = answeredQuestions[currentIndex];
+
+        q.options.forEach((opt, idx) => {
             const btn = document.createElement('button');
             btn.className = 'opt-btn';
             btn.innerText = opt.text;
-            btn.onclick = () => handleSelect(btn, opt.correct);
+
+            // Przywracanie stanu jeśli odpowiedź została już udzielona
+            if (userState && userState.answered) {
+                btn.disabled = true;
+                if (opt.correct) {
+                    btn.classList.add('correct');
+                } else if (userState.selectedOpt === idx) {
+                    btn.classList.add('incorrect');
+                }
+            } else {
+                btn.onclick = () => handleSelect(btn, opt.correct, idx);
+            }
+
             container.appendChild(btn);
         });
+
+        // Obsługa sekcji objaśnień (Słowniczek / Gramatyka)
+        const expBox = document.getElementById('explanation-box');
+        expBox.style.display = 'none';
+        expBox.innerHTML = '';
+
+        if (q.explanationAlways) {
+            expBox.innerHTML = q.explanation;
+            expBox.style.display = 'block';
+        } else if (q.explanationOnAnswer && userState && userState.answered) {
+            expBox.innerHTML = q.explanation;
+            expBox.style.display = 'block';
+        }
     }
 
-    function handleSelect(btn, isCorrect) {
+    function handleSelect(btn, isCorrect, optIdx) {
+        const q = questions[currentIndex];
+
         if (isCorrect) {
             btn.classList.add('correct');
-            correctCount++;
             disableOptions();
-            setTimeout(nextQuestion, 1000);
+            
+            answeredQuestions[currentIndex] = { answered: true, correct: true, selectedOpt: optIdx };
+
+            // Jeśli istnieje objaśnienie po odpowiedzi
+            if (q.explanationOnAnswer) {
+                const expBox = document.getElementById('explanation-box');
+                expBox.innerHTML = q.explanation;
+                expBox.style.display = 'block';
+            }
+
+            setTimeout(autoNextQuestion, q.explanationOnAnswer ? 2500 : 1000);
         } else {
             attempts++;
             btn.classList.add('incorrect');
             btn.disabled = true;
 
             if (attempts >= 3) {
-                // Przepuść dalej po 3 nieudanych próbach
                 disableOptions();
                 highlightCorrect();
-                setTimeout(nextQuestion, 1500);
+                answeredQuestions[currentIndex] = { answered: true, correct: false, selectedOpt: optIdx };
+                
+                if (q.explanationOnAnswer) {
+                    const expBox = document.getElementById('explanation-box');
+                    expBox.innerHTML = q.explanation;
+                    expBox.style.display = 'block';
+                }
+
+                setTimeout(autoNextQuestion, 1500);
             }
         }
     }
@@ -194,12 +301,28 @@
         });
     }
 
-    function nextQuestion() {
-        currentIndex++;
-        if (currentIndex < questions.length) {
+    function autoNextQuestion() {
+        if (currentIndex < questions.length - 1) {
+            currentIndex++;
             showQuestion();
         } else {
             finishStage();
+        }
+    }
+
+    function manualNextQuestion() {
+        if (currentIndex < questions.length - 1) {
+            currentIndex++;
+            showQuestion();
+        } else {
+            finishStage();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            showQuestion();
         }
     }
 
@@ -207,6 +330,12 @@
         document.getElementById('quiz-area').style.display = 'none';
         document.getElementById('summary').style.display = 'block';
         
+        // Liczenie poprawnych odpowiedzi
+        let correctCount = 0;
+        Object.values(answeredQuestions).forEach(val => {
+            if (val.correct) correctCount++;
+        });
+
         const pct = Math.round((correctCount / questions.length) * 100);
         document.getElementById('score-text').innerText = `${correctCount} / ${questions.length} (${pct}%)`;
 
