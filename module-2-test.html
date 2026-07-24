@@ -848,45 +848,43 @@
 
             const score = calculateScore();
             const total = testQuestions.length;
-            const percent = Math.round((score / total) * 100);
+            const pct = Math.round((score / total) * 100);
 
             document.getElementById('final-score').textContent = `${score} / ${total}`;
-            document.getElementById('final-percent').textContent = `${percent}%`;
+            document.getElementById('final-percent').textContent = `${pct}%`;
 
-            const desc = document.getElementById('completion-desc');
-            if (percent >= 80) {
-                desc.textContent = "Wyśmienicie! Moduł 2 został opanowany na bardzo wysokim poziomie.";
-            } else if (percent >= 50) {
-                desc.textContent = "Dobra robota! Wynik jest pozytywny, ale warto przećwiczyć trudniejsze słówka.";
-            } else {
-                desc.textContent = "Spróbuj ponownie! Powtórka materiału pozwoli Ci uzyskać lepszy wynik.";
-            }
+            let desc = "Oto Twój wynik za cały moduł.";
+            if (pct === 100) desc = "🏆 Genialnie! Perfekcyjny wynik!";
+            else if (pct >= 80) desc = "👏 Bardzo dobry wynik! Świetna robota!";
+            else if (pct >= 50) desc = "👍 Dobry wynik, ale możesz jeszcze powtórzyć materiał.";
+            else desc = "💪 Warto powtórzyć słownictwo i spróbować ponownie!";
+
+            document.getElementById('completion-desc').textContent = desc;
         }
 
         function restartTest() {
             currentQIndex = 0;
+            attempts = 0;
             userAnswers = new Array(testQuestions.length).fill(null);
-            document.getElementById('completion-screen').style.display = 'none';
             document.getElementById('quiz-card').style.display = 'block';
+            document.getElementById('completion-screen').style.display = 'none';
             renderQuestion();
         }
 
         function markStageComplete() {
-            const MODULE_KEY = 'm2_progress';
-            let progress = JSON.parse(localStorage.getItem(MODULE_KEY)) || {};
-            progress.test = true;
-            localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
+            const score = calculateScore();
+            const total = testQuestions.length;
+            const pct = Math.round((score / total) * 100);
+            
+            // Zapis wyniku w localStorage dla modułu 2
+            localStorage.setItem('module2_test_score', pct);
+            localStorage.setItem('module2_completed', 'true');
         }
 
-        // Obsługa klawisza Enter w polu wpisywania
-        document.getElementById('user-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                checkInputAnswer();
-            }
+        // Inicjalizacja pierwszej karty po załadowaniu
+        document.addEventListener("DOMContentLoaded", () => {
+            renderQuestion();
         });
-
-        // Start testu
-        renderQuestion();
     </script>
 </body>
 </html>
