@@ -142,6 +142,42 @@
         .dialogue-line {
             margin: 6px 0;
         }
+
+        /* Podsumowanie wyniku */
+        .summary-card {
+            background: #eef5fc;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .summary-score {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 15px 0;
+        }
+
+        .btn-nav {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1em;
+            transition: background 0.2s ease;
+            margin-top: 15px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-nav:hover {
+            background-color: #d65a3c;
+        }
     </style>
 </head>
 <body>
@@ -153,10 +189,10 @@
     <div class="question-card" id="q2">
         <div class="question-title">2. „Apple pie” po polsku to? (Wybierz poprawną odpowiedź)</div>
         <div class="options">
-            <button class="btn-option" onclick="checkQ2(this, true, 'szarlotka')">szarlotka</button>
-            <button class="btn-option" onclick="checkQ2(this, true, 'ciasto jabłkowe')">ciasto jabłkowe</button>
-            <button class="btn-option" onclick="checkQ2(this, false, 'sernik')">sernik</button>
-            <button class="btn-option" onclick="checkQ2(this, false, 'pączek')">pączek</button>
+            <button class="btn-option" onclick="checkQ2(this, true, 'szarlotka', 'q2')">szarlotka</button>
+            <button class="btn-option" onclick="checkQ2(this, true, 'ciasto jabłkowe', 'q2')">ciasto jabłkowe</button>
+            <button class="btn-option" onclick="checkQ2(this, false, 'sernik', 'q2')">sernik</button>
+            <button class="btn-option" onclick="checkQ2(this, false, 'pączek', 'q2')">pączek</button>
         </div>
         <div id="q2-explain" class="explanation-box" style="display:none;"></div>
     </div>
@@ -165,9 +201,9 @@
     <div class="question-card" id="q4">
         <div class="question-title">4. Sery, mleko i masło muszę spakować do ________.</div>
         <div class="options">
-            <button class="btn-option" onclick="checkQ4(this, 'torba')">torba</button>
-            <button class="btn-option" onclick="checkQ4(this, 'torbą')">torbą</button>
-            <button class="btn-option" onclick="checkQ4(this, 'torby')">torby</button>
+            <button class="btn-option" onclick="checkQ4(this, 'torba', 'q4')">torba</button>
+            <button class="btn-option" onclick="checkQ4(this, 'torbą', 'q4')">torbą</button>
+            <button class="btn-option" onclick="checkQ4(this, 'torby', 'q4')">torby</button>
         </div>
         <div id="q4-explain" class="explanation-box" style="display:none;"></div>
     </div>
@@ -176,10 +212,10 @@
     <div class="question-card" id="q5">
         <div class="question-title">5. Co pijemy rano ze śniadaniem?</div>
         <div class="options">
-            <button class="btn-option" onclick="checkSimple(this, true)">kawa / herbata</button>
-            <button class="btn-option" onclick="checkSimple(this, false)">zupa</button>
-            <button class="btn-option" onclick="checkSimple(this, false)">owoce</button>
-            <button class="btn-option" onclick="checkSimple(this, false)">sos pomidorowy</button>
+            <button class="btn-option" onclick="checkSimple(this, true, 'q5')">kawa / herbata</button>
+            <button class="btn-option" onclick="checkSimple(this, false, 'q5')">zupa</button>
+            <button class="btn-option" onclick="checkSimple(this, false, 'q5')">owoce</button>
+            <button class="btn-option" onclick="checkSimple(this, false, 'q5')">sos pomidorowy</button>
         </div>
     </div>
 
@@ -187,10 +223,10 @@
     <div class="question-card" id="q6">
         <div class="question-title">6. Gdzie parkujemy samochód?</div>
         <div class="options">
-            <button class="btn-option" onclick="checkSimple(this, false)">w salonie</button>
-            <button class="btn-option" onclick="checkSimple(this, true)">w garażu</button>
-            <button class="btn-option" onclick="checkSimple(this, false)">w kuchni</button>
-            <button class="btn-option" onclick="checkSimple(this, false)">w łazience</button>
+            <button class="btn-option" onclick="checkSimple(this, false, 'q6')">w salonie</button>
+            <button class="btn-option" onclick="checkSimple(this, true, 'q6')">w garażu</button>
+            <button class="btn-option" onclick="checkSimple(this, false, 'q6')">w kuchni</button>
+            <button class="btn-option" onclick="checkSimple(this, false, 'q6')">w łazience</button>
         </div>
     </div>
 
@@ -198,10 +234,10 @@
     <div class="question-card" id="q7">
         <div class="question-title">7. Gdzie zwykle śpimy?</div>
         <div class="options">
-            <button class="btn-option" onclick="checkSimple(this, true)">w sypialni</button>
-            <button class="btn-option" onclick="checkSimple(this, false)">w garażu</button>
-            <button class="btn-option" onclick="checkSimple(this, false)">w ogrodzie</button>
-            <button class="btn-option" onclick="checkSimple(this, false)">w sklepie</button>
+            <button class="btn-option" onclick="checkSimple(this, true, 'q7')">w sypialni</button>
+            <button class="btn-option" onclick="checkSimple(this, false, 'q7')">w garażu</button>
+            <button class="btn-option" onclick="checkSimple(this, false, 'q7')">w ogrodzie</button>
+            <button class="btn-option" onclick="checkSimple(this, false, 'q7')">w sklepie</button>
         </div>
     </div>
 
@@ -212,43 +248,51 @@
         <div class="dialogue-block">
             <div class="dialogue-line"><strong>Dialog 1:</strong> — Gdzie jest pies? — Pies biega w ________ (ogród).</div>
             <input type="text" id="d1_input" placeholder="Wpisz słowo...">
-            <button class="btn-submit" onclick="checkText('d1_input', ['ogrodzie'], 'd1_feedback')">Sprawdź</button>
+            <button class="btn-submit" onclick="checkText('d1_input', ['ogrodzie'], 'd1_feedback', 'd1')">Sprawdź</button>
             <span id="d1_feedback"></span>
         </div>
 
         <div class="dialogue-block">
             <div class="dialogue-line"><strong>Dialog 2:</strong> — Gdzie oglądamy telewizję? — Oglądamy film w ________ (salon).</div>
             <input type="text" id="d2_input" placeholder="Wpisz słowo...">
-            <button class="btn-submit" onclick="checkText('d2_input', ['salonie'], 'd2_feedback')">Sprawdź</button>
+            <button class="btn-submit" onclick="checkText('d2_input', ['salonie'], 'd2_feedback', 'd2')">Sprawdź</button>
             <span id="d2_feedback"></span>
         </div>
 
         <div class="dialogue-block">
             <div class="dialogue-line"><strong>Dialog 3:</strong> — Gdzie stawiamy talerz? — Talerz stoi na ________ (stół).</div>
             <input type="text" id="d3_input" placeholder="Wpisz słowo...">
-            <button class="btn-submit" onclick="checkText('d3_input', ['stole'], 'd3_feedback')">Sprawdź</button>
+            <button class="btn-submit" onclick="checkText('d3_input', ['stole'], 'd3_feedback', 'd3')">Sprawdź</button>
             <span id="d3_feedback"></span>
         </div>
 
         <div class="dialogue-block">
             <div class="dialogue-line"><strong>Dialog 4:</strong> — Gdzie jest auto? — Auto stoi w ________ (garaż).</div>
             <input type="text" id="d4_input" placeholder="Wpisz słowo...">
-            <button class="btn-submit" onclick="checkText('d4_input', ['garażu'], 'd4_feedback')">Sprawdź</button>
+            <button class="btn-submit" onclick="checkText('d4_input', ['garażu'], 'd4_feedback', 'd4')">Sprawdź</button>
             <span id="d4_feedback"></span>
         </div>
 
         <div class="dialogue-block">
             <div class="dialogue-line"><strong>Dialog 5:</strong> — Na czym siedzisz? — Siedzę na wygodnym ________ (krzesło).</div>
             <input type="text" id="d5_input" placeholder="Wpisz słowo...">
-            <button class="btn-submit" onclick="checkText('d5_input', ['krześle'], 'd5_feedback')">Sprawdź</button>
+            <button class="btn-submit" onclick="checkText('d5_input', ['krześle'], 'd5_feedback', 'd5')">Sprawdź</button>
             <span id="d5_feedback"></span>
         </div>
 
         <div class="dialogue-block">
             <div class="dialogue-line"><strong>Dialog 6:</strong> — Kto stoi obok ________ (drzwi)? — To nasz sąsiad.</div>
             <input type="text" id="d6_input" placeholder="Wpisz słowo...">
-            <button class="btn-submit" onclick="checkText('d6_input', ['drzwi'], 'd6_feedback')">Sprawdź</button>
+            <button class="btn-submit" onclick="checkText('d6_input', ['drzwi'], 'd6_feedback', 'd6')">Sprawdź</button>
             <span id="d6_feedback"></span>
+            
+            <div class="explanation-box" style="margin-top: 10px;">
+                <strong>Vocabulary & Synonym Note (EN):</strong><br>
+                • <strong>obok</strong> = next to / beside (e.g. <em>obok drzwi</em>)<br>
+                • <strong>blisko</strong> = close to / near (e.g. <em>blisko drzwi</em>)<br>
+                • <strong>przy</strong> = at / by / right next to (e.g. <em>przy drzwiach</em>)<br>
+                All three express proximity! Notice that <em>obok</em> and <em>blisko</em> take the Genitive case (<em>drzwi</em>), while <em>przy</em> takes the Locative case (<em>drzwiach</em>).
+            </div>
         </div>
     </div>
 
@@ -256,9 +300,9 @@
     <div class="question-card" id="q9">
         <div class="question-title">9. Mieszkam w dużym ________.</div>
         <div class="options">
-            <button class="btn-option" onclick="checkSimple(this, true)">domu</button>
-            <button class="btn-option" onclick="checkSimple(this, false)">dom</button>
-            <button class="btn-option" onclick="checkSimple(this, false)">domem</button>
+            <button class="btn-option" onclick="checkSimple(this, true, 'q9')">domu</button>
+            <button class="btn-option" onclick="checkSimple(this, false, 'q9')">dom</button>
+            <button class="btn-option" onclick="checkSimple(this, false, 'q9')">domem</button>
         </div>
     </div>
 
@@ -266,9 +310,9 @@
     <div class="question-card" id="q10">
         <div class="question-title">10. „Living room” po polsku to?</div>
         <div class="options">
-            <button class="btn-option" onclick="checkSimple(this, true)">salon</button>
-            <button class="btn-option" onclick="checkSimple(this, false)">kuchnia</button>
-            <button class="btn-option" onclick="checkSimple(this, false)">łazienka</button>
+            <button class="btn-option" onclick="checkSimple(this, true, 'q10')">salon</button>
+            <button class="btn-option" onclick="checkSimple(this, false, 'q10')">kuchnia</button>
+            <button class="btn-option" onclick="checkSimple(this, false, 'q10')">łazienka</button>
         </div>
     </div>
 
@@ -276,8 +320,8 @@
     <div class="question-card" id="q11">
         <div class="question-title">11. Meble to?</div>
         <div class="options">
-            <button class="btn-option" onclick="checkQ11(this, true)">szafa, stół, krzesło, kanapa</button>
-            <button class="btn-option" onclick="checkQ11(this, false)">wanna, piekarnik, prysznic</button>
+            <button class="btn-option" onclick="checkQ11(this, true, 'q11')">szafa, stół, krzesło, kanapa</button>
+            <button class="btn-option" onclick="checkQ11(this, false, 'q11')">wanna, piekarnik, prysznic</button>
         </div>
         <div id="q11-explain" class="explanation-box" style="display:none;"></div>
     </div>
@@ -286,9 +330,9 @@
     <div class="question-card" id="q12">
         <div class="question-title">12. „Garden” po polsku to?</div>
         <div class="options">
-            <button class="btn-option" onclick="checkQ12(this, true)">ogród</button>
-            <button class="btn-option" onclick="checkQ12(this, false)">balkon</button>
-            <button class="btn-option" onclick="checkQ12(this, false)">taras</button>
+            <button class="btn-option" onclick="checkQ12(this, true, 'q12')">ogród</button>
+            <button class="btn-option" onclick="checkQ12(this, false, 'q12')">balkon</button>
+            <button class="btn-option" onclick="checkQ12(this, false, 'q12')">taras</button>
         </div>
         <div id="q12-explain" class="explanation-box" style="display:none;"></div>
     </div>
@@ -297,7 +341,7 @@
     <div class="question-card" id="q13">
         <div class="question-title">13. Chcę kupić nową ________ (kanapa).</div>
         <input type="text" id="q13_input" placeholder="Wpisz poprawną formę...">
-        <button class="btn-submit" onclick="checkText('q13_input', ['kanapę'], 'q13_feedback')">Sprawdź</button>
+        <button class="btn-submit" onclick="checkText('q13_input', ['kanapę'], 'q13_feedback', 'q13')">Sprawdź</button>
         <span id="q13_feedback"></span>
     </div>
 
@@ -305,9 +349,9 @@
     <div class="question-card" id="q16">
         <div class="question-title">16. Mleko i jajka są w ________.</div>
         <div class="options">
-            <button class="btn-option" onclick="checkSimple(this, true)">lodówce</button>
-            <button class="btn-option" onclick="checkSimple(this, false)">lodówka</button>
-            <button class="btn-option" onclick="checkSimple(this, false)">lodówki</button>
+            <button class="btn-option" onclick="checkSimple(this, true, 'q16')">lodówce</button>
+            <button class="btn-option" onclick="checkSimple(this, false, 'q16')">lodówka</button>
+            <button class="btn-option" onclick="checkSimple(this, false, 'q16')">lodówki</button>
         </div>
     </div>
 
@@ -315,9 +359,9 @@
     <div class="question-card" id="q17">
         <div class="question-title">17. Na stole stoi gorąca ________.</div>
         <div class="options">
-            <button class="btn-option" onclick="checkQ17(this, true, 'herbata')">herbata</button>
-            <button class="btn-option" onclick="checkQ17(this, false, 'chleb')">chleb</button>
-            <button class="btn-option" onclick="checkQ17(this, false, 'jabłko')">jabłko</button>
+            <button class="btn-option" onclick="checkQ17(this, true, 'herbata', 'q17')">herbata</button>
+            <button class="btn-option" onclick="checkQ17(this, false, 'chleb', 'q17')">chleb</button>
+            <button class="btn-option" onclick="checkQ17(this, false, 'jabłko', 'q17')">jabłko</button>
         </div>
         <div id="q17-explain" class="explanation-box" style="display:none;"></div>
     </div>
@@ -326,9 +370,9 @@
     <div class="question-card" id="q18">
         <div class="question-title">18. Co mamy w lodówce?</div>
         <div class="options">
-            <button class="btn-option" onclick="checkSimple(this, true)">masło, ser, jajka i mleko</button>
-            <button class="btn-option" onclick="checkSimple(this, false)">krzesło, stół i szafę</button>
-            <button class="btn-option" onclick="checkSimple(this, false)">książki, długopis i zeszyt</button>
+            <button class="btn-option" onclick="checkSimple(this, true, 'q18')">masło, ser, jajka i mleko</button>
+            <button class="btn-option" onclick="checkSimple(this, false, 'q18')">krzesło, stół i szafę</button>
+            <button class="btn-option" onclick="checkSimple(this, false, 'q18')">książki, długopis i zeszyt</button>
         </div>
     </div>
 
@@ -336,22 +380,60 @@
     <div class="question-card" id="q19">
         <div class="question-title">19. On siedzi na ________ (chair).</div>
         <input type="text" id="q19_input" placeholder="Wpisz po polsku w poprawnej formie...">
-        <button class="btn-submit" onclick="checkText('q19_input', ['krześle'], 'q19_feedback')">Sprawdź</button>
+        <button class="btn-submit" onclick="checkText('q19_input', ['krześle'], 'q19_feedback', 'q19')">Sprawdź</button>
         <span id="q19_feedback"></span>
+    </div>
+
+    <!-- Podsumowanie Wyników -->
+    <div class="summary-card">
+        <h2>Podsumowanie Testu</h2>
+        <p>Twój wynik:</p>
+        <div class="summary-score" id="final-score">0 / 18 (0%)</div>
+        <p id="score-comment">Rozwiąż pytania powyżej, aby zobaczyć swój wynik!</p>
+        <a href="module-1-vocab.html" class="btn-nav">Powrót do modułu (module-1-vocab.html)</a>
     </div>
 
 </div>
 
 <script>
-    function checkSimple(btn, isCorrect) {
+    // Obiekt przechowujący stan pytań (18 zadań/dialogów w sumie)
+    const results = {};
+    const TOTAL_QUESTIONS = 18;
+
+    function updateScore() {
+        let correctCount = 0;
+        for (let key in results) {
+            if (results[key] === true) {
+                correctCount++;
+            }
+        }
+        const percentage = Math.round((correctCount / TOTAL_QUESTIONS) * 100);
+        document.getElementById('final-score').innerText = `${correctCount} / ${TOTAL_QUESTIONS} (${percentage}%)`;
+
+        const comment = document.getElementById('score-comment');
+        if (percentage === 100) {
+            comment.innerText = 'Perfekcyjnie! Opanowałeś cały materiał!';
+        } else if (percentage >= 70) {
+            comment.innerText = 'Bardzo dobry wynik! Dobra robota!';
+        } else if (percentage >= 50) {
+            comment.innerText = 'Dobra próba! Przejrzyj materiał i spróbuj ponownie.';
+        } else {
+            comment.innerText = 'Ćwicz dalej, a na pewno poprawisz swój wynik!';
+        }
+    }
+
+    function checkSimple(btn, isCorrect, qId) {
         const parent = btn.parentElement;
         const buttons = parent.querySelectorAll('.btn-option');
         buttons.forEach(b => b.classList.remove('correct', 'incorrect'));
         btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+        results[qId] = isCorrect;
+        updateScore();
     }
 
-    function checkQ2(btn, isCorrect, chosenWord) {
-        checkSimple(btn, isCorrect);
+    function checkQ2(btn, isCorrect, chosenWord, qId) {
+        checkSimple(btn, isCorrect, qId);
         const exp = document.getElementById('q2-explain');
         exp.style.display = 'block';
         if (isCorrect) {
@@ -363,9 +445,9 @@
         }
     }
 
-    function checkQ4(btn, option) {
+    function checkQ4(btn, option, qId) {
         const isCorrect = (option === 'torby');
-        checkSimple(btn, isCorrect);
+        checkSimple(btn, isCorrect, qId);
         const exp = document.getElementById('q4-explain');
         exp.style.display = 'block';
         exp.innerHTML = `
@@ -376,8 +458,8 @@
         `;
     }
 
-    function checkQ11(btn, isCorrect) {
-        checkSimple(btn, isCorrect);
+    function checkQ11(btn, isCorrect, qId) {
+        checkSimple(btn, isCorrect, qId);
         const exp = document.getElementById('q11-explain');
         exp.style.display = 'block';
         exp.innerHTML = `
@@ -393,8 +475,8 @@
         `;
     }
 
-    function checkQ12(btn, isCorrect) {
-        checkSimple(btn, isCorrect);
+    function checkQ12(btn, isCorrect, qId) {
+        checkSimple(btn, isCorrect, qId);
         const exp = document.getElementById('q12-explain');
         exp.style.display = 'block';
         exp.innerHTML = `
@@ -404,8 +486,8 @@
         `;
     }
 
-    function checkQ17(btn, isCorrect, word) {
-        checkSimple(btn, isCorrect);
+    function checkQ17(btn, isCorrect, word, qId) {
+        checkSimple(btn, isCorrect, qId);
         const exp = document.getElementById('q17-explain');
         exp.style.display = 'block';
         exp.innerHTML = `
@@ -418,14 +500,17 @@
         `;
     }
 
-    function checkText(inputId, correctAnswers, feedbackId) {
+    function checkText(inputId, correctAnswers, feedbackId, qId) {
         const val = document.getElementById(inputId).value.trim().toLowerCase();
         const fb = document.getElementById(feedbackId);
         if (correctAnswers.includes(val)) {
             fb.innerHTML = ' <span style="color:green; font-weight:bold;">✓ Dobrze!</span>';
+            results[qId] = true;
         } else {
             fb.innerHTML = ' <span style="color:red; font-weight:bold;">✗ Spróbuj jeszcze raz!</span>';
+            results[qId] = false;
         }
+        updateScore();
     }
 </script>
 
