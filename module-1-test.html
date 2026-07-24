@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polski A1-A2 | Platforma Edukacyjna</title>
+    <title>Moduł 1: Test Końcowy | Język Polski A1-A2</title>
     <style>
         :root {
-            --primary-color: #34c759;
-            --primary-hover: #28a745;
-            --secondary-color: #007bff;
-            --bg-color: #f8f9fa;
+            --primary: #2c3e50;
+            --accent: #D0A03C;
+            --accent-hover: #b88a2e;
+            --bg: #f8fafc;
             --card-bg: #ffffff;
-            --text-color: #212529;
-            --text-muted: #6c757d;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --error: #ef4444;
             --border-radius: 16px;
-            --box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-            --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            --shadow: 0 10px 15px -3px rgba(0,0,0,0.08);
         }
 
         * {
@@ -25,357 +26,519 @@
         }
 
         body {
-            font-family: var(--font-family);
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
             line-height: 1.6;
-            display: flex;
-            flex-direction: column;
             min-height: 100vh;
-        }
-
-        /* --- Header --- */
-        header {
-            background-color: var(--card-bg);
-            border-bottom: 1px solid #e9ecef;
-            padding: 1.5rem 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-container {
-            max-width: 1100px;
-            margin: 0 auto;
+            padding: 20px;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--primary-color);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 15px;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: var(--text-color);
-            font-weight: 600;
-            padding: 8px 16px;
-            border-radius: 20px;
-            transition: background 0.2s, color 0.2s;
-        }
-
-        nav a:hover {
-            background-color: #f1f3f5;
-            color: var(--primary-color);
-        }
-
-        /* --- Hero Banner --- */
-        .hero {
-            background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 100%);
-            padding: 4rem 2rem;
-            text-align: center;
-        }
-
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: #1b4332;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-        }
-
-        /* --- Main Content --- */
-        main {
-            max-width: 1100px;
-            margin: 3rem auto;
-            padding: 0 1.5rem;
-            flex: 1;
+        .top-nav {
             width: 100%;
+            max-width: 650px;
+            margin-bottom: 20px;
         }
 
-        .section-title {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 4px;
-            background-color: var(--primary-color);
-            border-radius: 2px;
-        }
-
-        /* --- Module Grid --- */
-        .modules-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .module-card {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 1px solid #f1f3f5;
-        }
-
-        .module-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
-        }
-
-        .module-badge {
-            align-self: flex-start;
-            background-color: #e8f5e9;
-            color: var(--primary-color);
-            font-weight: 700;
-            font-size: 0.85rem;
-            padding: 4px 12px;
-            border-radius: 12px;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-        }
-
-        .module-badge.pdf-badge {
-            background-color: #e3f2fd;
-            color: var(--secondary-color);
-        }
-
-        .module-card h3 {
-            font-size: 1.4rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .module-card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .resource-links {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .btn {
+        .btn-back {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            padding: 10px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            text-align: center;
-            transition: background 0.2s;
-            border: none;
-            cursor: pointer;
             gap: 8px;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 2px solid #e9ecef;
-            color: var(--text-color);
-        }
-
-        .btn-outline:hover {
-            background-color: #f8f9fa;
-            border-color: #ced4da;
-        }
-
-        /* --- Footer --- */
-        footer {
+            padding: 8px 16px;
             background-color: var(--card-bg);
-            border-top: 1px solid #e9ecef;
-            padding: 2rem;
-            text-align: center;
+            color: var(--text-main);
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+
+        .btn-back:hover {
+            background-color: #f1f5f9;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background-color: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--accent);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
             color: var(--text-muted);
             font-size: 0.9rem;
-            margin-top: auto;
+            font-weight: 600;
         }
 
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .header-container {
-                flex-direction: column;
-                gap: 15px;
-            }
-            .hero h1 {
-                font-size: 1.8rem;
-            }
+        .question-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            border-color: var(--accent);
+            background-color: #fffdf5;
+        }
+
+        .option-btn.correct {
+            border-color: var(--success);
+            background-color: #ecfdf5;
+            color: #065f46;
+        }
+
+        .option-btn.wrong {
+            border-color: var(--error);
+            background-color: #fef2f2;
+            color: #991b1b;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            outline: none;
+        }
+
+        .text-input:focus {
+            border-color: var(--accent);
+        }
+
+        .feedback-msg {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            display: none;
+        }
+
+        .feedback-msg.show-correct {
+            display: block;
+            background-color: #ecfdf5;
+            color: var(--success);
+        }
+
+        .feedback-msg.show-error {
+            display: block;
+            background-color: #fef2f2;
+            color: var(--error);
+        }
+
+        .btn-action {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 15px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-action:hover {
+            background-color: var(--accent-hover);
+            transform: scale(1.01);
+        }
+
+        .summary-card {
+            text-align: center;
+        }
+
+        .summary-stars {
+            font-size: 3rem;
+            margin: 15px 0;
+        }
+
+        .summary-score {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .summary-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .summary-buttons .btn-action {
+            margin-top: 0;
+        }
+
+        .btn-secondary {
+            background-color: #64748b;
+        }
+
+        .btn-secondary:hover {
+            background-color: #475569;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="header-container">
-            <a href="#" class="logo">🇵🇱 Język Polski A1–A2</a>
-            <nav>
-                <ul>
-                    <li><a href="#moduly">Moduły</a></li>
-                    <li><a href="#materialy">PDF i Pliki</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+    <div class="top-nav">
+        <a href="module-1-vocab.html" class="btn-back">← Powrót do modułu</a>
+    </div>
 
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Materiały do nauki języka polskiego</h1>
-            <p>Interaktywne quizy, ćwiczenia, wiktoriny oraz pliki PDF dla obcokrajowców.</p>
-        </div>
-    </section>
-
-    <main>
-        <!-- Sekcja z Modułami i Quizami -->
-        <section id="moduly">
-            <h2 class="section-title">Moduły Edukacyjne</h2>
-            <div class="modules-grid">
-
-                <!-- MODUŁ 1 -->
-                <div class="module-card">
-                    <div>
-                        <span class="module-badge">Moduł 1</span>
-                        <h3>Dom i jedzenie</h3>
-                        <p>Naucz się 20 podstawowych słów, potrenuj fiszki, dopasowywanie, pisanie oraz podstawową gramatykę.</p>
-                    </div>
-                    <div class="resource-links">
-                        <a href="module-1-vocab.html" class="btn btn-primary">Uruchom Quiz 🎯</a>
-                    </div>
-                </div>
-
-                <!-- MODUŁ 2 -->
-                <div class="module-card">
-                    <div>
-                        <span class="module-badge">Moduł 2</span>
-                        <h3>Rodzina i Przyjaciele</h3>
-                        <p>Poznaj słownictwo związane z rodziną, opisem osób oraz podstawowymi relacjami.</p>
-                    </div>
-                    <div class="resource-links">
-                        <a href="module-2-vocab.html" class="btn btn-primary">Uruchom Quiz 🎯</a>
-                    </div>
-                </div>
-
-                <!-- MODUŁ 3 -->
-                <div class="module-card">
-                    <div>
-                        <span class="module-badge">Moduł 3</span>
-                        <h3>Zakupy i Sklep</h3>
-                        <p>Ćwiczenia ze słownictwa i dialogów w sklepie, pytania o cenę oraz nazwy produktów.</p>
-                    </div>
-                    <div class="resource-links">
-                        <a href="module-3-vocab.html" class="btn btn-primary">Uruchom Quiz 🎯</a>
-                    </div>
-                </div>
-
-                <!-- MODUŁ 4 -->
-                <div class="module-card">
-                    <div>
-                        <span class="module-badge">Moduł 4</span>
-                        <h3>Wakacje i dni wolne</h3>
-                        <p>Słownictwo związane z podróżami, czasem wolnym, wypoczynkiem oraz planowaniem urlopu.</p>
-                    </div>
-                    <div class="resource-links">
-                        <a href="module-4-vocab.html" class="btn btn-primary">Uruchom Quiz 🎯</a>
-                    </div>
-                </div>
-
-                <!-- MODUŁ 5 -->
-                <div class="module-card">
-                    <div>
-                        <span class="module-badge">Moduł 5</span>
-                        <h3>Na mieście</h3>
-                        <p>Pytanie o drogę, poruszanie się po mieście, transport publiczny i ważne miejsca.</p>
-                    </div>
-                    <div class="resource-links">
-                        <a href="module-5-vocab.html" class="btn btn-primary">Uruchom Quiz 🎯</a>
-                    </div>
-                </div>
-
-                <!-- MODUŁ 6 -->
-                <div class="module-card">
-                    <div>
-                        <span class="module-badge">Moduł 6</span>
-                        <h3>W pracy</h3>
-                        <p>Słownictwo zawodowe, zwroty w biurze, umawianie spotkań oraz codzienne obowiązki.</p>
-                    </div>
-                    <div class="resource-links">
-                        <a href="module-6-vocab.html" class="btn btn-primary">Uruchom Quiz 🎯</a>
-                    </div>
-                </div>
-
+    <div class="container">
+        <div class="card" id="quiz-card">
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar"></div>
             </div>
-        </section>
-
-        <!-- Sekcja z materiałami PDF / Wiktorinami -->
-        <section id="materialy">
-            <h2 class="section-title">Materiały do pobrania (PDF)</h2>
-            <div class="modules-grid">
-
-                <!-- KARTA PDF 1 -->
-                <div class="module-card">
-                    <div>
-                        <span class="module-badge pdf-badge">PDF • Karty Pracy</span>
-                        <h3>Karty ze słownictwem: Dom</h3>
-                        <p>Zestaw obrazkowy ze słownictwem z modułu 1 gotowy do wydruku.</p>
-                    </div>
-                    <div class="resource-links">
-                        <a href="pdf/dom_slownictwo.pdf" target="_blank" class="btn btn-outline">Pobierz PDF 📄</a>
-                    </div>
-                </div>
-
+            
+            <div class="question-header">
+                <span id="question-number">Pytanie 1 z 20</span>
+                <span id="attempts-count">Próby: 0/3</span>
             </div>
-        </section>
-    </main>
 
-    <footer>
-        <p>© 2026 Platforma Edukacyjna – Język Polski jako Obcy. Wszystkie prawa zastrzeżone.</p>
-    </footer>
+            <div class="question-title" id="question-text">Pytanie...</div>
 
+            <div id="quiz-body"></div>
+
+            <div class="feedback-msg" id="feedback"></div>
+
+            <button class="btn-action" id="btn-next" style="display: none;" onclick="nextQuestion()">Kolejne pytanie →</button>
+            <button class="btn-action" id="btn-submit" onclick="checkAnswer()">Sprawdź odpowiedź</button>
+        </div>
+
+        <div class="card summary-card" id="summary-card" style="display: none;">
+            <h2>Gratulacje! Ukończyłeś Test Końcowy</h2>
+            <p style="color: var(--text-muted); margin-top: 5px;">Moduł 1: Dom i jedzenie</p>
+            
+            <div class="summary-stars" id="stars-display">⭐⭐⭐</div>
+            <div class="summary-score" id="score-display">0%</div>
+            <p id="summary-text" style="font-size: 1.1rem; color: var(--text-main);"></p>
+
+            <div class="summary-buttons">
+                <button class="btn-action btn-secondary" onclick="restartQuiz()">Powtórz test</button>
+                <a href="module-1-vocab.html" class="btn-action">Powrót do modułu</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                type: 'single',
+                question: 'Gdzie gotujemy obiad?',
+                options: ['W łazience', 'W kuchni', 'W sypialni', 'W garażu'],
+                answer: 'W kuchni'
+            },
+            {
+                type: 'single',
+                question: 'Co znajduje się w salonie do oglądania serwisów informacyjnych?',
+                options: ['Lodówka', 'Telewizor', 'Pralka', 'Piekarnik'],
+                answer: 'Telewizor'
+            },
+            {
+                type: 'tf',
+                question: 'Prawda czy fałsz: „Chleb” to napój.',
+                answer: 'Fałsz'
+            },
+            {
+                type: 'text',
+                question: 'Wpisz po polsku słowo oznaczające miejsce do spania (zaczyna się na Ł):',
+                answer: 'łóżko'
+            },
+            {
+                type: 'single',
+                question: 'Co jemy na śniadanie z mlekiem?',
+                options: ['Zupę', 'Płatki', 'Herbata', 'Mięso'],
+                answer: 'Płatki'
+            },
+            {
+                type: 'tf',
+                question: 'Prawda czy fałsz: Owoce i warzywa przechowujemy w lodówce.',
+                answer: 'Prawda'
+            },
+            {
+                type: 'single',
+                question: 'Które słowo NIE pasuje do pozostałych?',
+                options: ['Jabłko', 'Banan', 'Ser', 'Truskawka'],
+                answer: 'Ser'
+            },
+            {
+                type: 'text',
+                question: 'Uzupełnij zdanie: „Piję gorącą ______ z cytryną.”',
+                answer: 'herbatę'
+            },
+            {
+                type: 'single',
+                question: 'Gdzie myjemy zęby i bierzemy prysznic?',
+                options: ['W łazience', 'W kuchni', 'W ogrodzie', 'W piwnicy'],
+                answer: 'W łazience'
+            },
+            {
+                type: 'tf',
+                question: 'Prawda czy fałsz: „Stół” i „krzesło” to meble.',
+                answer: 'Prawda'
+            },
+            {
+                type: 'single',
+                question: 'Co jest białe i pijemy to od krowy?',
+                options: ['Woda', 'Mleko', 'Sok', 'Kawa'],
+                answer: 'Mleko'
+            },
+            {
+                type: 'single',
+                question: 'Na czym siedzimy przy stole?',
+                options: ['Na szafie', 'Na krześle', 'Na dywanie', 'Na oknie'],
+                answer: 'Na krześle'
+            },
+            {
+                type: 'text',
+                question: 'Przetłumacz na język polski słowo „Water”:',
+                answer: 'woda'
+            },
+            {
+                type: 'tf',
+                question: 'Prawda czy fałsz: W piekarniku pieczemy ciasto.',
+                answer: 'Prawda'
+            },
+            {
+                type: 'single',
+                question: 'Jak nazywa się pomieszczenie, w którym śpimy?',
+                options: ['Sypialnia', 'Kuchnia', 'Korytarz', 'Balkon'],
+                answer: 'Sypialnia'
+            },
+            {
+                type: 'single',
+                question: 'Co kładziemy na chleb, robiąc kanapkę?',
+                options: ['Masło i ser', 'Cukier i sól', 'Kawiarnię', 'Sok'],
+                answer: 'Masło i ser'
+            },
+            {
+                type: 'text',
+                question: 'Uzupełnij zwrot: „Smacznego!” - „Dziękuję, wzajemnie! Co jesz na ______?” (meal during midday)',
+                answer: 'obiad'
+            },
+            {
+                type: 'single',
+                question: 'Gdzie wieszasz kurtkę i zdejmujesz buty po wejściu do domu?',
+                options: ['W korytarzu', 'W łazience', 'W kuchni', 'W sypialni'],
+                answer: 'W korytarzu'
+            },
+            {
+                type: 'tf',
+                question: 'Prawda czy fałsz: „Jabłko” to warzywo.',
+                answer: 'Fałsz'
+            },
+            {
+                type: 'single',
+                question: 'Co pijemy rano, aby mieć energię?',
+                options: ['Kawę', 'Zupę', 'Olej', 'Ocet'],
+                answer: 'Kawę'
+            }
+        ];
+
+        let currentIndex = 0;
+        let score = 0;
+        let attempts = 0;
+        let selectedOption = null;
+
+        function initQuestion() {
+            attempts = 0;
+            selectedOption = null;
+            
+            const q = questions[currentIndex];
+            document.getElementById('question-number').innerText = `Pytanie ${currentIndex + 1} z ${questions.length}`;
+            document.getElementById('attempts-count').innerText = `Próby: 0/3`;
+            document.getElementById('progress-bar').style.width = `${((currentIndex) / questions.length) * 100}%`;
+            document.getElementById('question-text').innerText = q.question;
+            
+            const feedback = document.getElementById('feedback');
+            feedback.className = 'feedback-msg';
+            feedback.style.display = 'none';
+
+            document.getElementById('btn-submit').style.display = 'block';
+            document.getElementById('btn-next').style.display = 'none';
+
+            const container = document.getElementById('quiz-body');
+            container.innerHTML = '';
+
+            if (q.type === 'single' || q.type === 'tf') {
+                const options = q.type === 'tf' ? ['Prawda', 'Fałsz'] : q.options;
+                const grid = document.createElement('div');
+                grid.className = 'options-grid';
+
+                options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerText = opt;
+                    btn.onclick = () => {
+                        document.querySelectorAll('.option-btn').forEach(b => b.style.borderColor = '#e2e8f0');
+                        btn.style.borderColor = 'var(--accent)';
+                        selectedOption = opt;
+                    };
+                    grid.appendChild(btn);
+                });
+                container.appendChild(grid);
+            } else if (q.type === 'text') {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'text-input';
+                input.placeholder = 'Wpisz odpowiedź tutaj...';
+                input.id = 'text-answer';
+                container.appendChild(input);
+            }
+        }
+
+        function checkAnswer() {
+            const q = questions[currentIndex];
+            let userAns = '';
+
+            if (q.type === 'single' || q.type === 'tf') {
+                userAns = selectedOption;
+            } else if (q.type === 'text') {
+                const input = document.getElementById('text-answer');
+                userAns = input ? input.value.trim().toLowerCase() : '';
+            }
+
+            if (!userAns) {
+                alert('Proszę wybrać lub wpisać odpowiedź!');
+                return;
+            }
+
+            const isCorrect = userAns.toLowerCase() === q.answer.toLowerCase();
+            const feedback = document.getElementById('feedback');
+
+            if (isCorrect) {
+                score++;
+                feedback.innerText = 'Świetnie! Poprawna odpowiedź! 🎉';
+                feedback.className = 'feedback-msg show-correct';
+                finishQuestionPass();
+            } else {
+                attempts++;
+                document.getElementById('attempts-count').innerText = `Próby: ${attempts}/3`;
+
+                if (attempts >= 3) {
+                    feedback.innerText = `Wykorzystano 3 próby. Poprawna odpowiedź to: "${q.answer}"`;
+                    feedback.className = 'feedback-msg show-error';
+                    finishQuestionPass();
+                } else {
+                    feedback.innerText = `Niestety błędna odpowiedź. Spróbuj ponowne! (Pozostało prób: ${3 - attempts})`;
+                    feedback.className = 'feedback-msg show-error';
+                }
+            }
+        }
+
+        function finishQuestionPass() {
+            document.getElementById('btn-submit').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < questions.length) {
+                initQuestion();
+            } else {
+                showSummary();
+            }
+        }
+
+        function showSummary() {
+            document.getElementById('quiz-card').style.display = 'none';
+            const summaryCard = document.getElementById('summary-card');
+            summaryCard.style.display = 'block';
+
+            const percentage = Math.round((score / questions.length) * 100);
+            document.getElementById('score-display').innerText = `${percentage}%`;
+
+            let stars = '⭐☆☆';
+            let msg = 'Musisz jeszcze poćwiczyć. Spróbuj ponownie!';
+            
+            if (percentage >= 80) {
+                stars = '⭐⭐⭐';
+                msg = 'Doskonale! Doskonale opanowałeś materiał z Modułu 1!';
+            } else if (percentage >= 50) {
+                stars = '⭐⭐☆';
+                msg = 'Dobra robota! Wynik jest satysfakcjonujący.';
+            }
+
+            document.getElementById('stars-display').innerText = stars;
+            document.getElementById('summary-text').innerText = `Zdobyłeś ${score} z ${questions.length} punktów. ${msg}`;
+
+            // Zapis do localStorage
+            const progress = JSON.parse(localStorage.getItem('polish_module_1_progress') || '{}');
+            progress.testCompleted = true;
+            progress.score = percentage;
+            localStorage.setItem('polish_module_1_progress', JSON.stringify(progress));
+        }
+
+        function restartQuiz() {
+            currentIndex = 0;
+            score = 0;
+            document.getElementById('summary-card').style.display = 'none';
+            document.getElementById('quiz-card').style.display = 'block';
+            initQuestion();
+        }
+
+        // Initialize quiz on start
+        initQuestion();
+    </script>
 </body>
 </html>
