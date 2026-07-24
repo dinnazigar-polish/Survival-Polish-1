@@ -45,14 +45,24 @@
             margin-bottom: 1.5rem;
         }
 
-        .back-link {
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-link, .prev-link {
             color: var(--text-muted);
             text-decoration: none;
             font-weight: 600;
             transition: color 0.2s ease;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 0.95rem;
         }
 
-        .back-link:hover {
+        .back-link:hover, .prev-link:hover {
             color: var(--primary-salmon);
         }
 
@@ -153,18 +163,6 @@
             background-color: #fffaf9;
         }
 
-        .option-btn.correct {
-            border-color: var(--success-color);
-            background-color: #eafaf1;
-            color: var(--success-color);
-        }
-
-        .option-btn.incorrect {
-            border-color: var(--error-color);
-            background-color: #fdf2f2;
-            color: var(--error-color);
-        }
-
         /* Sekcja Objaśnień i Kontekstu */
         .explanation-box {
             margin-top: 1.5rem;
@@ -195,8 +193,14 @@
             margin-bottom: 0;
         }
 
+        .action-buttons {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1.2rem;
+        }
+
         .next-btn {
-            width: 100%;
+            flex: 2;
             background-color: var(--primary-salmon);
             color: white;
             border: none;
@@ -205,13 +209,30 @@
             font-size: 1.1rem;
             font-weight: 700;
             cursor: pointer;
-            margin-top: 1.2rem;
             display: none;
             transition: background-color 0.2s ease;
         }
 
         .next-btn:hover {
             background-color: var(--primary-salmon-hover);
+        }
+
+        .prev-btn-action {
+            flex: 1;
+            background-color: #e2e8f0;
+            color: var(--text-dark);
+            border: none;
+            padding: 1rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .prev-btn-action:hover {
+            background-color: #cbd5e1;
         }
 
         .completion-screen {
@@ -248,7 +269,10 @@
 
     <div class="container">
         <div class="header">
-            <a href="module-2-vocab.html" class="back-link">← Powrót do modułu</a>
+            <div class="nav-links">
+                <a href="module-2-vocab.html" class="back-link">← Powrót do modułu</a>
+                <button id="header-prev-btn" class="prev-link" onclick="prevDialog()" style="display: none;">← Poprzedni dialog</button>
+            </div>
             <span id="step-counter" style="font-weight: 700; color: var(--text-muted);">Dialog 1 / 10</span>
         </div>
 
@@ -269,7 +293,10 @@
                 <div id="explanation-text"></div>
             </div>
 
-            <button class="next-btn" id="next-btn" onclick="nextDialog()">Następny dialog →</button>
+            <div class="action-buttons">
+                <button class="prev-btn-action" id="prev-btn-action" onclick="prevDialog()">← Wróć</button>
+                <button class="next-btn" id="next-btn" onclick="nextDialog()">Następny dialog →</button>
+            </div>
         </div>
 
         <!-- Ekran Końcowy -->
@@ -286,7 +313,10 @@
             {
                 title: "Dialog 1: Odbieranie dzieci ze szkoły",
                 firstComment: "Kto zwykle odbiera Wasze dzieci ze szkoły w tygodniu?",
-                lastComment: "To bardzo wygodne rozwiązanie!",
+                lastComments: [
+                    "To bardzo wygodne rozwiązanie!",
+                    "Aha, to świetny trening i spacer dla dzieci."
+                ],
                 choices: [
                     "Najczęściej robi to moja żona, ale czasami pomaga nam też babcia.",
                     "Moje dzieci chodzą do szkoły na piechotę z kolegami."
@@ -300,7 +330,10 @@
             {
                 title: "Dialog 2: Zawód i praca mamy",
                 firstComment: "Czym zajmuje się Twoja mama?",
-                lastComment: "Uczenie matematyki brzmi jak bardzo trudne zadanie!",
+                lastComments: [
+                    "Uczenie matematyki brzmi jak bardzo trudne zadanie!",
+                    "Piękne hobby!"
+                ],
                 choices: [
                     "Moja mama jest nauczycielką. Naucza matematyki i fizyki w szkole.",
                     "Moja mama bardzo lubi spędzać czas w ogrodzie."
@@ -314,7 +347,10 @@
             {
                 title: "Dialog 3: Nauka języka polskiego",
                 firstComment: "Kto Ciebie nauczył tak dobrze mówić po polsku?",
-                lastComment: "Mówisz naprawdę świetnie i wspaniale porozumiewasz się po polsku.",
+                lastComments: [
+                    "Twój dziadek jest Polakiem i mieszkał w Polsce?",
+                    "Mówisz naprawdę świetnie po polsku!"
+                ],
                 choices: [
                     "Mój dziadek! Często ze mną rozmawiał, kiedy byłem mały.",
                     "Uczę się sam z internetu."
@@ -328,7 +364,10 @@
             {
                 title: "Dialog 4: Domowy wypiek",
                 firstComment: "Kto upiekł ten pyszny tort na Twoje urodziny?",
-                lastComment: "Jest naprawdę wyśmienity! Muszę poprosić ją o przepis.",
+                lastComments: [
+                    "Jest naprawdę wyśmienity! Muszę poprosić ją o przepis.",
+                    "O, to niesamowite, że można kupić tak smaczny tort w markecie!"
+                ],
                 choices: [
                     "Moja ciocia! Ona uwielbia piec ciasta dla całej rodziny.",
                     "Kupiłem ten tort wczoraj w markecie."
@@ -342,7 +381,10 @@
             {
                 title: "Dialog 5: Spotkania z rodziną",
                 firstComment: "Czy masz rodzeństwo?",
-                lastComment: "Cudownie! Moi rodzice też są już na emeryturze.",
+                lastComments: [
+                    "Cudownie! Moi rodzice też są już na emeryturze.",
+                    "Bycie jedynakiem ma też swoje plusy!"
+                ],
                 choices: [
                     "Tak, mam brata i siostrę. Często odwiedzamy rodziców na emeryturze.",
                     "Nie, jestem jedynakiem."
@@ -356,7 +398,10 @@
             {
                 title: "Dialog 6: Opis wyglądu",
                 firstComment: "Jak wygląda Twój najlepszy przyjaciel?",
-                lastComment: "Wydaje się bardzo miłą i sympatyczną osobą!",
+                lastComments: [
+                    "Wydaje się bardzo miłą i sympatyczną osobą!",
+                    "Super! Muzyka to wspaniała pasja."
+                ],
                 choices: [
                     "Jest wysoki, ma krótkie ciemne włosy i nosi okulary.",
                     "Mój przyjaciel bardzo lubi grać na gitarze."
@@ -370,7 +415,10 @@
             {
                 title: "Dialog 7: Plany na weekend",
                 firstComment: "Dokąd jedziecie w ten weekend?",
-                lastComment: "Babcia na pewno ucieszy się z Waszej wizyty!",
+                lastComments: [
+                    "Babcia na pewno ucieszy się z Waszej wizyty!",
+                    "Czasami taki odpoczynek w domu też jest potrzebny."
+                ],
                 choices: [
                     "Jedziemy do naszej babci na niedzielny obiad.",
                     "Zostajemy w domu i sprzątamy."
@@ -384,7 +432,10 @@
             {
                 title: "Dialog 8: Miejsca pracy",
                 firstComment: "Gdzie pracuje Twoja siostra?",
-                lastComment: "To słodka i przyjemna praca!",
+                lastComments: [
+                    "To słodka i przyjemna praca!",
+                    "Studia to super czas, jaki kierunek wybrała?"
+                ],
                 choices: [
                     "Moja siostra pracuje w znanej cukierni w centrum miasta.",
                     "Ona studiuje na uniwersytecie."
@@ -397,7 +448,10 @@
             {
                 title: "Dialog 9: Poranny rytuał",
                 firstComment: "Co zwykle robisz z żoną rano?",
-                lastComment: "Nie ma nic lepszego niż spokojny poranek!",
+                lastComments: [
+                    "Nie ma nic lepszego niż spokojny poranek!",
+                    "Oj, poranki bywają bardzo chaotyczne..."
+                ],
                 choices: [
                     "Zwykle pijemy razem kawę i rozmawiamy przed pracą.",
                     "Szybko wybiegamy z domu bez śniadania."
@@ -410,7 +464,10 @@
             {
                 title: "Dialog 10: Zakup prezentu",
                 firstComment: "Co kupujesz dla brata na urodziny?",
-                lastComment: "To genialny pomysł, na pewno się ucieszy!",
+                lastComments: [
+                    "To genialny pomysł, na pewno się ucieszy!",
+                    "Warto coś wymyślić, urodziny są tylko raz w roku!"
+                ],
                 choices: [
                     "Planuję kupować elegancki prezent – dobrą książkę.",
                     "Jeszcze nie wiem, nic nie kupuję."
@@ -433,11 +490,21 @@
             const dialogOptions = document.getElementById('dialog-options');
             const explanationBox = document.getElementById('explanation-box');
             const nextBtn = document.getElementById('next-btn');
+            const prevBtnAction = document.getElementById('prev-btn-action');
+            const headerPrevBtn = document.getElementById('header-prev-btn');
 
             chatContainer.innerHTML = '';
             dialogOptions.innerHTML = '';
             explanationBox.classList.remove('visible');
             nextBtn.style.display = 'none';
+            prevBtnAction.style.display = 'none';
+
+            // Sterowanie widocznością przycisku powrotu w nagłówku
+            if (currentIndex > 0) {
+                headerPrevBtn.style.display = 'inline-block';
+            } else {
+                headerPrevBtn.style.display = 'none';
+            }
 
             // Krok 1: Wypowiedź Osoby A
             addBubble('A', data.firstComment);
@@ -461,11 +528,15 @@
             // Pokazujemy odpowiedź Osoby B
             addBubble('B', choiceText);
 
-            // Krok 3: Komentarz kończący Osoby A
+            // Krok 3: Komentarz kończący Osoby A (zależny od wybranej opcji)
             setTimeout(() => {
-                addBubble('A', data.lastComment);
+                const finalComment = Array.isArray(data.lastComments) 
+                    ? data.lastComments[selectedIdx] 
+                    : data.lastComment;
 
-                // Krok 4: Sekcja tłumaczeń i wyjaśnień w kontekście (na samym końcu)
+                addBubble('A', finalComment);
+
+                // Krok 4: Sekcja tłumaczeń i wyjaśnień w kontekście
                 let htmlContent = "";
                 data.phrases.forEach(p => {
                     htmlContent += `
@@ -479,6 +550,10 @@
                 document.getElementById('explanation-text').innerHTML = htmlContent;
                 document.getElementById('explanation-box').classList.add('visible');
                 document.getElementById('next-btn').style.display = 'block';
+
+                if (currentIndex > 0) {
+                    document.getElementById('prev-btn-action').style.display = 'block';
+                }
             }, 300);
         }
 
@@ -508,6 +583,13 @@
             }
         }
 
+        function prevDialog() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderDialog();
+            }
+        }
+
         function updateProgress() {
             const total = dialoguesData.length;
             const pct = ((currentIndex + 1) / total) * 100;
@@ -519,6 +601,7 @@
             document.getElementById('quiz-card').style.display = 'none';
             document.getElementById('completion-screen').style.display = 'block';
             document.getElementById('progress-bar').style.width = '100%';
+            document.getElementById('header-prev-btn').style.display = 'none';
         }
 
         function markStageComplete() {
