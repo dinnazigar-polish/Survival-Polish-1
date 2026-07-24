@@ -332,9 +332,9 @@
         <div class="stage-card" id="card-1">
             <div class="card-header">
                 <div class="stage-icon">📚</div>
-                <span class="badge" id="badge-1">Etap 1</span>
+                <span class="badge" id="badge-1">Dostępny</span>
             </div>
-            <h2 class="stage-title">Fiszki</h2>
+            <h2 class="stage-title">Etap 1: Fiszki</h2>
             <p class="stage-desc">Poznaj 20 podstawowych zwrotów i słów związanych z wakacjami i czasem wolnym.</p>
             <button class="btn-action" id="btn-1" onclick="startStage(1)">Rozpocznij</button>
         </div>
@@ -345,7 +345,7 @@
                 <div class="stage-icon">🧩</div>
                 <span class="badge lock" id="badge-2">Zablokowany</span>
             </div>
-            <h2 class="stage-title">Dopasowanie</h2>
+            <h2 class="stage-title">Etap 2: Dopasowanie</h2>
             <p class="stage-desc">Łącz w pary polskie słowa i zwroty, aby utrwalić ich znaczenie.</p>
             <button class="btn-action" id="btn-2" disabled onclick="startStage(2)">Rozpocznij</button>
         </div>
@@ -356,7 +356,7 @@
                 <div class="stage-icon">⌨️</div>
                 <span class="badge lock" id="badge-3">Zablokowany</span>
             </div>
-            <h2 class="stage-title">Pisanie</h2>
+            <h2 class="stage-title">Etap 3: Ćwiczenie pisania</h2>
             <p class="stage-desc">Przećwicz poprawną pisownię i wpisuj brakujące słowa wakacyjne.</p>
             <button class="btn-action" id="btn-3" disabled onclick="startStage(3)">Rozpocznij</button>
         </div>
@@ -364,10 +364,10 @@
         <!-- Etap 4 -->
         <div class="stage-card locked" id="card-4">
             <div class="card-header">
-                <div class="stage-icon">✍</div>
+                <div class="stage-icon">✍️</div>
                 <span class="badge lock" id="badge-4">Zablokowany</span>
             </div>
-            <h2 class="stage-title">Gramatyka</h2>
+            <h2 class="stage-title">Etap 4: Gramatyka</h2>
             <p class="stage-desc">Sprawdź znajomość konstrukcji gramatycznych i poprawnej odmiany.</p>
             <button class="btn-action" id="btn-4" disabled onclick="startStage(4)">Rozpocznij</button>
         </div>
@@ -378,7 +378,7 @@
                 <div class="stage-icon">🎮</div>
                 <span class="badge lock" id="badge-5">Zablokowany</span>
             </div>
-            <h2 class="stage-title">Mini Gra</h2>
+            <h2 class="stage-title">Etap 5: Mini Wyzwanie</h2>
             <p class="stage-desc">Szybki quiz interaktywny sprawdzający Twoją reakcję i wiedzę.</p>
             <button class="btn-action" id="btn-5" disabled onclick="startStage(5)">Rozpocznij</button>
         </div>
@@ -389,7 +389,7 @@
                 <div class="stage-icon">🎯</div>
                 <span class="badge lock" id="badge-6">Zablokowany</span>
             </div>
-            <h2 class="stage-title">Wyzwanie</h2>
+            <h2 class="stage-title">Etap 6: Wyzwanie</h2>
             <p class="stage-desc">Skomplikowane ćwiczenia utrwalające cały materiał przed testem.</p>
             <button class="btn-action" id="btn-6" disabled onclick="startStage(6)">Rozpocznij</button>
         </div>
@@ -400,7 +400,7 @@
                 <div class="stage-icon">🏆</div>
                 <span class="badge lock" id="badge-7">Zablokowany</span>
             </div>
-            <h2 class="stage-title">Test Końcowy</h2>
+            <h2 class="stage-title">Etap 7: Test Końcowy</h2>
             <p class="stage-desc">20 pytań z całego modułu. Zdobywaj punkty, oceny w postaci gwiazdek i odznakę!</p>
             <button class="btn-action" id="btn-7" disabled onclick="startStage(7)">Rozpocznij Test Końcowy</button>
         </div>
@@ -469,7 +469,7 @@
                 btn.disabled = false;
                 btn.innerText = i === 7 ? 'Rozpocznij Test Końcowy' : 'Rozpocznij';
                 badge.className = 'badge';
-                badge.innerText = `Etap ${i}`;
+                badge.innerText = 'Dostępny';
             } else {
                 card.classList.add('locked');
                 card.classList.remove('completed');
