@@ -3,542 +3,1451 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moduł 1: Test Końcowy | Język Polski A1-A2</title>
+    <title>Moduł 1: Test - Dom i Jedzenie</title>
     <style>
         :root {
-            --primary: #2c3e50;
-            --accent: #D0A03C;
-            --accent-hover: #b88a2e;
+            --primary: #1e293b;
+            --accent: #22c55e;
+            --accent-hover: #16a34a;
+            --accent-light: #dcfce7;
             --bg: #f8fafc;
             --card-bg: #ffffff;
-            --text-main: #1e293b;
+            --text-main: #0f172a;
             --text-muted: #64748b;
-            --success: #10b981;
             --error: #ef4444;
+            --error-light: #fee2e2;
+            --warning: #f59e0b;
             --border-radius: 16px;
-            --shadow: 0 10px 15px -3px rgba(0,0,0,0.08);
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg);
             color: var(--text-main);
-            line-height: 1.6;
+            padding: 24px 16px;
             min-height: 100vh;
-            padding: 20px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .top-nav {
-            width: 100%;
-            max-width: 650px;
-            margin-bottom: 20px;
-        }
-
-        .btn-back {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background-color: var(--card-bg);
-            color: var(--text-main);
-            text-decoration: none;
-            border-radius: 20px;
-            font-weight: 600;
-            box-shadow: var(--shadow);
-            border: 1px solid #e2e8f0;
-            transition: all 0.2s;
-        }
-
-        .btn-back:hover {
-            background-color: #f1f5f9;
+            justify-content: center;
+            align-items: flex-start;
         }
 
         .container {
             width: 100%;
-            max-width: 650px;
+            max-width: 850px;
         }
 
-        .card {
-            background-color: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 30px;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .progress-bar-container {
-            width: 100%;
-            height: 10px;
-            background-color: #e2e8f0;
-            border-radius: 5px;
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background-color: var(--accent);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        .question-header {
+        /* Top Navigation */
+        .top-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .question-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--primary);
             margin-bottom: 20px;
         }
 
-        .options-grid {
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 10px 18px;
+            background: var(--card-bg);
+            border-radius: 30px;
+            border: 1px solid #e2e8f0;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            color: var(--accent-hover);
+            border-color: var(--accent);
+            transform: translateX(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Header Card */
+        .header-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 24px 28px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 24px;
+            position: relative;
+            border-top: 5px solid var(--accent);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .q-badge {
+            background: var(--accent-light);
+            color: var(--accent-hover);
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar-bg {
+            background-color: #e2e8f0;
+            height: 10px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        /* Question Container Card */
+        .question-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 32px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 24px;
+            min-height: 380px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            justify-content: space-between;
+        }
+
+        .question-header {
             margin-bottom: 20px;
         }
 
-        .option-btn {
-            padding: 14px 18px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            background-color: var(--card-bg);
-            color: var(--text-main);
-            font-size: 1rem;
+        .section-tag {
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: var(--accent-hover);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            color: var(--primary);
             font-weight: 600;
-            cursor: pointer;
-            text-align: left;
-            transition: all 0.2s;
+            line-height: 1.4;
         }
 
-        .option-btn:hover {
-            border-color: var(--accent);
-            background-color: #fffdf5;
-        }
-
-        .option-btn.correct {
-            border-color: var(--success);
-            background-color: #ecfdf5;
-            color: #065f46;
-        }
-
-        .option-btn.wrong {
-            border-color: var(--error);
-            background-color: #fef2f2;
-            color: #991b1b;
+        /* Input Controls */
+        .text-input-group {
+            margin: 20px 0;
         }
 
         .text-input {
             width: 100%;
-            padding: 14px 18px;
-            border: 2px solid #e2e8f0;
+            padding: 16px 20px;
+            font-size: 1.1rem;
+            border: 2px solid #cbd5e1;
             border-radius: 12px;
-            font-size: 1rem;
-            margin-bottom: 15px;
             outline: none;
+            transition: var(--transition);
         }
 
         .text-input:focus {
             border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-light);
         }
 
-        .feedback-msg {
-            margin-top: 15px;
-            padding: 12px;
+        .text-input.success {
+            border-color: var(--accent);
+            background-color: var(--accent-light);
+        }
+
+        .text-input.failed {
+            border-color: var(--error);
+            background-color: var(--error-light);
+        }
+
+        /* Feedback / Hints Box */
+        .feedback-box {
+            margin-top: 12px;
+            padding: 12px 16px;
             border-radius: 10px;
+            font-size: 0.95rem;
             font-weight: 600;
+            display: none;
+        }
+
+        .feedback-box.info {
+            display: block;
+            background: #fef3c7;
+            color: #b45309;
+            border: 1px solid #fde68a;
+        }
+
+        .feedback-box.error-final {
+            display: block;
+            background: var(--error-light);
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .feedback-box.success-msg {
+            display: block;
+            background: var(--accent-light);
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        /* Word Bank for Dialogues */
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 16px;
+            background: #f1f5f9;
+            border-radius: 12px;
+        }
+
+        .word-chip {
+            background: var(--card-bg);
+            border: 2px solid #cbd5e1;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            user-select: none;
+        }
+
+        .word-chip:hover {
+            border-color: var(--accent);
+            color: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .word-chip.selected {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* Dialogue Box */
+        .dialogue-box {
+            background: #f8fafc;
+            border-left: 4px solid var(--accent);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .dialogue-line {
+            margin-bottom: 10px;
+        }
+
+        .dialogue-line:last-child {
+            margin-bottom: 0;
+        }
+
+        .gap-slot {
+            display: inline-block;
+            min-width: 120px;
+            padding: 2px 12px;
+            border-bottom: 3px solid var(--accent);
+            font-weight: 700;
+            color: var(--accent-hover);
+            text-align: center;
+        }
+
+        /* Matching Pairs Grid */
+        .matching-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .matching-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .match-card {
+            padding: 14px 18px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .match-card:hover {
+            border-color: var(--accent);
+        }
+
+        .match-card.active {
+            border-color: var(--accent);
+            background: var(--accent-light);
+            color: var(--accent-hover);
+        }
+
+        .match-card.matched {
+            border-color: #94a3b8;
+            background: #e2e8f0;
+            color: #64748b;
+            cursor: default;
+        }
+
+        /* Multiple Choice Options */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: var(--card-bg);
+            cursor: pointer;
+            font-size: 1.05rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .option-item:hover {
+            border-color: var(--accent);
+            background: #f0fdf4;
+        }
+
+        .option-item.selected {
+            border-color: var(--accent);
+            background: var(--accent-light);
+            color: var(--accent-hover);
+        }
+
+        .option-checkbox {
+            width: 22px;
+            height: 22px;
+            accent-color: var(--accent);
+        }
+
+        /* Bottom Controls */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 24px;
+        }
+
+        .btn-submit {
+            padding: 14px 28px;
+            border-radius: 30px;
+            border: none;
+            background: var(--accent);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+            transition: var(--transition);
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+        }
+
+        .btn-submit:disabled {
+            background: #cbd5e1;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        /* Attempts indicator */
+        .attempts-tag {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--warning);
+            margin-top: 6px;
+        }
+
+        /* Final Results Screen */
+        .results-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 40px 32px;
+            box-shadow: var(--shadow-lg);
             text-align: center;
             display: none;
         }
 
-        .feedback-msg.show-correct {
+        .results-card.active {
             display: block;
-            background-color: #ecfdf5;
-            color: var(--success);
         }
 
-        .feedback-msg.show-error {
-            display: block;
-            background-color: #fef2f2;
-            color: var(--error);
+        .results-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
         }
 
-        .btn-action {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 30px;
-            font-size: 1.05rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 15px;
-            text-align: center;
-            text-decoration: none;
-        }
-
-        .btn-action:hover {
-            background-color: var(--accent-hover);
-            transform: scale(1.01);
-        }
-
-        .summary-card {
-            text-align: center;
-        }
-
-        .summary-stars {
-            font-size: 3rem;
-            margin: 15px 0;
-        }
-
-        .summary-score {
-            font-size: 2.5rem;
-            font-weight: 800;
+        .results-title {
+            font-size: 2rem;
             color: var(--primary);
-            margin-bottom: 10px;
+            font-weight: 800;
+            margin-bottom: 8px;
         }
 
-        .summary-buttons {
+        .results-score {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--accent-hover);
+            margin: 16px 0;
+        }
+
+        .results-desc {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 32px;
+        }
+
+        .results-actions {
             display: flex;
-            gap: 15px;
-            margin-top: 25px;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
         }
 
-        .summary-buttons .btn-action {
-            margin-top: 0;
+        .btn-restart {
+            padding: 14px 28px;
+            border-radius: 30px;
+            background: var(--accent);
+            color: white;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+            transition: var(--transition);
         }
 
-        .btn-secondary {
-            background-color: #64748b;
+        .btn-restart:hover {
+            background: var(--accent-hover);
+            transform: scale(1.03);
         }
 
-        .btn-secondary:hover {
-            background-color: #475569;
+        .btn-exit {
+            padding: 14px 28px;
+            border-radius: 30px;
+            background: #f1f5f9;
+            color: var(--primary);
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .btn-exit:hover {
+            background: #e2e8f0;
+        }
+
+        @media (max-width: 640px) {
+            .matching-grid {
+                grid-template-columns: 1fr;
+            }
+            .question-card {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
 
+<div class="container">
+    <!-- Top Nav -->
     <div class="top-nav">
-        <a href="module-1-vocab.html" class="btn-back">← Powrót do modułu</a>
+        <button class="nav-btn" id="btn-back" onclick="prevQuestion()">
+            ← Wstecz
+        </button>
+        <a href="index.html" class="nav-btn">
+            Opuść Test ✕
+        </a>
     </div>
 
-    <div class="container">
-        <div class="card" id="quiz-card">
-            <div class="progress-bar-container">
-                <div class="progress-bar" id="progress-bar"></div>
+    <!-- Active Test View -->
+    <div id="test-view">
+        <!-- Header / Progress -->
+        <div class="header-card">
+            <div class="header-top">
+                <div class="header-title">Moduł 1: Dom i Jedzenie</div>
+                <div class="q-badge" id="q-counter">Pytanie 1 / 30</div>
             </div>
-            
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- Question Card -->
+        <div class="question-card">
             <div class="question-header">
-                <span id="question-number">Pytanie 1 z 20</span>
-                <span id="attempts-count">Próby: 0/3</span>
+                <span class="section-tag" id="section-tag">Sekcja 1: Wpisz Słowo</span>
+                <div class="question-text" id="question-text">Wczytywanie pytania...</div>
+                <div class="attempts-tag" id="attempts-tag"></div>
             </div>
 
-            <div class="question-title" id="question-text">Pytanie...</div>
+            <!-- Dynamic Interactive Area -->
+            <div id="interactive-area">
+                <!-- Injected via JS -->
+            </div>
 
-            <div id="quiz-body"></div>
+            <!-- Feedback Box -->
+            <div class="feedback-box" id="feedback-box"></div>
 
-            <div class="feedback-msg" id="feedback"></div>
-
-            <button class="btn-action" id="btn-next" style="display: none;" onclick="nextQuestion()">Kolejne pytanie →</button>
-            <button class="btn-action" id="btn-submit" onclick="checkAnswer()">Sprawdź odpowiedź</button>
-        </div>
-
-        <div class="card summary-card" id="summary-card" style="display: none;">
-            <h2>Gratulacje! Ukończyłeś Test Końcowy</h2>
-            <p style="color: var(--text-muted); margin-top: 5px;">Moduł 1: Dom i jedzenie</p>
-            
-            <div class="summary-stars" id="stars-display">⭐⭐⭐</div>
-            <div class="summary-score" id="score-display">0%</div>
-            <p id="summary-text" style="font-size: 1.1rem; color: var(--text-main);"></p>
-
-            <div class="summary-buttons">
-                <button class="btn-action btn-secondary" onclick="restartQuiz()">Powtórz test</button>
-                <a href="module-1-vocab.html" class="btn-action">Powrót do modułu</a>
+            <!-- Bottom Nav Controls -->
+            <div class="bottom-nav">
+                <div></div> <!-- Placeholder -->
+                <button class="btn-submit" id="btn-action" onclick="handleAction()">
+                    Sprawdź
+                </button>
             </div>
         </div>
     </div>
 
-    <script>
-        const questions = [
-            {
-                type: 'single',
-                question: 'Gdzie gotujemy obiad?',
-                options: ['W łazience', 'W kuchni', 'W sypialni', 'W garażu'],
-                answer: 'W kuchni'
-            },
-            {
-                type: 'single',
-                question: 'Co znajduje się w salonie do oglądania serwisów informacyjnych?',
-                options: ['Lodówka', 'Telewizor', 'Pralka', 'Piekarnik'],
-                answer: 'Telewizor'
-            },
-            {
-                type: 'tf',
-                question: 'Prawda czy fałsz: „Chleb” to napój.',
-                answer: 'Fałsz'
-            },
-            {
-                type: 'text',
-                question: 'Wpisz po polsku słowo oznaczające miejsce do spania (zaczyna się na Ł):',
-                answer: 'łóżko'
-            },
-            {
-                type: 'single',
-                question: 'Co jemy na śniadanie z mlekiem?',
-                options: ['Zupę', 'Płatki', 'Herbata', 'Mięso'],
-                answer: 'Płatki'
-            },
-            {
-                type: 'tf',
-                question: 'Prawda czy fałsz: Owoce i warzywa przechowujemy w lodówce.',
-                answer: 'Prawda'
-            },
-            {
-                type: 'single',
-                question: 'Które słowo NIE pasuje do pozostałych?',
-                options: ['Jabłko', 'Banan', 'Ser', 'Truskawka'],
-                answer: 'Ser'
-            },
-            {
-                type: 'text',
-                question: 'Uzupełnij zdanie: „Piję gorącą ______ z cytryną.”',
-                answer: 'herbatę'
-            },
-            {
-                type: 'single',
-                question: 'Gdzie myjemy zęby i bierzemy prysznic?',
-                options: ['W łazience', 'W kuchni', 'W ogrodzie', 'W piwnicy'],
-                answer: 'W łazience'
-            },
-            {
-                type: 'tf',
-                question: 'Prawda czy fałsz: „Stół” i „krzesło” to meble.',
-                answer: 'Prawda'
-            },
-            {
-                type: 'single',
-                question: 'Co jest białe i pijemy to od krowy?',
-                options: ['Woda', 'Mleko', 'Sok', 'Kawa'],
-                answer: 'Mleko'
-            },
-            {
-                type: 'single',
-                question: 'Na czym siedzimy przy stole?',
-                options: ['Na szafie', 'Na krześle', 'Na dywanie', 'Na oknie'],
-                answer: 'Na krześle'
-            },
-            {
-                type: 'text',
-                question: 'Przetłumacz na język polski słowo „Water”:',
-                answer: 'woda'
-            },
-            {
-                type: 'tf',
-                question: 'Prawda czy fałsz: W piekarniku pieczemy ciasto.',
-                answer: 'Prawda'
-            },
-            {
-                type: 'single',
-                question: 'Jak nazywa się pomieszczenie, w którym śpimy?',
-                options: ['Sypialnia', 'Kuchnia', 'Korytarz', 'Balkon'],
-                answer: 'Sypialnia'
-            },
-            {
-                type: 'single',
-                question: 'Co kładziemy na chleb, robiąc kanapkę?',
-                options: ['Masło i ser', 'Cukier i sól', 'Kawiarnię', 'Sok'],
-                answer: 'Masło i ser'
-            },
-            {
-                type: 'text',
-                question: 'Uzupełnij zwrot: „Smacznego!” - „Dziękuję, wzajemnie! Co jesz na ______?” (meal during midday)',
-                answer: 'obiad'
-            },
-            {
-                type: 'single',
-                question: 'Gdzie wieszasz kurtkę i zdejmujesz buty po wejściu do domu?',
-                options: ['W korytarzu', 'W łazience', 'W kuchni', 'W sypialni'],
-                answer: 'W korytarzu'
-            },
-            {
-                type: 'tf',
-                question: 'Prawda czy fałsz: „Jabłko” to warzywo.',
-                answer: 'Fałsz'
-            },
-            {
-                type: 'single',
-                question: 'Co pijemy rano, aby mieć energię?',
-                options: ['Kawę', 'Zupę', 'Olej', 'Ocet'],
-                answer: 'Kawę'
-            }
-        ];
+    <!-- Results Screen -->
+    <div class="results-card" id="results-card">
+        <div class="results-icon" id="res-icon">🏆</div>
+        <h1 class="results-title" id="res-title">Gratulacje!</h1>
+        <p>Ukończyłeś Test z Modułu 1: Dom i Jedzenie</p>
+        
+        <div class="results-score" id="res-score">0 / 30</div>
+        <p class="results-desc" id="res-desc">Twój wynik to 0%</p>
 
-        let currentIndex = 0;
-        let score = 0;
-        let attempts = 0;
-        let selectedOption = null;
+        <div class="results-actions">
+            <button class="btn-restart" onclick="restartTest()">
+                🔄 Powtórz test
+            </button>
+            <a href="index.html" class="btn-exit">
+                Wróć do Modułów
+            </a>
+        </div>
+    </div>
+</div>
 
-        function initQuestion() {
-            attempts = 0;
-            selectedOption = null;
-            
-            const q = questions[currentIndex];
-            document.getElementById('question-number').innerText = `Pytanie ${currentIndex + 1} z ${questions.length}`;
-            document.getElementById('attempts-count').innerText = `Próby: 0/3`;
-            document.getElementById('progress-bar').style.width = `${((currentIndex) / questions.length) * 100}%`;
-            document.getElementById('question-text').innerText = q.question;
-            
-            const feedback = document.getElementById('feedback');
-            feedback.className = 'feedback-msg';
-            feedback.style.display = 'none';
+<script>
+    // Full 30 Questions Dataset
+    const questions = [
+        // --- PYTANIA 1-5: WPISZ SŁOWO (Open Text with 3 Attempts) ---
+        {
+            id: 1,
+            type: 'open_text',
+            section: 'Sekcja 1: Wpisz Słowo',
+            question: 'Miejsce w domu, gdzie gotujemy posiłki i przygotowujemy jedzenie to...',
+            correctAnswer: 'kuchnia',
+            hint: 'Słowo zaczyna się na literę "K"',
+            attempts: 3
+        },
+        {
+            id: 2,
+            type: 'open_text',
+            section: 'Sekcja 1: Wpisz Słowo',
+            question: 'Mebel w jadalni lub kuchni, przy którym jemy obiad z całą rodziną to...',
+            correctAnswer: 'stół',
+            hint: 'Słowo zaczyna się na literę "S"',
+            attempts: 3
+        },
+        {
+            id: 3,
+            type: 'open_text',
+            section: 'Sekcja 1: Wpisz Słowo',
+            question: 'Ciepły napój, który bardzo często pijemy rano do śniadania, aby mieć energię to...',
+            correctAnswer: 'kawa',
+            hint: 'Słowo zaczyna się na literę "K"',
+            attempts: 3
+        },
+        {
+            id: 4,
+            type: 'open_text',
+            section: 'Sekcja 1: Wpisz Słowo',
+            question: 'Duże urządzenie AGD w kuchni, w którym chłodzimy świeże jedzenie i mleko to...',
+            correctAnswer: 'lodówka',
+            hint: 'Słowo zaczyna się na literę "L"',
+            attempts: 3
+        },
+        {
+            id: 5,
+            type: 'open_text',
+            section: 'Sekcja 1: Wpisz Słowo',
+            question: 'Pierwszy posiłek w ciągu dnia, który jemy rano to...',
+            correctAnswer: 'śniadanie',
+            hint: 'Słowo zaczyna się na literę "Ś"',
+            attempts: 3
+        },
 
-            document.getElementById('btn-submit').style.display = 'block';
-            document.getElementById('btn-next').style.display = 'none';
+        // --- PYTANIA 6-10: DOPASUJ PARY (Zestaw 1: Czasowniki i Rzeczowniki) ---
+        {
+            id: 6,
+            type: 'matching',
+            section: 'Sekcja 2: Dopasuj Pary (Zwroty)',
+            question: 'Dopasuj czasowniki do odpowiednich rzeczowników:',
+            pairs: [
+                { left: 'Gotować', right: 'obiad' },
+                { left: 'Pić', right: 'kawę' },
+                { left: 'Jeść', right: 'owoce' },
+                { left: 'Kupować', right: 'chleb' },
+                { left: 'Sprzątać', right: 'pokój' }
+            ]
+        },
+        {
+            id: 7,
+            type: 'matching',
+            section: 'Sekcja 2: Dopasuj Pary (Zwroty)',
+            question: 'Dopasuj czynności do odpowiednich przedmiotów:',
+            pairs: [
+                { left: 'Kroić', right: 'nożem' },
+                { left: 'Smażyć', right: 'na patelni' },
+                { left: 'Siedzieć', right: 'na krześle' },
+                { left: 'Nalać', right: 'do szklanki' },
+                { left: 'Piec', right: 'w piekarniku' }
+            ]
+        },
+        {
+            id: 8,
+            type: 'matching',
+            section: 'Sekcja 2: Dopasuj Pary (Zwroty)',
+            question: 'Dopasuj posiłki i napoje do pory dnia:',
+            pairs: [
+                { left: 'Poranna kawa', right: 'rano' },
+                { left: 'Gorąca zupa', right: 'na obiad' },
+                { left: 'Kolacja', right: 'wieczorem' },
+                { left: 'Przekąska', right: 'w ciągu dnia' },
+                { left: 'Herbata', right: 'popołudniu' }
+            ]
+        },
+        {
+            id: 9,
+            type: 'matching',
+            section: 'Sekcja 2: Dopasuj Pary (Zwroty)',
+            question: 'Dopasuj produkty do ich kategorii:',
+            pairs: [
+                { left: 'Jabłko i banan', right: 'Owoce' },
+                { left: 'Pomidor i ogórek', right: 'Warzywa' },
+                { left: 'Mleko i ser', right: 'Nabiał' },
+                { left: 'Chleb i bułka', right: 'Pieczywo' },
+                { left: 'Woda i sok', right: 'Napoje' }
+            ]
+        },
+        {
+            id: 10,
+            type: 'matching',
+            section: 'Sekcja 2: Dopasuj Pary (Zwroty)',
+            question: 'Dopasuj wyposażenie do pomieszczeń:',
+            pairs: [
+                { left: 'Lodówka i kuchenka', right: 'Kuchnia' },
+                { left: 'Łóżko i szafa', right: 'Sypialnia' },
+                { left: 'Kanapa i telewizor', right: 'Salon' },
+                { left: 'Prysznic i pralka', right: 'Łazienka' },
+                { left: 'Stół i krzesła', right: 'Jadalnia' }
+            ]
+        },
 
-            const container = document.getElementById('quiz-body');
-            container.innerHTML = '';
+        // --- PYTANIA 11-15: DOPASUJ PARY (Zestaw 2: Słownictwo Dom i Jedzenie) ---
+        {
+            id: 11,
+            type: 'matching',
+            section: 'Sekcja 3: Słownictwo i Relacje',
+            question: 'Dopasuj sztućce i naczynia do ich zastosowania:',
+            pairs: [
+                { left: 'Widelec', right: 'do drugiego dania' },
+                { left: 'Łyżka', right: 'do zupy' },
+                { left: 'Kubek', right: 'do gorącej herbaty' },
+                { left: 'Talerz', right: 'na posiłek' },
+                { left: 'Kieliszek', right: 'do wody' }
+            ]
+        },
+        {
+            id: 12,
+            type: 'matching',
+            section: 'Sekcja 3: Słownictwo i Relacje',
+            question: 'Dopasuj smak do przykładowego produktu:',
+            pairs: [
+                { left: 'Cukier', right: 'Słodki' },
+                { left: 'Cytryna', right: 'Kwaśny' },
+                { left: 'Sól', right: 'Słony' },
+                { left: 'Kawa bez cukru', right: 'Gorzki' },
+                { left: 'Papryczka chili', right: 'Ostry' }
+            ]
+        },
+        {
+            id: 13,
+            type: 'matching',
+            section: 'Sekcja 3: Słownictwo i Relacje',
+            question: 'Dopasuj przymiotniki do rzeczowników:',
+            pairs: [
+                { left: 'Świeży', right: 'chleb' },
+                { left: 'Zimna', right: 'woda' },
+                { left: 'Ciepła', right: 'zupa' },
+                { left: 'Wygodne', right: 'krzesło' },
+                { left: 'Czysta', right: 'kuchnia' }
+            ]
+        },
+        {
+            id: 14,
+            type: 'matching',
+            section: 'Sekcja 3: Słownictwo i Relacje',
+            question: 'Dopasuj polskie słowa do definicji:',
+            pairs: [
+                { left: 'Pieczywo', right: 'Chleb i bułki' },
+                { left: 'Sztućce', right: 'Nóż, widelec, łyżka' },
+                { left: 'Mebel', right: 'Stół, szafa, krzesło' },
+                { left: 'Prysznic', right: 'Urządzenie w łazience' },
+                { left: 'Ręcznik', right: 'Do wycierania po kąpieli' }
+            ]
+        },
+        {
+            id: 15,
+            type: 'matching',
+            section: 'Sekcja 3: Słownictwo i Relacje',
+            question: 'Dopasuj czasowniki oznaczające stan:',
+            pairs: [
+                { left: 'Leżeć', right: 'w łóżku' },
+                { left: 'Siedzieć', right: 'w fotelu' },
+                { left: 'Stać', right: 'w kolejce' },
+                { left: 'Mieszkać', right: 'w domu' },
+                { left: 'Odpoczywać', right: 'po pracy' }
+            ]
+        },
 
-            if (q.type === 'single' || q.type === 'tf') {
-                const options = q.type === 'tf' ? ['Prawda', 'Fałsz'] : q.options;
-                const grid = document.createElement('div');
-                grid.className = 'options-grid';
+        // --- PYTANIA 16-25: DIALOGI Z LUKAMI (Z Bankiem Słów i Dystraktorami) ---
+        {
+            id: 16,
+            type: 'dialogue_gap',
+            section: 'Sekcja 4: Dialogi z Lukami',
+            speakerA: 'Co jesz najczęściej na śniadanie?',
+            speakerB: 'Zazwyczaj jem świeży ___ z masłem i serem.',
+            correctAnswer: 'chleb',
+            wordBank: ['chleb', 'chleba', 'chlebem', 'mleko']
+        },
+        {
+            id: 17,
+            type: 'dialogue_gap',
+            section: 'Sekcja 4: Dialogi z Lukami',
+            speakerA: 'Czy masz ochotę na coś do picia?',
+            speakerB: 'Tak, bardzo chętnie napiję się zimnej ___.',
+            correctAnswer: 'wody',
+            wordBank: ['wody', 'woda', 'wodą', 'jabłko']
+        },
+        {
+            id: 18,
+            type: 'dialogue_gap',
+            section: 'Sekcja 4: Dialogi z Lukami',
+            speakerA: 'Przepraszam, gdzie znajdę czyste talerze?',
+            speakerB: 'Szafka z talerzami stoi w naszej ___.',
+            correctAnswer: 'kuchni',
+            wordBank: ['kuchni', 'kuchnia', 'kuchnią', 'pokój']
+        },
+        {
+            id: 19,
+            type: 'dialogue_gap',
+            section: 'Sekcja 4: Dialogi z Lukami',
+            speakerA: 'Co robisz dzisiaj o godzinie czternastej?',
+            speakerB: 'Gotuję smaczny ___ dla całej rodziny.',
+            correctAnswer: 'obiad',
+            wordBank: ['obiad', 'obiadu', 'obiadem', 'zupa']
+        },
+        {
+            id: 20,
+            type: 'dialogue_gap',
+            section: 'Sekcja 4: Dialogi z Lukami',
+            speakerA: 'Gdzie zazwyczaj kupujesz świeże warzywa?',
+            speakerB: 'Najczęściej chodzę na lokalny ___.',
+            correctAnswer: 'targ',
+            wordBank: ['targ', 'targu', 'targiem', 'sklep']
+        },
+        {
+            id: 21,
+            type: 'dialogue_gap',
+            section: 'Sekcja 4: Dialogi z Lukami',
+            speakerA: 'Czy masz ochotę na coś słodkiego do herbaty?',
+            speakerB: 'Tak, z przyjemnością zjem kawałek ___.',
+            correctAnswer: 'ciasta',
+            wordBank: ['ciasta', 'ciasto', 'ciastem', 'chleb']
+        },
+        {
+            id: 22,
+            type: 'dialogue_gap',
+            section: 'Sekcja 4: Dialogi z Lukami',
+            speakerA: 'Gdzie schowałeś świeże mleko i masło?',
+            speakerB: 'Włożyłem wszystko do zimnej ___.',
+            correctAnswer: 'lodówki',
+            wordBank: ['lodówki', 'lodówka', 'lodówką', 'stół']
+        },
+        {
+            id: 23,
+            type: 'dialogue_gap',
+            section: 'Sekcja 4: Dialogi z Lukami',
+            speakerA: 'Na czym wolisz siedzieć przy stole?',
+            speakerB: 'Wolę siedzieć na tym wygodnym ___.',
+            correctAnswer: 'krześle',
+            wordBank: ['krześle', 'krzesło', 'krzesłem', 'biurko']
+        },
+        {
+            id: 24,
+            type: 'dialogue_gap',
+            section: 'Sekcja 4: Dialogi z Lukami',
+            speakerA: 'Co pijesz popołudniu podczas odpoczynku?',
+            speakerB: 'Chętnie piję gorącą ___ z cytryną.',
+            correctAnswer: 'herbatę',
+            wordBank: ['herbatę', 'herbata', 'herbatą', 'kawa']
+        },
+        {
+            id: 25,
+            type: 'dialogue_gap',
+            section: 'Sekcja 4: Dialogi z Lukami',
+            speakerA: 'Gdzie jecie wspólne posiłki w domu?',
+            speakerB: 'Jemy razem w jadalni przy wielkim ___.',
+            correctAnswer: 'stole',
+            wordBank: ['stole', 'stół', 'stołem', 'łóżko']
+        },
 
-                options.forEach(opt => {
-                    const btn = document.createElement('button');
-                    btn.className = 'option-btn';
-                    btn.innerText = opt;
-                    btn.onclick = () => {
-                        document.querySelectorAll('.option-btn').forEach(b => b.style.borderColor = '#e2e8f0');
-                        btn.style.borderColor = 'var(--accent)';
-                        selectedOption = opt;
-                    };
-                    grid.appendChild(btn);
-                });
-                container.appendChild(grid);
-            } else if (q.type === 'text') {
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.className = 'text-input';
-                input.placeholder = 'Wpisz odpowiedź tutaj...';
-                input.id = 'text-answer';
-                container.appendChild(input);
-            }
+        // --- PYTANIA 26-30: GRAMATYKA I WYBÓR WIELOKROTNY ---
+        {
+            id: 26,
+            type: 'multiple_select',
+            section: 'Sekcja 5: Gramatyka i Wybór',
+            question: 'Co najczęściej pijemy rano ze śniadaniem? (Zaznacz wszystkie pasujące napoje):',
+            options: ['sok', 'woda', 'kawa', 'zupa', 'sos pomidorowy'],
+            correctAnswers: ['sok', 'woda', 'kawa']
+        },
+        {
+            id: 27,
+            type: 'single_choice',
+            section: 'Sekcja 5: Gramatyka i Wybór',
+            question: 'Wybierz poprawną formę gramatyczną: "Oni piją świeży ___."',
+            options: ['sok', 'soku', 'sokiem', 'soki'],
+            correctAnswer: 'sok'
+        },
+        {
+            id: 28,
+            type: 'single_choice',
+            section: 'Sekcja 5: Gramatyka i Wybór',
+            question: 'Wybierz poprawne pomieszczenie: "Gdzie przygotowujemy posiłki?"',
+            options: ['w kuchni', 'w sypialni', 'w łazience', 'w garażu'],
+            correctAnswer: 'w kuchni'
+        },
+        {
+            id: 29,
+            type: 'single_choice',
+            section: 'Sekcja 5: Gramatyka i Wybór',
+            question: 'Wybierz poprawną formę w przeczeniu: "Nie mam czarnej ___."',
+            options: ['kawy', 'kawa', 'kawą', 'kawach'],
+            correctAnswer: 'kawy'
+        },
+        {
+            id: 30,
+            type: 'single_choice',
+            section: 'Sekcja 5: Gramatyka i Wybór',
+            question: 'Które słowo NIE pasuje do pozostałych w grupie?',
+            options: ['jabłko', 'gruszka', 'banan', 'krzesło'],
+            correctAnswer: 'krzesło'
+        }
+    ];
+
+    // State Tracking
+    let currentQIndex = 0;
+    let userAnswers = {}; // Stores response data for each question index
+    let currentAttemptsLeft = 3;
+    let selectedMatchingLeft = null;
+
+    // Local Storage Progress Key
+    const MODULE_KEY = 'polish_module_1_progress';
+
+    window.addEventListener('DOMContentLoaded', () => {
+        initQuestion(currentQIndex);
+    });
+
+    function initQuestion(index) {
+        currentQIndex = index;
+        const q = questions[index];
+
+        // Header Update
+        document.getElementById('q-counter').innerText = `Pytanie ${index + 1} / ${questions.length}`;
+        const progressPct = ((index + 1) / questions.length) * 100;
+        document.getElementById('progress-fill').style.width = `${progressPct}%`;
+        document.getElementById('section-tag').innerText = q.section;
+        document.getElementById('question-text').innerText = q.question;
+
+        // Nav Buttons
+        document.getElementById('btn-back').disabled = (index === 0);
+
+        // Feedback Reset
+        const fbBox = document.getElementById('feedback-box');
+        fbBox.className = 'feedback-box';
+        fbBox.style.display = 'none';
+
+        const attemptsTag = document.getElementById('attempts-tag');
+        attemptsTag.innerText = '';
+
+        const actionBtn = document.getElementById('btn-action');
+        actionBtn.disabled = false;
+        actionBtn.innerText = 'Sprawdź';
+
+        const interactiveArea = document.getElementById('interactive-area');
+        interactiveArea.innerHTML = '';
+
+        // Render Question Type
+        if (q.type === 'open_text') {
+            renderOpenText(q);
+        } else if (q.type === 'matching') {
+            renderMatching(q);
+        } else if (q.type === 'dialogue_gap') {
+            renderDialogue(q);
+        } else if (q.type === 'multiple_select') {
+            renderMultipleSelect(q);
+        } else if (q.type === 'single_choice') {
+            renderSingleChoice(q);
         }
 
-        function checkAnswer() {
-            const q = questions[currentIndex];
-            let userAns = '';
+        // Restore user state if previously answered
+        if (userAnswers[index]) {
+            restoreState(index);
+        }
+    }
 
-            if (q.type === 'single' || q.type === 'tf') {
-                userAns = selectedOption;
-            } else if (q.type === 'text') {
-                const input = document.getElementById('text-answer');
-                userAns = input ? input.value.trim().toLowerCase() : '';
+    /* --- RENDERERS --- */
+
+    // 1. Open Text (Questions 1-5)
+    function renderOpenText(q) {
+        const saved = userAnswers[currentQIndex];
+        currentAttemptsLeft = saved ? saved.attemptsLeft : 3;
+
+        const container = document.createElement('div');
+        container.className = 'text-input-group';
+        
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'text-input';
+        input.id = 'open-input';
+        input.placeholder = 'Wpisz odpowiedź po polsku...';
+        input.autocomplete = 'off';
+
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleAction();
             }
+        });
 
-            if (!userAns) {
-                alert('Proszę wybrać lub wpisać odpowiedź!');
+        container.appendChild(input);
+        document.getElementById('interactive-area').appendChild(container);
+
+        updateAttemptsTag();
+    }
+
+    function updateAttemptsTag() {
+        const attemptsTag = document.getElementById('attempts-tag');
+        if (questions[currentQIndex].type === 'open_text') {
+            attemptsTag.innerText = `Pozostałe próby: ${currentAttemptsLeft} z 3`;
+        }
+    }
+
+    // 2. Matching Pairs (Questions 6-15)
+    function renderMatching(q) {
+        selectedMatchingLeft = null;
+        const container = document.createElement('div');
+        container.className = 'matching-grid';
+
+        const saved = userAnswers[currentQIndex] || { matchedPairs: {} };
+
+        // Shuffled right options for display
+        if (!q.shuffledRight) {
+            q.shuffledRight = q.pairs.map(p => p.right).sort(() => Math.random() - 0.5);
+        }
+
+        const colLeft = document.createElement('div');
+        colLeft.className = 'matching-column';
+        
+        const colRight = document.createElement('div');
+        colRight.className = 'matching-column';
+
+        q.pairs.forEach((p, idx) => {
+            const isMatched = saved.matchedPairs && saved.matchedPairs[p.left];
+            
+            const cardL = document.createElement('div');
+            cardL.className = `match-card ${isMatched ? 'matched' : ''}`;
+            cardL.innerText = p.left;
+            cardL.dataset.left = p.left;
+
+            if (!isMatched) {
+                cardL.onclick = () => selectLeftPair(cardL, p.left);
+            }
+            colLeft.appendChild(cardL);
+        });
+
+        q.shuffledRight.forEach((rightVal) => {
+            const isMatchedRight = saved.matchedPairs && Object.values(saved.matchedPairs).includes(rightVal);
+            
+            const cardR = document.createElement('div');
+            cardR.className = `match-card ${isMatchedRight ? 'matched' : ''}`;
+            cardR.innerText = rightVal;
+            cardR.dataset.right = rightVal;
+
+            if (!isMatchedRight) {
+                cardR.onclick = () => selectRightPair(cardR, rightVal);
+            }
+            colRight.appendChild(cardR);
+        });
+
+        container.appendChild(colLeft);
+        container.appendChild(colRight);
+        document.getElementById('interactive-area').appendChild(container);
+    }
+
+    function selectLeftPair(element, val) {
+        document.querySelectorAll('.matching-column:first-child .match-card').forEach(c => {
+            if (!c.classList.contains('matched')) c.classList.remove('active');
+        });
+        element.classList.add('active');
+        selectedMatchingLeft = val;
+    }
+
+    function selectRightPair(element, val) {
+        if (!selectedMatchingLeft) return;
+
+        if (!userAnswers[currentQIndex]) {
+            userAnswers[currentQIndex] = { matchedPairs: {} };
+        }
+        userAnswers[currentQIndex].matchedPairs[selectedMatchingLeft] = val;
+
+        // Re-render
+        renderMatching(questions[currentQIndex]);
+    }
+
+    // 3. Dialogue Gaps (Questions 16-25)
+    function renderDialogue(q) {
+        const container = document.createElement('div');
+
+        const diagBox = document.createElement('div');
+        diagBox.className = 'dialogue-box';
+
+        const lineA = document.createElement('div');
+        lineA.className = 'dialogue-line';
+        lineA.innerHTML = `<strong>Osoba A:</strong> ${q.speakerA}`;
+
+        const lineB = document.createElement('div');
+        lineB.className = 'dialogue-line';
+        const currentSelected = (userAnswers[currentQIndex] && userAnswers[currentQIndex].value) ? userAnswers[currentQIndex].value : '___';
+        
+        lineB.innerHTML = `<strong>Osoba B:</strong> ${q.speakerB.replace('___', `<span class="gap-slot" id="gap-target">${currentSelected}</span>`)}`;
+
+        diagBox.appendChild(lineA);
+        diagBox.appendChild(lineB);
+
+        // Word Bank Chips
+        const bankBox = document.createElement('div');
+        bankBox.className = 'word-bank';
+
+        q.wordBank.forEach(word => {
+            const chip = document.createElement('div');
+            chip.className = `word-chip ${currentSelected === word ? 'selected' : ''}`;
+            chip.innerText = word;
+            chip.onclick = () => {
+                document.querySelectorAll('.word-chip').forEach(c => c.classList.remove('selected'));
+                chip.classList.add('selected');
+                document.getElementById('gap-target').innerText = word;
+                
+                if (!userAnswers[currentQIndex]) userAnswers[currentQIndex] = {};
+                userAnswers[currentQIndex].value = word;
+            };
+            bankBox.appendChild(chip);
+        });
+
+        container.appendChild(diagBox);
+        container.appendChild(bankBox);
+        document.getElementById('interactive-area').appendChild(container);
+    }
+
+    // 4. Multiple Select (Question 26)
+    function renderMultipleSelect(q) {
+        const container = document.createElement('div');
+        container.className = 'options-list';
+
+        const savedSelected = (userAnswers[currentQIndex] && userAnswers[currentQIndex].values) || [];
+
+        q.options.forEach((opt, i) => {
+            const item = document.createElement('div');
+            const isChecked = savedSelected.includes(opt);
+            item.className = `option-item ${isChecked ? 'selected' : ''}`;
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'option-checkbox';
+            checkbox.checked = isChecked;
+
+            const label = document.createElement('span');
+            label.innerText = opt;
+
+            item.onclick = () => {
+                checkbox.checked = !checkbox.checked;
+                item.classList.toggle('selected', checkbox.checked);
+
+                if (!userAnswers[currentQIndex]) userAnswers[currentQIndex] = { values: [] };
+                let currentList = userAnswers[currentQIndex].values;
+                if (checkbox.checked) {
+                    if (!currentList.includes(opt)) currentList.push(opt);
+                } else {
+                    userAnswers[currentQIndex].values = currentList.filter(x => x !== opt);
+                }
+            };
+
+            item.appendChild(checkbox);
+            item.appendChild(label);
+            container.appendChild(item);
+        });
+
+        document.getElementById('interactive-area').appendChild(container);
+    }
+
+    // 5. Single Choice (Questions 27-30)
+    function renderSingleChoice(q) {
+        const container = document.createElement('div');
+        container.className = 'options-list';
+
+        const savedVal = userAnswers[currentQIndex] ? userAnswers[currentQIndex].value : null;
+
+        q.options.forEach((opt) => {
+            const item = document.createElement('div');
+            item.className = `option-item ${savedVal === opt ? 'selected' : ''}`;
+
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'single_opt';
+            radio.className = 'option-checkbox';
+            radio.checked = (savedVal === opt);
+
+            const label = document.createElement('span');
+            label.innerText = opt;
+
+            item.onclick = () => {
+                document.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
+                item.classList.add('selected');
+                radio.checked = true;
+
+                if (!userAnswers[currentQIndex]) userAnswers[currentQIndex] = {};
+                userAnswers[currentQIndex].value = opt;
+            };
+
+            item.appendChild(radio);
+            item.appendChild(label);
+            container.appendChild(item);
+        });
+
+        document.getElementById('interactive-area').appendChild(container);
+    }
+
+    /* --- ACTION HANDLING & VALIDATION --- */
+
+    function handleAction() {
+        const q = questions[currentQIndex];
+        const fbBox = document.getElementById('feedback-box');
+        const actionBtn = document.getElementById('btn-action');
+
+        // If already completed and user clicks Next
+        if (userAnswers[currentQIndex] && userAnswers[currentQIndex].completed) {
+            nextQuestion();
+            return;
+        }
+
+        // 1. OPEN TEXT (Questions 1-5)
+        if (q.type === 'open_text') {
+            const inputEl = document.getElementById('open-input');
+            const val = inputEl ? inputEl.value.trim().toLowerCase() : '';
+
+            if (!val) {
+                fbBox.innerText = 'Wpisz odpowiedź przed sprawdzeniem!';
+                fbBox.className = 'feedback-box info';
                 return;
             }
 
-            const isCorrect = userAns.toLowerCase() === q.answer.toLowerCase();
-            const feedback = document.getElementById('feedback');
-
-            if (isCorrect) {
-                score++;
-                feedback.innerText = 'Świetnie! Poprawna odpowiedź! 🎉';
-                feedback.className = 'feedback-msg show-correct';
-                finishQuestionPass();
+            if (val === q.correctAnswer.toLowerCase()) {
+                // Correct!
+                inputEl.className = 'text-input success';
+                inputEl.disabled = true;
+                fbBox.innerText = '✓ Świetnie! Poprawna odpowiedź.';
+                fbBox.className = 'feedback-box success-msg';
+                
+                userAnswers[currentQIndex] = {
+                    completed: true,
+                    isCorrect: true,
+                    value: val,
+                    attemptsLeft: currentAttemptsLeft
+                };
+                actionBtn.innerText = 'Przejdź dalej →';
             } else {
-                attempts++;
-                document.getElementById('attempts-count').innerText = `Próby: ${attempts}/3`;
+                // Incorrect
+                currentAttemptsLeft--;
+                updateAttemptsTag();
 
-                if (attempts >= 3) {
-                    feedback.innerText = `Wykorzystano 3 próby. Poprawna odpowiedź to: "${q.answer}"`;
-                    feedback.className = 'feedback-msg show-error';
-                    finishQuestionPass();
+                if (currentAttemptsLeft > 0) {
+                    inputEl.className = 'text-input failed';
+                    fbBox.innerText = `Niepoprawna odpowiedź. ${q.hint}`;
+                    fbBox.className = 'feedback-box info';
                 } else {
-                    feedback.innerText = `Niestety błędna odpowiedź. Spróbuj ponowne! (Pozostało prób: ${3 - attempts})`;
-                    feedback.className = 'feedback-msg show-error';
+                    // 3 Failed Attempts Rule
+                    inputEl.value = q.correctAnswer;
+                    inputEl.className = 'text-input failed';
+                    inputEl.disabled = true;
+
+                    fbBox.innerText = `Wykorzystano 3 próby. Poprawna odpowiedź to: "${q.correctAnswer}".`;
+                    fbBox.className = 'feedback-box error-final';
+
+                    userAnswers[currentQIndex] = {
+                        completed: true,
+                        isCorrect: false,
+                        value: q.correctAnswer,
+                        attemptsLeft: 0
+                    };
+                    actionBtn.innerText = 'Przejdź dalej →';
                 }
             }
         }
 
-        function finishQuestionPass() {
-            document.getElementById('btn-submit').style.display = 'none';
-            document.getElementById('btn-next').style.display = 'block';
+        // 2. MATCHING (Questions 6-15)
+        else if (q.type === 'matching') {
+            const saved = userAnswers[currentQIndex];
+            if (!saved || Object.keys(saved.matchedPairs || {}).length < q.pairs.length) {
+                fbBox.innerText = 'Dopasuj wszystkie pary przed przejściem dalej!';
+                fbBox.className = 'feedback-box info';
+                return;
+            }
+
+            let correctCount = 0;
+            q.pairs.forEach(p => {
+                if (saved.matchedPairs[p.left] === p.right) correctCount++;
+            });
+
+            const isAllCorrect = (correctCount === q.pairs.length);
+            fbBox.innerText = isAllCorrect ? 
+                `✓ Idealnie! Wszystkie ${q.pairs.length} par dopasowane poprawnie.` : 
+                `Poprawnie dopasowano: ${correctCount} z ${q.pairs.length} par.`;
+            fbBox.className = isAllCorrect ? 'feedback-box success-msg' : 'feedback-box error-final';
+
+            userAnswers[currentQIndex].completed = true;
+            userAnswers[currentQIndex].isCorrect = isAllCorrect;
+            userAnswers[currentQIndex].scoreFraction = correctCount / q.pairs.length;
+            actionBtn.innerText = 'Przejdź dalej →';
         }
 
-        function nextQuestion() {
-            currentIndex++;
-            if (currentIndex < questions.length) {
-                initQuestion();
-            } else {
-                showSummary();
+        // 3. DIALOGUE GAP (Questions 16-25)
+        else if (q.type === 'dialogue_gap') {
+            const saved = userAnswers[currentQIndex];
+            if (!saved || !saved.value || saved.value === '___') {
+                fbBox.innerText = 'Wybierz słowo z banku odpowiedzi!';
+                fbBox.className = 'feedback-box info';
+                return;
+            }
+
+            const isCorrect = (saved.value === q.correctAnswer);
+            fbBox.innerText = isCorrect ? '✓ Poprawnie uzupełniono dialog!' : `Niepoprawnie. Poprawna odpowiedź to: "${q.correctAnswer}".`;
+            fbBox.className = isCorrect ? 'feedback-box success-msg' : 'feedback-box error-final';
+
+            userAnswers[currentQIndex].completed = true;
+            userAnswers[currentQIndex].isCorrect = isCorrect;
+            actionBtn.innerText = 'Przejdź dalej →';
+        }
+
+        // 4. MULTIPLE SELECT (Question 26)
+        else if (q.type === 'multiple_select') {
+            const saved = userAnswers[currentQIndex];
+            if (!saved || !saved.values || saved.values.length === 0) {
+                fbBox.innerText = 'Zaznacz przynajmniej jedną opcję!';
+                fbBox.className = 'feedback-box info';
+                return;
+            }
+
+            const chosen = saved.values.sort();
+            const target = q.correctAnswers.sort();
+            const isCorrect = (JSON.stringify(chosen) === JSON.stringify(target));
+
+            fbBox.innerText = isCorrect ? 
+                '✓ Świetnie! Zaznaczono wszystkie poprawne napoje.' : 
+                `Poprawne opcje to: ${q.correctAnswers.join(', ')}.`;
+            fbBox.className = isCorrect ? 'feedback-box success-msg' : 'feedback-box error-final';
+
+            userAnswers[currentQIndex].completed = true;
+            userAnswers[currentQIndex].isCorrect = isCorrect;
+            actionBtn.innerText = 'Przejdź dalej →';
+        }
+
+        // 5. SINGLE CHOICE (Questions 27-30)
+        else if (q.type === 'single_choice') {
+            const saved = userAnswers[currentQIndex];
+            if (!saved || !saved.value) {
+                fbBox.innerText = 'Wybierz jedną z odpowiedzi!';
+                fbBox.className = 'feedback-box info';
+                return;
+            }
+
+            const isCorrect = (saved.value === q.correctAnswer);
+            fbBox.innerText = isCorrect ? '✓ Poprawna odpowiedź!' : `Niepoprawnie. Poprawna odpowiedź to: "${q.correctAnswer}".`;
+            fbBox.className = isCorrect ? 'feedback-box success-msg' : 'feedback-box error-final';
+
+            userAnswers[currentQIndex].completed = true;
+            userAnswers[currentQIndex].isCorrect = isCorrect;
+            actionBtn.innerText = 'Przejdź dalej →';
+        }
+    }
+
+    function restoreState(index) {
+        const saved = userAnswers[index];
+        if (!saved) return;
+
+        const q = questions[index];
+        const fbBox = document.getElementById('feedback-box');
+        const actionBtn = document.getElementById('btn-action');
+
+        if (q.type === 'open_text') {
+            const inputEl = document.getElementById('open-input');
+            if (inputEl && saved.value) {
+                inputEl.value = saved.value;
             }
         }
 
-        function showSummary() {
-            document.getElementById('quiz-card').style.display = 'none';
-            const summaryCard = document.getElementById('summary-card');
-            summaryCard.style.display = 'block';
-
-            const percentage = Math.round((score / questions.length) * 100);
-            document.getElementById('score-display').innerText = `${percentage}%`;
-
-            let stars = '⭐☆☆';
-            let msg = 'Musisz jeszcze poćwiczyć. Spróbuj ponownie!';
-            
-            if (percentage >= 80) {
-                stars = '⭐⭐⭐';
-                msg = 'Doskonale! Doskonale opanowałeś materiał z Modułu 1!';
-            } else if (percentage >= 50) {
-                stars = '⭐⭐☆';
-                msg = 'Dobra robota! Wynik jest satysfakcjonujący.';
+        if (saved.completed) {
+            actionBtn.innerText = 'Przejdź dalej →';
+            if (q.type === 'open_text') {
+                const inputEl = document.getElementById('open-input');
+                if (inputEl) inputEl.disabled = true;
             }
 
-            document.getElementById('stars-display').innerText = stars;
-            document.getElementById('summary-text').innerText = `Zdobyłeś ${score} z ${questions.length} punktów. ${msg}`;
+            fbBox.innerText = saved.isCorrect ? '✓ Pytanie zaliczone.' : 'Pytanie ukończone.';
+            fbBox.className = saved.isCorrect ? 'feedback-box success-msg' : 'feedback-box error-final';
+        }
+    }
 
-            // Zapis do localStorage
-            const progress = JSON.parse(localStorage.getItem('polish_module_1_progress') || '{}');
-            progress.testCompleted = true;
-            progress.score = percentage;
-            localStorage.setItem('polish_module_1_progress', JSON.stringify(progress));
+    function prevQuestion() {
+        if (currentQIndex > 0) {
+            initQuestion(currentQIndex - 1);
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQIndex < questions.length - 1) {
+            initQuestion(currentQIndex + 1);
+        } else {
+            showFinalResults();
+        }
+    }
+
+    function showFinalResults() {
+        document.getElementById('test-view').style.display = 'none';
+        const resCard = document.getElementById('results-card');
+        resCard.classList.add('active');
+
+        let totalPoints = 0;
+
+        questions.forEach((q, idx) => {
+            const ans = userAnswers[idx];
+            if (ans) {
+                if (q.type === 'matching' && ans.scoreFraction) {
+                    totalPoints += ans.scoreFraction;
+                } else if (ans.isCorrect) {
+                    totalPoints += 1;
+                }
+            }
+        });
+
+        totalPoints = Math.round(totalPoints * 10) / 10;
+        const maxPoints = questions.length;
+        const percentage = Math.round((totalPoints / maxPoints) * 100);
+
+        document.getElementById('res-score').innerText = `${totalPoints} / ${maxPoints}`;
+        document.getElementById('res-desc').innerText = `Twój wynik to ${percentage}%`;
+
+        const resIcon = document.getElementById('res-icon');
+        const resTitle = document.getElementById('res-title');
+
+        if (percentage >= 80) {
+            resIcon.innerText = '🏆';
+            resTitle.innerText = 'Wspaniały wynik!';
+        } else if (percentage >= 50) {
+            resIcon.innerText = '🌟';
+            resTitle.innerText = 'Dobra robota!';
+        } else {
+            resIcon.innerText = '📚';
+            resTitle.innerText = 'Warto powtórzyć materiał!';
         }
 
-        function restartQuiz() {
-            currentIndex = 0;
-            score = 0;
-            document.getElementById('summary-card').style.display = 'none';
-            document.getElementById('quiz-card').style.display = 'block';
-            initQuestion();
-        }
+        // Save progress to LocalStorage for Module Hub
+        let progress = JSON.parse(localStorage.getItem(MODULE_KEY)) || {};
+        progress[7] = { completed: true, unlocked: true, score: percentage };
+        localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
+    }
 
-        // Initialize quiz on start
-        initQuestion();
-    </script>
+    function restartTest() {
+        userAnswers = {};
+        currentQIndex = 0;
+        document.getElementById('results-card').classList.remove('active');
+        document.getElementById('test-view').style.display = 'block';
+        initQuestion(0);
+    }
+</script>
+
 </body>
 </html>
+```eof
+
+Your updated **Module 1 Test** HTML file (`module-1-test.html`) is ready! 
+
+### Summary of Features:
+- **Dynamic Green Accent Styling:** Updated color theme to `#22c55e` / `#16a34a` for a vibrant test UI.
+- **30 Complete Questions Structure:**
+  - **Q1–5:** Open text fill-in-the-blanks with 3 attempts limit, contextual hints, and automatic reveal + input lock after 3 failed attempts (with Enter shortcut navigation).
+  - **Q6–10 & Q11–15:** Two interactive matching pair sets covering Home & Food vocabulary.
+  - **Q16–25:** 10 Dialogue gaps with word bank chips & grammatical distractors.
+  - **Q26–30:** Multiple-choice grammar & vocabulary checks (including morning breakfast drinks like *sok, woda, kawa*).
+- **Navigation & Mechanics:**
+  - `← Wstecz` button active on all 30 questions allowing seamless backward navigation and answer review.
+  - Full feedback boxes for correct/incorrect answers.
+  - Score calculating system and detailed final screen (`X / 30 punktów - Y%`) with working `🔄 Powtórz test` button and `localStorage` progress saving.
