@@ -220,7 +220,7 @@
         .btn-action {
             width: 100%;
             padding: 12px 20px;
-            border-radius: 30px; /* rounded button */
+            border-radius: 30px;
             border: none;
             background-color: var(--accent);
             color: white;
@@ -276,7 +276,7 @@
             font-size: 0.9rem;
         }
 
-        /* Confetti Container Canvas */
+        /* Confetti Canvas */
         #confetti-canvas {
             position: fixed;
             top: 0;
@@ -302,14 +302,14 @@
 <canvas id="confetti-canvas"></canvas>
 
 <div class="container">
-    <!-- Top Navigation -->
+    <!-- Nawigacja górna -->
     <nav class="top-nav">
         <a href="index.html" class="back-btn">
-            ← Back to Modules
+            ← Powrót do Modułów
         </a>
     </nav>
 
-    <!-- Header Card & Progress -->
+    <!-- Nagłówek i Postęp -->
     <header class="header-card">
         <h1>Moduł 4: Wakacje i Dni wolne</h1>
         <p>Naucz się opowiadać o urlopie, podróżach, odpoczynku i czasie wolnym po polsku!</p>
@@ -325,89 +325,89 @@
         </div>
     </header>
 
-    <!-- Stages Grid -->
+    <!-- Siatka Etapów -->
     <main class="stages-grid">
 
-        <!-- Stage 1 -->
+        <!-- Etap 1 -->
         <div class="stage-card" id="card-1">
             <div class="card-header">
                 <div class="stage-icon">📚</div>
-                <span class="badge" id="badge-1">Stage 1</span>
+                <span class="badge" id="badge-1">Etap 1</span>
             </div>
-            <h2 class="stage-title">Flashcards</h2>
-            <p class="stage-desc">Learn 20 Polish phrases about holidays, travels, and free time.</p>
-            <button class="btn-action" id="btn-1" onclick="completeStage(1)">Start</button>
+            <h2 class="stage-title">Fiszki</h2>
+            <p class="stage-desc">Poznaj 20 podstawowych zwrotów i słów związanych z wakacjami i czasem wolnym.</p>
+            <button class="btn-action" id="btn-1" onclick="startStage(1)">Rozpocznij</button>
         </div>
 
-        <!-- Stage 2 -->
+        <!-- Etap 2 -->
         <div class="stage-card locked" id="card-2">
             <div class="card-header">
                 <div class="stage-icon">🧩</div>
-                <span class="badge lock" id="badge-2">Locked</span>
+                <span class="badge lock" id="badge-2">Zablokowany</span>
             </div>
-            <h2 class="stage-title">Match phrases</h2>
-            <p class="stage-desc">Match words to make a common Polish phrase.</p>
-            <button class="btn-action" id="btn-2" disabled onclick="completeStage(2)">Start</button>
+            <h2 class="stage-title">Dopasowanie</h2>
+            <p class="stage-desc">Łącz w pary polskie słowa i zwroty, aby utrwalić ich znaczenie.</p>
+            <button class="btn-action" id="btn-2" disabled onclick="startStage(2)">Rozpocznij</button>
         </div>
 
-        <!-- Stage 3 -->
+        <!-- Etap 3 -->
         <div class="stage-card locked" id="card-3">
             <div class="card-header">
                 <div class="stage-icon">⌨️</div>
-                <span class="badge lock" id="badge-3">Locked</span>
+                <span class="badge lock" id="badge-3">Zablokowany</span>
             </div>
-            <h2 class="stage-title">Typing Practice</h2>
-            <p class="stage-desc">Type the correct end of the holiday phrase.</p>
-            <button class="btn-action" id="btn-3" disabled onclick="completeStage(3)">Start</button>
+            <h2 class="stage-title">Pisanie</h2>
+            <p class="stage-desc">Przećwicz poprawną pisownię i wpisuj brakujące słowa wakacyjne.</p>
+            <button class="btn-action" id="btn-3" disabled onclick="startStage(3)">Rozpocznij</button>
         </div>
 
-        <!-- Stage 4 -->
+        <!-- Etap 4 -->
         <div class="stage-card locked" id="card-4">
             <div class="card-header">
                 <div class="stage-icon">✍</div>
-                <span class="badge lock" id="badge-4">Locked</span>
+                <span class="badge lock" id="badge-4">Zablokowany</span>
             </div>
-            <h2 class="stage-title">Grammar</h2>
-            <p class="stage-desc">Choose the correct Polish sentence structure.</p>
-            <button class="btn-action" id="btn-4" disabled onclick="completeStage(4)">Start</button>
+            <h2 class="stage-title">Gramatyka</h2>
+            <p class="stage-desc">Sprawdź znajomość konstrukcji gramatycznych i poprawnej odmiany.</p>
+            <button class="btn-action" id="btn-4" disabled onclick="startStage(4)">Rozpocznij</button>
         </div>
 
-        <!-- Stage 5 -->
+        <!-- Etap 5 -->
         <div class="stage-card locked" id="card-5">
             <div class="card-header">
                 <div class="stage-icon">🎮</div>
-                <span class="badge lock" id="badge-5">Locked</span>
+                <span class="badge lock" id="badge-5">Zablokowany</span>
             </div>
-            <h2 class="stage-title">Mini Challenge</h2>
-            <p class="stage-desc">Mixed quick exercises to test your speed.</p>
-            <button class="btn-action" id="btn-5" disabled onclick="completeStage(5)">Start</button>
+            <h2 class="stage-title">Mini Gra</h2>
+            <p class="stage-desc">Szybki quiz interaktywny sprawdzający Twoją reakcję i wiedzę.</p>
+            <button class="btn-action" id="btn-5" disabled onclick="startStage(5)">Rozpocznij</button>
         </div>
 
-        <!-- Stage 6 -->
+        <!-- Etap 6 -->
         <div class="stage-card locked" id="card-6">
             <div class="card-header">
                 <div class="stage-icon">🎯</div>
-                <span class="badge lock" id="badge-6">Locked</span>
+                <span class="badge lock" id="badge-6">Zablokowany</span>
             </div>
-            <h2 class="stage-title">Practice Review</h2>
-            <p class="stage-desc">Consolidate all vocabulary before the final test.</p>
-            <button class="btn-action" id="btn-6" disabled onclick="completeStage(6)">Start</button>
+            <h2 class="stage-title">Wyzwanie</h2>
+            <p class="stage-desc">Skomplikowane ćwiczenia utrwalające cały materiał przed testem.</p>
+            <button class="btn-action" id="btn-6" disabled onclick="startStage(6)">Rozpocznij</button>
         </div>
 
-        <!-- Stage 7 (Final Quiz) -->
+        <!-- Etap 7 (Test końcowy) -->
         <div class="stage-card locked" id="card-7" style="grid-column: 1 / -1;">
             <div class="card-header">
                 <div class="stage-icon">🏆</div>
-                <span class="badge lock" id="badge-7">Final Locked</span>
+                <span class="badge lock" id="badge-7">Zablokowany</span>
             </div>
-            <h2 class="stage-title">Final Quiz</h2>
-            <p class="stage-desc">20 random questions covering the whole module. Show your score and award stars!</p>
-            <button class="btn-action" id="btn-7" disabled onclick="completeStage(7)">Start Final Test</button>
+            <h2 class="stage-title">Test Końcowy</h2>
+            <p class="stage-desc">20 pytań z całego modułu. Zdobywaj punkty, oceny w postaci gwiazdek i odznakę!</p>
+            <button class="btn-action" id="btn-7" disabled onclick="startStage(7)">Rozpocznij Test Końcowy</button>
         </div>
 
     </main>
 
-    <!-- Small Achievement Badge -->
+    <!-- Karta Osiągnięcia -->
     <div class="achievement-card">
         <div class="achievement-icon" id="achieve-icon">🔒</div>
         <div class="achievement-info">
@@ -418,10 +418,20 @@
 </div>
 
 <script>
-    // System postępów w LocalStorage
+    // Mapowanie numerów etapów na odpowiednie pliki HTML
+    const stageFiles = {
+        1: 'module-4-fiszki.html',
+        2: 'module-4-dopasowanie.html',
+        3: 'module-4-pisanie.html',
+        4: 'module-4-gramatyka.html',
+        5: 'module-4-gra.html',
+        6: 'module-4-wyzwanie.html',
+        7: 'module-4-test.html'
+    };
+
     const STORAGE_KEY = 'polish_module_4_progress';
     
-    // Inicjalizacja stanu: Stage 1 domyślnie odblokowany (unlocked: true)
+    // Inicjalizacja stanu: Etap 1 domyślnie odblokowany
     let moduleProgress = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
         1: { completed: false, unlocked: true },
         2: { completed: false, unlocked: false },
@@ -457,16 +467,16 @@
             } else if (state.unlocked) {
                 card.classList.remove('locked', 'completed');
                 btn.disabled = false;
-                btn.innerText = i === 7 ? 'Start Final Test' : 'Start';
+                btn.innerText = i === 7 ? 'Rozpocznij Test Końcowy' : 'Rozpocznij';
                 badge.className = 'badge';
-                badge.innerText = `Stage ${i}`;
+                badge.innerText = `Etap ${i}`;
             } else {
                 card.classList.add('locked');
                 card.classList.remove('completed');
                 btn.disabled = true;
                 btn.innerText = 'Zablokowane';
                 badge.className = 'badge lock';
-                badge.innerText = 'Locked';
+                badge.innerText = 'Zablokowany';
             }
         }
 
@@ -484,14 +494,14 @@
     }
 
     function checkLockingRules() {
-        // Po ukończeniu Stage 1 odblokuj etapy 2, 3, 4, 5, 6
+        // Po ukończeniu Etapu 1 odblokuj etapy 2, 3, 4, 5, 6
         if (moduleProgress[1].completed) {
             for (let i = 2; i <= 6; i++) {
                 moduleProgress[i].unlocked = true;
             }
         }
 
-        // Gdy etapy 2, 3, 4, 5, 6 są ukończone -> odblokuj Stage 7
+        // Gdy etapy 2, 3, 4, 5, 6 są ukończone -> odblokuj Etap 7
         const middleCompleted = [2, 3, 4, 5, 6].every(stage => moduleProgress[stage].completed);
         if (middleCompleted) {
             moduleProgress[7].unlocked = true;
@@ -500,62 +510,14 @@
         saveProgress();
     }
 
-    function completeStage(stageNum) {
-        // Symulacja ukończenia etapu
-        moduleProgress[stageNum].completed = true;
-        checkLockingRules();
-        updateUI();
-        triggerConfetti();
-    }
-
-    // Prosta animacja Konfetti w Canvas (bez zewnętrznych bibliotek)
-    function triggerConfetti() {
-        const canvas = document.getElementById('confetti-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        const pieces = [];
-        const colors = ['#D05341', '#2c3e50', '#10b981', '#f59e0b', '#3b82f6'];
-
-        for (let i = 0; i < 80; i++) {
-            pieces.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height - canvas.height,
-                size: Math.random() * 10 + 5,
-                color: colors[Math.floor(Math.random() * colors.length)],
-                speedY: Math.random() * 3 + 2,
-                speedX: Math.random() * 2 - 1,
-                rotation: Math.random() * 360
-            });
-        }
-
-        let animationFrame;
-        let timer = 0;
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            pieces.forEach(p => {
-                p.y += p.speedY;
-                p.x += p.speedX;
-                p.rotation += 2;
-                ctx.save();
-                ctx.translate(p.x, p.y);
-                ctx.rotate((p.rotation * Math.PI) / 180);
-                ctx.fillStyle = p.color;
-                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-                ctx.restore();
-            });
-
-            timer++;
-            if (timer < 120) {
-                animationFrame = requestAnimationFrame(animate);
-            } else {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                cancelAnimationFrame(animationFrame);
+    // Funkcja przekierowująca do wybranego pliku HTML
+    function startStage(stageNum) {
+        if (moduleProgress[stageNum].unlocked || moduleProgress[stageNum].completed) {
+            const targetFile = stageFiles[stageNum];
+            if (targetFile) {
+                window.location.href = targetFile;
             }
         }
-        animate();
     }
 
     // Inicjalizacja przy ładowaniu strony
