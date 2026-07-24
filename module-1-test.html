@@ -3,516 +3,379 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polski Module 1 - Test</title>
+    <title>Polski A1-A2 | Platforma Edukacyjna</title>
     <style>
         :root {
-            --primary: #2b5c8f;
-            --secondary: #e76f51;
-            --bg: #f4f7f6;
+            --primary-color: #34c759;
+            --primary-hover: #28a745;
+            --secondary-color: #007bff;
+            --bg-color: #f8f9fa;
             --card-bg: #ffffff;
-            --text: #2c3e50;
-            --correct: #2a9d8f;
-            --incorrect: #e76f51;
-            --info-bg: #eef5fc;
+            --text-color: #212529;
+            --text-muted: #6c757d;
+            --border-radius: 16px;
+            --box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+            --font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 20px;
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        .quiz-container {
-            width: 100%;
-            max-width: 780px;
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        /* --- Header --- */
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid #e9ecef;
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        h1 {
-            color: var(--primary);
-            text-align: center;
-            margin-bottom: 25px;
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 10px;
+        .header-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .question-card {
-            background: #fafafa;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 25px;
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .question-title {
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 15px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-color);
             font-weight: 600;
-            font-size: 1.1em;
-            margin-bottom: 15px;
-            color: #1a365d;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: background 0.2s, color 0.2s;
         }
 
-        .options {
+        nav a:hover {
+            background-color: #f1f3f5;
+            color: var(--primary-color);
+        }
+
+        /* --- Hero Banner --- */
+        .hero {
+            background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #1b4332;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        /* --- Main Content --- */
+        main {
+            max-width: 1100px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+            width: 100%;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 4px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        /* --- Module Grid --- */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .module-card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #f1f3f5;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+        }
+
+        .module-badge {
+            align-self: flex-start;
+            background-color: #e8f5e9;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 4px 12px;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .module-badge.pdf-badge {
+            background-color: #e3f2fd;
+            color: var(--secondary-color);
+        }
+
+        .module-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .module-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .resource-links {
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
 
-        .btn-option {
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            padding: 12px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            text-align: left;
-            font-size: 1em;
-            transition: all 0.2s ease;
-        }
-
-        .btn-option:hover {
-            background: #f1f5f9;
-            border-color: var(--primary);
-        }
-
-        .btn-option.correct {
-            background-color: #d1fae5;
-            border-color: var(--correct);
-            color: #065f46;
-            font-weight: bold;
-        }
-
-        .btn-option.incorrect {
-            background-color: #fee2e2;
-            border-color: var(--incorrect);
-            color: #991b1b;
-        }
-
-        .explanation-box {
-            margin-top: 15px;
-            padding: 14px;
-            background-color: var(--info-bg);
-            border-left: 4px solid var(--primary);
-            border-radius: 4px;
-            font-size: 0.95em;
-            line-height: 1.5;
-        }
-
-        .explanation-box strong {
-            color: var(--primary);
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            font-size: 1em;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            box-sizing: border-box;
-            margin-bottom: 10px;
-        }
-
-        .btn-submit {
-            background: var(--primary);
-            color: white;
-            border: none;
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.95em;
-        }
-
-        .btn-submit:hover {
-            opacity: 0.9;
-        }
-
-        .dialogue-block {
-            background: #ffffff;
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px dashed #cbd5e1;
-            margin-bottom: 12px;
-        }
-
-        .dialogue-line {
-            margin: 6px 0;
-        }
-
-        /* Podsumowanie wyniku */
-        .summary-card {
-            background: #eef5fc;
-            border: 2px solid var(--primary);
-            border-radius: 10px;
-            padding: 25px;
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .summary-score {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: var(--primary);
-            margin: 15px 0;
-        }
-
-        .btn-nav {
-            display: inline-block;
-            background-color: var(--secondary);
-            color: white;
+            border-radius: 25px;
             text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 1em;
-            transition: background 0.2s ease;
-            margin-top: 15px;
+            font-weight: 600;
+            text-align: center;
+            transition: background 0.2s;
             border: none;
             cursor: pointer;
+            gap: 8px;
         }
 
-        .btn-nav:hover {
-            background-color: #d65a3c;
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid #e9ecef;
+            color: var(--text-color);
+        }
+
+        .btn-outline:hover {
+            background-color: #f8f9fa;
+            border-color: #ced4da;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--card-bg);
+            border-top: 1px solid #e9ecef;
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="quiz-container">
-    <h1>Module 1: Dom i Jedzenie – Test</h1>
-
-    <!-- Pytanie 2 -->
-    <div class="question-card" id="q2">
-        <div class="question-title">2. „Apple pie” po polsku to? (Wybierz poprawną odpowiedź)</div>
-        <div class="options">
-            <button class="btn-option" onclick="checkQ2(this, true, 'szarlotka', 'q2')">szarlotka</button>
-            <button class="btn-option" onclick="checkQ2(this, true, 'ciasto jabłkowe', 'q2')">ciasto jabłkowe</button>
-            <button class="btn-option" onclick="checkQ2(this, false, 'sernik', 'q2')">sernik</button>
-            <button class="btn-option" onclick="checkQ2(this, false, 'pączek', 'q2')">pączek</button>
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">🇵🇱 Język Polski A1–A2</a>
+            <nav>
+                <ul>
+                    <li><a href="#moduly">Moduły</a></li>
+                    <li><a href="#materialy">PDF i Pliki</a></li>
+                </ul>
+            </nav>
         </div>
-        <div id="q2-explain" class="explanation-box" style="display:none;"></div>
-    </div>
+    </header>
 
-    <!-- Pytanie 4 -->
-    <div class="question-card" id="q4">
-        <div class="question-title">4. Sery, mleko i masło muszę spakować do ________.</div>
-        <div class="options">
-            <button class="btn-option" onclick="checkQ4(this, 'torba', 'q4')">torba</button>
-            <button class="btn-option" onclick="checkQ4(this, 'torbą', 'q4')">torbą</button>
-            <button class="btn-option" onclick="checkQ4(this, 'torby', 'q4')">torby</button>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Materiały do nauki języka polskiego</h1>
+            <p>Interaktywne quizy, ćwiczenia, wiktoriny oraz pliki PDF dla obcokrajowców.</p>
         </div>
-        <div id="q4-explain" class="explanation-box" style="display:none;"></div>
-    </div>
+    </section>
 
-    <!-- Pytanie 5 -->
-    <div class="question-card" id="q5">
-        <div class="question-title">5. Co pijemy rano ze śniadaniem?</div>
-        <div class="options">
-            <button class="btn-option" onclick="checkSimple(this, true, 'q5')">kawa / herbata</button>
-            <button class="btn-option" onclick="checkSimple(this, false, 'q5')">zupa</button>
-            <button class="btn-option" onclick="checkSimple(this, false, 'q5')">owoce</button>
-            <button class="btn-option" onclick="checkSimple(this, false, 'q5')">sos pomidorowy</button>
-        </div>
-    </div>
+    <main>
+        <!-- Sekcja z Modułami i Quizami -->
+        <section id="moduly">
+            <h2 class="section-title">Moduły Edukacyjne</h2>
+            <div class="modules-grid">
 
-    <!-- Pytanie 6 -->
-    <div class="question-card" id="q6">
-        <div class="question-title">6. Gdzie parkujemy samochód?</div>
-        <div class="options">
-            <button class="btn-option" onclick="checkSimple(this, false, 'q6')">w salonie</button>
-            <button class="btn-option" onclick="checkSimple(this, true, 'q6')">w garażu</button>
-            <button class="btn-option" onclick="checkSimple(this, false, 'q6')">w kuchni</button>
-            <button class="btn-option" onclick="checkSimple(this, false, 'q6')">w łazience</button>
-        </div>
-    </div>
+                <!-- MODUŁ 1 -->
+                <div class="module-card">
+                    <div>
+                        <span class="module-badge">Moduł 1</span>
+                        <h3>Dom i jedzenie</h3>
+                        <p>Naucz się 20 podstawowych słów, potrenuj fiszki, dopasowywanie, pisanie oraz podstawową gramatykę.</p>
+                    </div>
+                    <div class="resource-links">
+                        <a href="module-1-vocab.html" class="btn btn-primary">Uruchom Quiz 🎯</a>
+                    </div>
+                </div>
 
-    <!-- Pytanie 7 -->
-    <div class="question-card" id="q7">
-        <div class="question-title">7. Gdzie zwykle śpimy?</div>
-        <div class="options">
-            <button class="btn-option" onclick="checkSimple(this, true, 'q7')">w sypialni</button>
-            <button class="btn-option" onclick="checkSimple(this, false, 'q7')">w garażu</button>
-            <button class="btn-option" onclick="checkSimple(this, false, 'q7')">w ogrodzie</button>
-            <button class="btn-option" onclick="checkSimple(this, false, 'q7')">w sklepie</button>
-        </div>
-    </div>
+                <!-- MODUŁ 2 -->
+                <div class="module-card">
+                    <div>
+                        <span class="module-badge">Moduł 2</span>
+                        <h3>Rodzina i Przyjaciele</h3>
+                        <p>Poznaj słownictwo związane z rodziną, opisem osób oraz podstawowymi relacjami.</p>
+                    </div>
+                    <div class="resource-links">
+                        <a href="module-2-vocab.html" class="btn btn-primary">Uruchom Quiz 🎯</a>
+                    </div>
+                </div>
 
-    <!-- Pytanie 8: Dialogi -->
-    <div class="question-card" id="q8">
-        <div class="question-title">8. Uzupełnij dialogi (Tematyka: Dom i Jedzenie):</div>
-        
-        <div class="dialogue-block">
-            <div class="dialogue-line"><strong>Dialog 1:</strong> — Gdzie jest pies? — Pies biega w ________ (ogród).</div>
-            <input type="text" id="d1_input" placeholder="Wpisz słowo...">
-            <button class="btn-submit" onclick="checkText('d1_input', ['ogrodzie'], 'd1_feedback', 'd1')">Sprawdź</button>
-            <span id="d1_feedback"></span>
-        </div>
+                <!-- MODUŁ 3 -->
+                <div class="module-card">
+                    <div>
+                        <span class="module-badge">Moduł 3</span>
+                        <h3>Zakupy i Sklep</h3>
+                        <p>Ćwiczenia ze słownictwa i dialogów w sklepie, pytania o cenę oraz nazwy produktów.</p>
+                    </div>
+                    <div class="resource-links">
+                        <a href="module-3-vocab.html" class="btn btn-primary">Uruchom Quiz 🎯</a>
+                    </div>
+                </div>
 
-        <div class="dialogue-block">
-            <div class="dialogue-line"><strong>Dialog 2:</strong> — Gdzie oglądamy telewizję? — Oglądamy film w ________ (salon).</div>
-            <input type="text" id="d2_input" placeholder="Wpisz słowo...">
-            <button class="btn-submit" onclick="checkText('d2_input', ['salonie'], 'd2_feedback', 'd2')">Sprawdź</button>
-            <span id="d2_feedback"></span>
-        </div>
+                <!-- MODUŁ 4 -->
+                <div class="module-card">
+                    <div>
+                        <span class="module-badge">Moduł 4</span>
+                        <h3>Wakacje i dni wolne</h3>
+                        <p>Słownictwo związane z podróżami, czasem wolnym, wypoczynkiem oraz planowaniem urlopu.</p>
+                    </div>
+                    <div class="resource-links">
+                        <a href="module-4-vocab.html" class="btn btn-primary">Uruchom Quiz 🎯</a>
+                    </div>
+                </div>
 
-        <div class="dialogue-block">
-            <div class="dialogue-line"><strong>Dialog 3:</strong> — Gdzie stawiamy talerz? — Talerz stoi na ________ (stół).</div>
-            <input type="text" id="d3_input" placeholder="Wpisz słowo...">
-            <button class="btn-submit" onclick="checkText('d3_input', ['stole'], 'd3_feedback', 'd3')">Sprawdź</button>
-            <span id="d3_feedback"></span>
-        </div>
+                <!-- MODUŁ 5 -->
+                <div class="module-card">
+                    <div>
+                        <span class="module-badge">Moduł 5</span>
+                        <h3>Na mieście</h3>
+                        <p>Pytanie o drogę, poruszanie się po mieście, transport publiczny i ważne miejsca.</p>
+                    </div>
+                    <div class="resource-links">
+                        <a href="module-5-vocab.html" class="btn btn-primary">Uruchom Quiz 🎯</a>
+                    </div>
+                </div>
 
-        <div class="dialogue-block">
-            <div class="dialogue-line"><strong>Dialog 4:</strong> — Gdzie jest auto? — Auto stoi w ________ (garaż).</div>
-            <input type="text" id="d4_input" placeholder="Wpisz słowo...">
-            <button class="btn-submit" onclick="checkText('d4_input', ['garażu'], 'd4_feedback', 'd4')">Sprawdź</button>
-            <span id="d4_feedback"></span>
-        </div>
+                <!-- MODUŁ 6 -->
+                <div class="module-card">
+                    <div>
+                        <span class="module-badge">Moduł 6</span>
+                        <h3>W pracy</h3>
+                        <p>Słownictwo zawodowe, zwroty w biurze, umawianie spotkań oraz codzienne obowiązki.</p>
+                    </div>
+                    <div class="resource-links">
+                        <a href="module-6-vocab.html" class="btn btn-primary">Uruchom Quiz 🎯</a>
+                    </div>
+                </div>
 
-        <div class="dialogue-block">
-            <div class="dialogue-line"><strong>Dialog 5:</strong> — Na czym siedzisz? — Siedzę na wygodnym ________ (krzesło).</div>
-            <input type="text" id="d5_input" placeholder="Wpisz słowo...">
-            <button class="btn-submit" onclick="checkText('d5_input', ['krześle'], 'd5_feedback', 'd5')">Sprawdź</button>
-            <span id="d5_feedback"></span>
-        </div>
-
-        <div class="dialogue-block">
-            <div class="dialogue-line"><strong>Dialog 6:</strong> — Kto stoi obok ________ (drzwi)? — To nasz sąsiad.</div>
-            <input type="text" id="d6_input" placeholder="Wpisz słowo...">
-            <button class="btn-submit" onclick="checkText('d6_input', ['drzwi'], 'd6_feedback', 'd6')">Sprawdź</button>
-            <span id="d6_feedback"></span>
-            
-            <div class="explanation-box" style="margin-top: 10px;">
-                <strong>Vocabulary & Synonym Note (EN):</strong><br>
-                • <strong>obok</strong> = next to / beside (e.g. <em>obok drzwi</em>)<br>
-                • <strong>blisko</strong> = close to / near (e.g. <em>blisko drzwi</em>)<br>
-                • <strong>przy</strong> = at / by / right next to (e.g. <em>przy drzwiach</em>)<br>
-                All three express proximity! Notice that <em>obok</em> and <em>blisko</em> take the Genitive case (<em>drzwi</em>), while <em>przy</em> takes the Locative case (<em>drzwiach</em>).
             </div>
-        </div>
-    </div>
+        </section>
 
-    <!-- Pytanie 9 -->
-    <div class="question-card" id="q9">
-        <div class="question-title">9. Mieszkam w dużym ________.</div>
-        <div class="options">
-            <button class="btn-option" onclick="checkSimple(this, true, 'q9')">domu</button>
-            <button class="btn-option" onclick="checkSimple(this, false, 'q9')">dom</button>
-            <button class="btn-option" onclick="checkSimple(this, false, 'q9')">domem</button>
-        </div>
-    </div>
+        <!-- Sekcja z materiałami PDF / Wiktorinami -->
+        <section id="materialy">
+            <h2 class="section-title">Materiały do pobrania (PDF)</h2>
+            <div class="modules-grid">
 
-    <!-- Pytanie 10 -->
-    <div class="question-card" id="q10">
-        <div class="question-title">10. „Living room” po polsku to?</div>
-        <div class="options">
-            <button class="btn-option" onclick="checkSimple(this, true, 'q10')">salon</button>
-            <button class="btn-option" onclick="checkSimple(this, false, 'q10')">kuchnia</button>
-            <button class="btn-option" onclick="checkSimple(this, false, 'q10')">łazienka</button>
-        </div>
-    </div>
+                <!-- KARTA PDF 1 -->
+                <div class="module-card">
+                    <div>
+                        <span class="module-badge pdf-badge">PDF • Karty Pracy</span>
+                        <h3>Karty ze słownictwem: Dom</h3>
+                        <p>Zestaw obrazkowy ze słownictwem z modułu 1 gotowy do wydruku.</p>
+                    </div>
+                    <div class="resource-links">
+                        <a href="pdf/dom_slownictwo.pdf" target="_blank" class="btn btn-outline">Pobierz PDF 📄</a>
+                    </div>
+                </div>
 
-    <!-- Pytanie 11 -->
-    <div class="question-card" id="q11">
-        <div class="question-title">11. Meble to?</div>
-        <div class="options">
-            <button class="btn-option" onclick="checkQ11(this, true, 'q11')">szafa, stół, krzesło, kanapa</button>
-            <button class="btn-option" onclick="checkQ11(this, false, 'q11')">wanna, piekarnik, prysznic</button>
-        </div>
-        <div id="q11-explain" class="explanation-box" style="display:none;"></div>
-    </div>
+            </div>
+        </section>
+    </main>
 
-    <!-- Pytanie 12 -->
-    <div class="question-card" id="q12">
-        <div class="question-title">12. „Garden” po polsku to?</div>
-        <div class="options">
-            <button class="btn-option" onclick="checkQ12(this, true, 'q12')">ogród</button>
-            <button class="btn-option" onclick="checkQ12(this, false, 'q12')">balkon</button>
-            <button class="btn-option" onclick="checkQ12(this, false, 'q12')">taras</button>
-        </div>
-        <div id="q12-explain" class="explanation-box" style="display:none;"></div>
-    </div>
-
-    <!-- Pytanie 13 -->
-    <div class="question-card" id="q13">
-        <div class="question-title">13. Chcę kupić nową ________ (kanapa).</div>
-        <input type="text" id="q13_input" placeholder="Wpisz poprawną formę...">
-        <button class="btn-submit" onclick="checkText('q13_input', ['kanapę'], 'q13_feedback', 'q13')">Sprawdź</button>
-        <span id="q13_feedback"></span>
-    </div>
-
-    <!-- Pytanie 16 -->
-    <div class="question-card" id="q16">
-        <div class="question-title">16. Mleko i jajka są w ________.</div>
-        <div class="options">
-            <button class="btn-option" onclick="checkSimple(this, true, 'q16')">lodówce</button>
-            <button class="btn-option" onclick="checkSimple(this, false, 'q16')">lodówka</button>
-            <button class="btn-option" onclick="checkSimple(this, false, 'q16')">lodówki</button>
-        </div>
-    </div>
-
-    <!-- Pytanie 17 -->
-    <div class="question-card" id="q17">
-        <div class="question-title">17. Na stole stoi gorąca ________.</div>
-        <div class="options">
-            <button class="btn-option" onclick="checkQ17(this, true, 'herbata', 'q17')">herbata</button>
-            <button class="btn-option" onclick="checkQ17(this, false, 'chleb', 'q17')">chleb</button>
-            <button class="btn-option" onclick="checkQ17(this, false, 'jabłko', 'q17')">jabłko</button>
-        </div>
-        <div id="q17-explain" class="explanation-box" style="display:none;"></div>
-    </div>
-
-    <!-- Pytanie 18 -->
-    <div class="question-card" id="q18">
-        <div class="question-title">18. Co mamy w lodówce?</div>
-        <div class="options">
-            <button class="btn-option" onclick="checkSimple(this, true, 'q18')">masło, ser, jajka i mleko</button>
-            <button class="btn-option" onclick="checkSimple(this, false, 'q18')">krzesło, stół i szafę</button>
-            <button class="btn-option" onclick="checkSimple(this, false, 'q18')">książki, długopis i zeszyt</button>
-        </div>
-    </div>
-
-    <!-- Pytanie 19 -->
-    <div class="question-card" id="q19">
-        <div class="question-title">19. On siedzi na ________ (chair).</div>
-        <input type="text" id="q19_input" placeholder="Wpisz po polsku w poprawnej formie...">
-        <button class="btn-submit" onclick="checkText('q19_input', ['krześle'], 'q19_feedback', 'q19')">Sprawdź</button>
-        <span id="q19_feedback"></span>
-    </div>
-
-    <!-- Podsumowanie Wyników -->
-    <div class="summary-card">
-        <h2>Podsumowanie Testu</h2>
-        <p>Twój wynik:</p>
-        <div class="summary-score" id="final-score">0 / 18 (0%)</div>
-        <p id="score-comment">Rozwiąż pytania powyżej, aby zobaczyć swój wynik!</p>
-        <a href="module-1-vocab.html" class="btn-nav">Powrót do modułu (module-1-vocab.html)</a>
-    </div>
-
-</div>
-
-<script>
-    // Obiekt przechowujący stan pytań (18 zadań/dialogów w sumie)
-    const results = {};
-    const TOTAL_QUESTIONS = 18;
-
-    function updateScore() {
-        let correctCount = 0;
-        for (let key in results) {
-            if (results[key] === true) {
-                correctCount++;
-            }
-        }
-        const percentage = Math.round((correctCount / TOTAL_QUESTIONS) * 100);
-        document.getElementById('final-score').innerText = `${correctCount} / ${TOTAL_QUESTIONS} (${percentage}%)`;
-
-        const comment = document.getElementById('score-comment');
-        if (percentage === 100) {
-            comment.innerText = 'Perfekcyjnie! Opanowałeś cały materiał!';
-        } else if (percentage >= 70) {
-            comment.innerText = 'Bardzo dobry wynik! Dobra robota!';
-        } else if (percentage >= 50) {
-            comment.innerText = 'Dobra próba! Przejrzyj materiał i spróbuj ponownie.';
-        } else {
-            comment.innerText = 'Ćwicz dalej, a na pewno poprawisz swój wynik!';
-        }
-    }
-
-    function checkSimple(btn, isCorrect, qId) {
-        const parent = btn.parentElement;
-        const buttons = parent.querySelectorAll('.btn-option');
-        buttons.forEach(b => b.classList.remove('correct', 'incorrect'));
-        btn.classList.add(isCorrect ? 'correct' : 'incorrect');
-
-        results[qId] = isCorrect;
-        updateScore();
-    }
-
-    function checkQ2(btn, isCorrect, chosenWord, qId) {
-        checkSimple(btn, isCorrect, qId);
-        const exp = document.getElementById('q2-explain');
-        exp.style.display = 'block';
-        if (isCorrect) {
-            exp.innerHTML = `<strong>Świetnie!</strong> Znałeś słowo <em>"${chosenWord}"</em>.<br>
-            Warto wiedzieć, że w języku polskim mówimy też: <strong>szarlotka</strong>, <strong>ciasto jabłkowe</strong> oraz <strong>jabłecznik</strong>.<br><br>
-            <em>Grammar & Culture Note (EN):</em> In Poland, all three terms refer to apple pastry/pie variations. Because apple orchards and apple growing form a huge part of Polish agriculture and culinary heritage, Polish has several specialized terms for apple pie!`;
-        } else {
-            exp.innerHTML = `<strong>Spróbuj ponownie!</strong> Słowo "apple pie" to po polsku <em>szarlotka</em>, <em>ciasto jabłkowe</em> lub <em>jabłecznik</em>.`;
-        }
-    }
-
-    function checkQ4(btn, option, qId) {
-        const isCorrect = (option === 'torby');
-        checkSimple(btn, isCorrect, qId);
-        const exp = document.getElementById('q4-explain');
-        exp.style.display = 'block';
-        exp.innerHTML = `
-            <strong>Wyjaśnienie form (Grammar Explanation):</strong><br>
-            • <strong>torba</strong> (Nominative / Mianownik) – basic dictionary form. <em>Example: To jest nowa torba. (This is a new bag.)</em><br>
-            • <strong>torbą</strong> (Instrumental / Narzędnik) – used with prepositions like "z" or for instruments. <em>Example: Idę na zakupy z torbą. (I go shopping with a bag.)</em><br>
-            • <strong>torby</strong> (Genitive / Dopełniacz) – required after the preposition <strong>do</strong>! <em>Example: Muszę spakować sery do torby. (I must pack cheeses into the bag.)</em>
-        `;
-    }
-
-    function checkQ11(btn, isCorrect, qId) {
-        checkSimple(btn, isCorrect, qId);
-        const exp = document.getElementById('q11-explain');
-        exp.style.display = 'block';
-        exp.innerHTML = `
-            <strong>Grammar & Vocabulary Note (EN):</strong><br>
-            The word <strong>meble</strong> in Polish refers to <em>furniture</em>. Unlike in English where "furniture" is uncountable, in Polish <em>meble</em> is used in the plural form (plural-only concept when speaking generally about items of furniture).<br><br>
-            <strong>Examples in sentences:</strong><br>
-            • <em>Kupuję nowe meble do salonu.</em> (I am buying new furniture for the living room.)<br>
-            • <em>Te meble są bardzo wygodne.</em> (This furniture is very comfortable.)<br><br>
-            <strong>Inne urządzenia / Inne wyposażenie:</strong><br>
-            • <strong>szafa</strong> = wardrobe / closet<br>
-            • <strong>wanna</strong> = bathtub<br>
-            • <strong>piekarnik</strong> = oven
-        `;
-    }
-
-    function checkQ12(btn, isCorrect, qId) {
-        checkSimple(btn, isCorrect, qId);
-        const exp = document.getElementById('q12-explain');
-        exp.style.display = 'block';
-        exp.innerHTML = `
-            <strong>Pamiętaj!</strong><br>
-            • <strong>ogród</strong> = garden<br>
-            • Miejscownik (Locative): <em>W ogrodzie rosną kwiaty.</em> (Flowers grow in the garden.)
-        `;
-    }
-
-    function checkQ17(btn, isCorrect, word, qId) {
-        checkSimple(btn, isCorrect, qId);
-        const exp = document.getElementById('q17-explain');
-        exp.style.display = 'block';
-        exp.innerHTML = `
-            <strong>English Vocabulary Note:</strong><br>
-            The adjective <strong>gorący / gorąca / gorące</strong> means <strong>hot</strong>.<br>
-            • <strong>gorąca herbata</strong> = hot tea (feminine form)<br>
-            • <strong>gorący stek</strong> = hot steak (masculine form)<br>
-            • <strong>gorąca zupa</strong> = hot soup<br>
-            • <strong>gorące mleko</strong> = hot milk (neuter form)
-        `;
-    }
-
-    function checkText(inputId, correctAnswers, feedbackId, qId) {
-        const val = document.getElementById(inputId).value.trim().toLowerCase();
-        const fb = document.getElementById(feedbackId);
-        if (correctAnswers.includes(val)) {
-            fb.innerHTML = ' <span style="color:green; font-weight:bold;">✓ Dobrze!</span>';
-            results[qId] = true;
-        } else {
-            fb.innerHTML = ' <span style="color:red; font-weight:bold;">✗ Spróbuj jeszcze raz!</span>';
-            results[qId] = false;
-        }
-        updateScore();
-    }
-</script>
+    <footer>
+        <p>© 2026 Platforma Edukacyjna – Język Polski jako Obcy. Wszystkie prawa zastrzeżone.</p>
+    </footer>
 
 </body>
 </html>
