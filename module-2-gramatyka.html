@@ -1,71 +1,462 @@
-const grammarQuizData = [
-    // Poprawione zdanie
-    {
-        sentence: "Jutro będę ______ moją ciocię.",
-        options: ["odwiedzać", "odwiedzać się", "odwiedzam"],
-        correct: 0,
-        explanation: "Po czasowniku posiłkowym «będę» używamy bezokolicznika «odwiedzać»."
-    },
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rodzina i Przyjaciele - Test z Gramatyki</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #f28b82;
+            --accent-hover: #e57373;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-radius: 16px;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            --success: #22c55e;
+            --error: #ef4444;
+        }
 
-    // --- 10 NOWYCH ZDAŃ ---
-    {
-        sentence: "Odwiedziłem Polskę z ______. Ona bardzo lubi Warszawę.",
-        options: ["moja żona", "moją żoną", "mojej żonie"],
-        correct: 1,
-        explanation: "Przyimki «z / ze» wymagają użycia Narzędnika (z kim? z czym? -> z moją żoną)."
-    },
-    {
-        sentence: "Mam bardzo ______.",
-        options: ["sympatyczny sąsiad", "sympatycznego sąsiada", "sympatyczni sąsiedzi"],
-        correct: 1,
-        explanation: "Czasownik «mieć» wymaga Biernika. Dla rzeczowników męskoosobowych Biernik = Dopełniacz (sympatycznego sąsiada)."
-    },
-    {
-        sentence: "Mój brat opiekuje się ______ w każdy weekend.",
-        options: ["naszym psem", "nasz pies", "naszego psa"],
-        correct: 0,
-        explanation: "Zwrot «opiekować się» zawsze łączy się z Narzędnikiem (kim? czym? -> naszym psem)."
-    },
-    {
-        sentence: "Szukam mojego ______. Czy go widziałeś?",
-        options: ["starszy brat", "starszego brata", "starszym bratem"],
-        correct: 1,
-        explanation: "Czasownik «szukać» wymaga Dopełniacza (kogo? czego? -> starszego brata)."
-    },
-    {
-        sentence: "Często rozmawiam o mojej rodzinie z ______.",
-        options: ["dobry przyjaciel", "dobrego przyjaciela", "dobrym przyjacielem"],
-        correct: 2,
-        explanation: "Przyimek «z» połączony z osobą wymaga Narzędnika (z kim? -> z dobrym przyjacielem)."
-    },
-    {
-        sentence: "Moja siostra pomaga ______ w pracach domowych.",
-        options: ["rodzice", "rodzicom", "rodziców"],
-        correct: 1,
-        explanation: "Czasownik «pomagać» wymaga Celownika (komu? czemu? -> rodzicom)."
-    },
-    {
-        sentence: "On nie ma ______ ani siostry.",
-        options: ["brata", "brat", "bratem"],
-        correct: 0,
-        explanation: "Negacja (brak/nie mam) wymaga Dopełniacza (kogo? czego? -> brata)."
-    },
-    {
-        sentence: "Oglądam stare zdjęcia z moimi ______.",
-        options: ["dziadkowie", "dziadków", "dziadkami"],
-        correct: 2,
-        explanation: "Konstrukcja «z» w liczbie mnogiej wymaga Narzędnika (z kim? -> z moimi dziadkami)."
-    },
-    {
-        sentence: "Mamy fantastyczną ______.",
-        options: ["sąsiadka", "sąsiadkę", "sąsiadki"],
-        correct: 1,
-        explanation: "Czasownik «mieć» wymaga Biernika w liczbie pojedynczej (kogo? co? -> fantastyczną sąsiadkę)."
-    },
-    {
-        sentence: "Jutro rano idziemy do ______ na obiad.",
-        options: ["nasza babcia", "naszą babcię", "naszej babci"],
-        correct: 2,
-        explanation: "Przyimek «do» zawsze wymaga Dopełniacza (do kogo? do czego? -> do naszej babci)."
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            padding: 24px 16px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            text-align: center;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            color: var(--text-main);
+            transform: translateY(-1px);
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 32px 24px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-top: 20px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .question-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 24px;
+            line-height: 1.4;
+            white-space: pre-line;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .opt-btn {
+            padding: 16px 20px;
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-main);
+            transition: all 0.2s;
+        }
+
+        .opt-btn:hover:not(:disabled) {
+            border-color: var(--accent);
+            background: #fff5f5;
+            transform: scale(1.01);
+        }
+
+        .opt-btn.correct {
+            background: #dcfce7 !important;
+            border-color: var(--success) !important;
+            color: #15803d !important;
+        }
+
+        .opt-btn.incorrect {
+            background: #fee2e2 !important;
+            border-color: var(--error) !important;
+            color: #b91c1c !important;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 30px;
+            border: none;
+            background: var(--accent);
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 12px rgba(242, 139, 130, 0.3);
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+            transform: scale(1.02);
+        }
+
+        .nav-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: var(--text-main);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #f1f5f9;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .stars-container {
+            font-size: 2.5rem;
+            margin: 15px 0;
+            letter-spacing: 5px;
+        }
+
+        .summary-card {
+            display: none;
+        }
+
+        .badge {
+            background: #fef2f2;
+            color: #991b1b;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="top-nav">
+        <a href="module-family-vocab.html" class="back-btn">← Powrót do Modułu</a>
+    </div>
+
+    <h1>Rodzina i Przyjaciele</h1>
+    <p style="color: var(--text-muted); margin-top: 6px;">Test z Gramatyki: Odmiana Rzeczowników (A1–A2)</p>
+
+    <!-- KARTA QUIZU -->
+    <div class="card" id="quiz-area">
+        <div class="q-header">
+            <span id="q-type" class="badge">Gramatyka</span>
+            <span id="q-num">Pytanie 1 / 10</span>
+        </div>
+        
+        <div class="question-title" id="q-title">Ładowanie pytania...</div>
+        
+        <div class="options" id="options-container"></div>
+
+        <div class="nav-controls">
+            <button class="nav-btn" id="prev-btn" onclick="prevQuestion()">← Poprzednie</button>
+            <button class="nav-btn" id="next-btn" onclick="nextQuestion()">Następne →</button>
+        </div>
+    </div>
+
+    <!-- KARTA PODSUMOWANIA -->
+    <div class="card summary-card" id="summary">
+        <h2>Podsumowanie Testu</h2>
+        <div class="stars-container" id="stars">⭐⭐⭐</div>
+        <p style="margin: 10px 0; font-size: 1.1rem; color: var(--text-muted);">Twój wynik całkowity:</p>
+        <p style="font-size: 2.2rem; font-weight: 800; color: var(--accent); margin-bottom: 24px;" id="score-text">0 / 10 (0%)</p>
+        <div style="display: flex; justify-content: center; gap: 12px;">
+            <button class="btn" onclick="initQuiz()">Powtórz Test</button>
+            <a href="module-family-vocab.html" class="btn" style="background: #64748b; box-shadow: none;">Powrót do modułu</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            type: "Narzędnik (Z kim?)",
+            title: "Idę na spacer z ... (mama).",
+            options: [
+                { text: "mamą", correct: true },
+                { text: "mamę", correct: false },
+                { text: "mamy", correct: false }
+            ]
+        },
+        {
+            type: "Narzędnik (Z kim?)",
+            title: "Mój brat rozmawia z ... (tata).",
+            options: [
+                { text: "tatą", correct: true },
+                { text: "tatę", correct: false },
+                { text: "taty", correct: false }
+            ]
+        },
+        {
+            type: "Biernik (Kogo? Co?)",
+            title: "Bardzo kocham mojego ... (mąż).",
+            options: [
+                { text: "mężem", correct: false },
+                { text: "męża", correct: true },
+                { text: "mąż", correct: false }
+            ]
+        },
+        {
+            type: "Biernik (Kogo? Co?)",
+            title: "On ma piękną ... (żona).",
+            options: [
+                { text: "żonę", correct: true },
+                { text: "żoną", correct: false },
+                { text: "żony", correct: false }
+            ]
+        },
+        {
+            type: "Dopełniacz (Kogo? Czego?)",
+            title: "Dziś w domu nie ma mojego ... (syn).",
+            options: [
+                { text: "synem", correct: false },
+                { text: "syna", correct: true },
+                { text: "synowi", correct: false }
+            ]
+        },
+        {
+            type: "Celownik (Komu?)",
+            title: "Często pomagam mojemu ... (sąsiad).",
+            options: [
+                { text: "sąsiadowi", correct: true },
+                { text: "sąsiadem", correct: false },
+                { text: "sąsiada", correct: false }
+            ]
+        },
+        {
+            type: "Biernik (Kogo?)",
+            title: "W niedzielę lubimy odwiedzać naszego ... (przyjaciel).",
+            options: [
+                { text: "przyjacielem", correct: false },
+                { text: "przyjaciela", correct: true },
+                { text: "przyjacielowi", correct: false }
+            ]
+        },
+        {
+            type: "Narzędnik (Z kim?)",
+            title: "Lubię spędzać czas razem z moim ... (przyjaciel).",
+            options: [
+                { text: "przyjaciela", correct: false },
+                { text: "przyjacielem", correct: true },
+                { text: "przyjaciel", correct: false }
+            ]
+        },
+        {
+            type: "Uzupełnienie zdania",
+            title: "Moja mama i tata mieszkają ... (together).",
+            options: [
+                { text: "razem", correct: true },
+                { text: "pomagać", correct: false },
+                { text: "odwiedzać", correct: false }
+            ]
+        },
+        {
+            type: "Forma czasownika + Biernik",
+            title: "Jutro będziemy ... naszą babcię.",
+            options: [
+                { text: "odwiedzać", correct: true },
+                { text: "pomagać", correct: false },
+                { text: "razem", correct: false }
+            ]
+        }
+    ];
+
+    let currentIndex = 0;
+    let attempts = 0;
+    let answeredQuestions = {};
+
+    function initQuiz() {
+        currentIndex = 0;
+        answeredQuestions = {};
+        document.getElementById('quiz-area').style.display = 'block';
+        document.getElementById('summary').style.display = 'none';
+        showQuestion();
     }
-];
+
+    function showQuestion() {
+        attempts = 0;
+        const q = questions[currentIndex];
+        
+        document.getElementById('q-type').innerText = q.type;
+        document.getElementById('q-num').innerText = `Pytanie ${currentIndex + 1} / ${questions.length}`;
+        document.getElementById('q-title').innerText = q.title;
+
+        document.getElementById('prev-btn').disabled = currentIndex === 0;
+        document.getElementById('next-btn').innerText = (currentIndex === questions.length - 1) ? 'Zakończ →' : 'Następne →';
+
+        const container = document.getElementById('options-container');
+        container.innerHTML = '';
+
+        const state = answeredQuestions[currentIndex];
+
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerText = opt.text;
+
+            if (state && state.answered) {
+                btn.disabled = true;
+                if (opt.correct) {
+                    btn.classList.add('correct');
+                } else if (state.selectedOpt === idx) {
+                    btn.classList.add('incorrect');
+                }
+            } else {
+                btn.onclick = () => handleSelect(btn, opt.correct, idx);
+            }
+
+            container.appendChild(btn);
+        });
+    }
+
+    function handleSelect(btn, isCorrect, optIdx) {
+        if (isCorrect) {
+            btn.classList.add('correct');
+            disableOptions();
+            answeredQuestions[currentIndex] = { answered: true, correct: true, selectedOpt: optIdx };
+            setTimeout(nextQuestion, 1000);
+        } else {
+            attempts++;
+            btn.classList.add('incorrect');
+            btn.disabled = true;
+
+            if (attempts >= 3) {
+                disableOptions();
+                highlightCorrect();
+                answeredQuestions[currentIndex] = { answered: true, correct: false, selectedOpt: optIdx };
+                setTimeout(nextQuestion, 1500);
+            }
+        }
+    }
+
+    function disableOptions() {
+        document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+    }
+
+    function highlightCorrect() {
+        const q = questions[currentIndex];
+        document.querySelectorAll('.opt-btn').forEach((b, idx) => {
+            if (q.options[idx].correct) b.classList.add('correct');
+        });
+    }
+
+    function nextQuestion() {
+        if (currentIndex < questions.length - 1) {
+            currentIndex++;
+            showQuestion();
+        } else {
+            finishStage();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            showQuestion();
+        }
+    }
+
+    function finishStage() {
+        document.getElementById('quiz-area').style.display = 'none';
+        document.getElementById('summary').style.display = 'block';
+        
+        let correctCount = 0;
+        Object.values(answeredQuestions).forEach(val => {
+            if (val.correct) correctCount++;
+        });
+
+        const pct = Math.round((correctCount / questions.length) * 100);
+        document.getElementById('score-text').innerText = `${correctCount} / ${questions.length} (${pct}%)`;
+
+        // Gwiazdki
+        let stars = "⭐☆☆";
+        if (pct >= 80) stars = "⭐⭐⭐";
+        else if (pct >= 50) stars = "⭐⭐☆";
+        document.getElementById('stars').innerText = stars;
+
+        // Zapis do localStorage
+        let progress = JSON.parse(localStorage.getItem('polish_module_family_grammar_progress')) || {};
+        progress.testCompleted = true;
+        progress.testScore = pct;
+        localStorage.setItem('polish_module_family_grammar_progress', JSON.stringify(progress));
+    }
+
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>
