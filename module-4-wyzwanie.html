@@ -7,9 +7,9 @@
     <style>
         :root {
             --primary: #1e293b;
-            --accent: #d9534f; /* Koralowy/Łososiowy przycisk */
+            --accent: #d9534f;
             --accent-hover: #c9302c;
-            --border-green: #10b981; /* Zielona ramka karty z obrazka */
+            --border-green: #10b981;
             --bg: #f8fafc;
             --card-bg: #ffffff;
             --text-main: #0f172a;
@@ -67,7 +67,6 @@
             transform: translateY(-1px);
         }
 
-        /* Pasek postępu */
         .progress-bar-container {
             width: 100%;
             height: 10px;
@@ -84,7 +83,6 @@
             transition: width 0.3s ease;
         }
 
-        /* Timer bar */
         .timer-container {
             width: 100%;
             height: 6px;
@@ -101,19 +99,17 @@
             transition: width 0.1s linear;
         }
 
-        /* Karta z zieloną obramówką jak na obrazku */
         .card {
             background: var(--card-bg);
             padding: 28px 20px;
             border-radius: var(--border-radius);
-            border: 2.5 solid var(--border-green);
             box-shadow: var(--shadow);
             margin-top: 10px;
             position: relative;
         }
 
         .card-border-green {
-            border: 2px solid var(--border-green);
+            border: 2.5px solid var(--border-green);
         }
 
         .subtitle {
@@ -133,10 +129,9 @@
             margin-bottom: 12px;
         }
 
-        /* Strefa budowania zdania */
         .sentence-dropzone {
             min-height: 65px;
-            border-bottom: 2px dashed #cbd5e1;
+            border: 2px dashed #cbd5e1;
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
@@ -146,14 +141,23 @@
             margin-bottom: 20px;
             background: #f8fafc;
             border-radius: 12px;
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
 
         .sentence-dropzone.drag-over {
             background: #e0f2fe;
         }
 
-        /* Pula słów do wyboru */
+        .sentence-dropzone.incorrect-state {
+            border-color: var(--error);
+            background: #fef2f2;
+        }
+
+        .sentence-dropzone.correct-state {
+            border-color: var(--success);
+            background: #f0fdf4;
+        }
+
         .words-pool {
             display: flex;
             flex-wrap: wrap;
@@ -163,7 +167,6 @@
             margin-bottom: 20px;
         }
 
-        /* Kafelki słów */
         .word-tile {
             padding: 10px 16px;
             background: #ffffff;
@@ -188,7 +191,18 @@
             pointer-events: none;
         }
 
-        /* Feedback i gramatyka */
+        .word-tile.tile-error {
+            border-color: var(--error);
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .word-tile.tile-success {
+            border-color: var(--success);
+            background: #d1fae5;
+            color: #065f46;
+        }
+
         .feedback {
             font-size: 1.1rem;
             font-weight: 700;
@@ -204,21 +218,30 @@
             background: #f0fdf4;
             border: 1px solid #bbf7d0;
             border-radius: 12px;
-            padding: 12px 16px;
+            padding: 16px;
             text-align: left;
-            font-size: 0.9rem;
+            font-size: 0.92rem;
             color: #166534;
             margin-bottom: 20px;
-            line-height: 1.4;
+            line-height: 1.5;
         }
 
-        .grammar-box strong {
-            display: block;
-            margin-bottom: 4px;
+        .grammar-box h4 {
             color: #15803d;
+            margin-bottom: 6px;
+            font-size: 1rem;
         }
 
-        /* Przyciski w stylu pigułki z obrazka */
+        .grammar-box .example-sentence {
+            background: #ffffff;
+            padding: 8px 12px;
+            border-left: 3px solid var(--border-green);
+            margin: 8px 0;
+            border-radius: 4px;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
         .btn {
             padding: 12px 36px;
             border-radius: 30px;
@@ -239,12 +262,6 @@
             transform: scale(1.02);
         }
 
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
         .btn-secondary {
             background: #64748b;
             box-shadow: none;
@@ -254,7 +271,6 @@
             background: #475569;
         }
 
-        /* Podsumowanie */
         .stars-container {
             font-size: 2.5rem;
             margin: 15px 0;
@@ -265,7 +281,6 @@
             display: none;
         }
 
-        /* Confetti Canvas */
         #confetti-canvas {
             position: fixed;
             top: 0;
@@ -317,7 +332,6 @@
             <span id="q-num">Zdanie 1 / 13</span>
         </div>
 
-        <!-- Pasek czasu 7s -->
         <div class="timer-container">
             <div class="timer-bar" id="timer-bar"></div>
         </div>
@@ -328,14 +342,14 @@
         <!-- Pula słów -->
         <div class="words-pool" id="words-pool"></div>
 
-        <!-- Feedback i objaśnienie -->
+        <!-- Feedback i gramatyka -->
         <div class="feedback" id="feedback"></div>
         <div class="grammar-box" id="grammar-box"></div>
 
         <!-- Przycisk Akcji -->
         <div style="margin-top: 10px;">
-            <button class="btn" id="action-btn" onclick="handleAction()">Sprawdź</button>
-            <span class="enter-hint">Naciśnij <strong>ENTER</strong> ↵</span>
+            <button class="btn" id="action-btn" style="display:none;" onclick="nextQuestion()">Następne zdanie →</button>
+            <span class="enter-hint" id="enter-hint" style="display:none;">Naciśnij <strong>ENTER</strong> ↵ aby przejść dalej</span>
         </div>
     </div>
 
@@ -361,67 +375,106 @@
         {
             correct: "Jutro jedziemy na wakacje.",
             words: ["wakacje", "Jutro", "jedziemy", "na"],
-            grammar: "<strong>Word order & Prepositions:</strong> In Polish, time expressions like 'Jutro' often come first. 'Na' is used with 'wakacje' (na wakacje)."
+            grammarTitle: "💡 Context & Grammar Note",
+            grammarBody: "In Polish, time expressions like <i>Jutro</i> (Tomorrow) usually start the sentence.<br><strong>Additional Example:</strong>",
+            exampleSentence: "W tym roku nie jedziemy na wakacje.",
+            exampleTranslation: "<i>This year we are not going on holiday.</i><br><b>Note:</b> In negative sentences, verbs like <i>jechać na</i> stay in the accusative with <i>wakacje</i> (plural)."
         },
         {
             correct: "Lubię pływać w jeziorze.",
             words: ["jeziorze", "Lubię", "w", "pływać"],
-            grammar: "<strong>Locative Case:</strong> After 'w' (in), the noun 'jezioro' changes to 'jeziorze'."
+            grammarTitle: "💡 Locative Case (Miejscownik)",
+            grammarBody: "The preposition <i>w</i> (in) requires the Locative case. <i>Jezioro</i> becomes <i>jeziorze</i>.<br><strong>Additional Example:</strong>",
+            exampleSentence: "W tym jeziorze nie ma ryb.",
+            exampleTranslation: "<i>There are no fish in this lake.</i><br><b>Genitive Rule:</b> In negative existence sentences ('nie ma'), the noun stays in Genitive case (<i>ryb</i>)."
         },
         {
             correct: "Muszę spakować walizkę.",
             words: ["walizkę", "Muszę", "spakować"],
-            grammar: "<strong>Accusative Case:</strong> 'Walizka' becomes 'walizkę' as the direct object of the verb."
+            grammarTitle: "💡 Accusative vs Genitive (Negative)",
+            grammarBody: "Direct objects take Accusative (<i>walizkę</i>). However, when negated, it changes to Genitive (<i>walizki</i>).<br><strong>Additional Example:</strong>",
+            exampleSentence: "Nie muszę pakować walizki.",
+            exampleTranslation: "<i>I don't need to pack a suitcase.</i><br><b>Grammar tip:</b> Notice how <i>walizkę</i> changes to <i>walizki</i> (Genitive) because of <b>Nie</b>!"
         },
         {
             correct: "Wieczorem nastawiam budzik.",
             words: ["budzik", "nastawiam", "Wieczorem"],
-            grammar: "<strong>Present Tense:</strong> 'Nastawiam' (I set) drops the personal pronoun 'Ja' because the verb ending indicates the person."
+            grammarTitle: "💡 Negation & Genitive Case",
+            grammarBody: "Masculine inanimate objects take Accusative identical to Nominative (<i>budzik</i>). In negative sentences, it switches to Genitive (<i>budzika</i>).<br><strong>Additional Example:</strong>",
+            exampleSentence: "W weekend nie nastawiam budzika.",
+            exampleTranslation: "<i>At the weekend I don't set an alarm clock.</i><br><b>Grammar tip:</b> In negative sentences, direct objects change from Accusative to Genitive (<i>budzik → budzika</i>)."
         },
         {
             correct: "Czytam w hamaku.",
             words: ["hamaku", "Czytam", "w"],
-            grammar: "<strong>Locative Case:</strong> 'Hamak' becomes 'w hamaku' to describe location (where?)."
+            grammarTitle: "💡 Locative Endings (-u)",
+            grammarBody: "Masculine hard stems ending in -k (like <i>hamak</i>) take the ending <b>-u</b> in Locative.<br><strong>Additional Example:</strong>",
+            exampleSentence: "Nie lubię spać w hamaku.",
+            exampleTranslation: "<i>I don't like sleeping in a hammock.</i><br><b>Grammar tip:</b> <i>W hamaku</i> describes location (where? / gdzie?)."
         },
         {
             correct: "Lubimy jeździć na rowerze.",
             words: ["rowerze", "na", "Lubimy", "jeździć"],
-            grammar: "<strong>Fixed Expression:</strong> 'Jeździć na rowerze' (to ride a bike) uses the locative form 'rowerze'."
+            grammarTitle: "💡 Fixed Expressions with 'na'",
+            grammarBody: "Transport methods often use <i>na + Locative</i> (<i>na rowerze, na koniu</i>).<br><strong>Additional Example:</strong>",
+            exampleSentence: "Dzisiaj nie jeżdżę na rowerze.",
+            exampleTranslation: "<i>Today I am not riding a bike.</i><br><b>Grammar tip:</b> Negating the verb doesn't change prepositional phrases like <i>na rowerze</i>."
         },
         {
             correct: "Śpimy pod namiotem.",
             words: ["pod", "namiotem", "Śpimy"],
-            grammar: "<strong>Instrumental Case:</strong> Preposition 'pod' (under) requires instrumental form ('namiotem')."
+            grammarTitle: "💡 Instrumental Case (Narzędnik)",
+            grammarBody: "The preposition <i>pod</i> (under) uses the Instrumental case (<i>namiot → pod namiotem</i>).<br><strong>Additional Example:</strong>",
+            exampleSentence: "Nigdy nie śpimy pod namiotem w zimie.",
+            exampleTranslation: "<i>We never sleep in a tent in winter.</i><br><b>Note:</b> Double negation is required in Polish (<i>nigdy nie...</i>)."
         },
         {
             correct: "Na drodze stoi znak drogowy.",
             words: ["drogowy", "stoi", "znak", "Na", "drodze"],
-            grammar: "<strong>Locative & Adjective:</strong> 'Droga' becomes 'na drodze'. 'Znak drogowy' is road sign."
+            grammarTitle: "💡 Negation & Subject Genitive",
+            grammarBody: "When stating something doesn't exist ('nie ma'), the subject moves to Genitive.<br><strong>Additional Example:</strong>",
+            exampleSentence: "Na tej drodze nie ma żadnego znaku drogowego.",
+            exampleTranslation: "<i>There is no road sign on this road.</i><br><b>Genitive Rule:</b> <i>Znak drogowy</i> becomes <i>znaku drogowego</i> in negative presence sentences!"
         },
         {
             correct: "Pojechaliśmy wynająć auto.",
             words: ["auto", "wynająć", "Pojechaliśmy"],
-            grammar: "<strong>Past Tense:</strong> 'Pojechaliśmy' means 'we went (by vehicle)'."
+            grammarTitle: "💡 Neuter Nouns in Negation",
+            grammarBody: "Neuter nouns like <i>auto</i> have identical Nominative and Accusative singular forms.<br><strong>Additional Example:</strong>",
+            exampleSentence: "Nie chcemy wynająć auta.",
+            exampleTranslation: "<i>We don't want to rent a car.</i><br><b>Genitive Rule:</b> In negation, neuter noun <i>auto</i> changes to <i>auta</i> (Genitive)."
         },
         {
             correct: "Po deszczu zbieramy grzyby.",
             words: ["grzyby", "zbieramy", "Po", "deszczu"],
-            grammar: "<strong>Genitive Case:</strong> 'Po' (after) in this context requires Genitive ('deszczu')."
+            grammarTitle: "💡 Plural Direct Objects",
+            grammarBody: "Plural non-virile nouns take Accusative (<i>grzyby</i>). In negative sentences, they take Genitive Plural (<i>grzybów</i>).<br><strong>Additional Example:</strong>",
+            exampleSentence: "W tym lesie nie zbieramy grzybów.",
+            exampleTranslation: "<i>We don't collect mushrooms in this forest.</i><br><b>Genitive Plural:</b> <i>Grzyby</i> changes to <i>grzybów</i> after negative verb."
         },
         {
             correct: "Pada letnia burza.",
             words: ["burza", "Pada", "letnia"],
-            grammar: "<strong>Weather Expressions:</strong> 'Pada' can be used with rain or storm ('pada letnia burza')."
+            grammarTitle: "💡 Weather Vocabulary",
+            grammarBody: "The verb <i>padać</i> is used for rain, snow, and storms.<br><strong>Additional Example:</strong>",
+            exampleSentence: "Mam nadzieję, że dzisiaj nie będzie letniej burzy.",
+            exampleTranslation: "<i>I hope there won't be a summer storm today.</i><br><b>Genitive Case:</b> <i>Letnia burza</i> becomes <i>letniej burzy</i> after negative future 'nie będzie'."
         },
         {
             correct: "Rano nastawiam czajnik.",
             words: ["czajnik", "nastawiam", "Rano"],
-            grammar: "<strong>Everyday Phrase:</strong> 'Nastawić czajnik' means to put the kettle on."
+            grammarTitle: "💡 Everyday Colloquial Phrases",
+            grammarBody: "<i>Nastawić czajnik</i> literally means to set/turn on the kettle.<br><strong>Additional Example:</strong>",
+            exampleSentence: "Rano nie nastawiam czajnika, wolę napić się wody.",
+            exampleTranslation: "<i>In the morning I don't turn on the kettle, I prefer drinking water.</i><br><b>Genitive Rule:</b> <i>Czajnik</i> becomes <i>czajnika</i> (Genitive) in negative sentence."
         },
         {
             correct: "Mam niebieską czapkę z daszkiem.",
             words: ["daszkiem", "czapkę", "Mam", "niebieską", "z"],
-            grammar: "<strong>Accusative Agreement:</strong> Both adjective and noun take feminine accusative ('niebieską czapkę')."
+            grammarTitle: "💡 Adjective-Noun Negation",
+            grammarBody: "Both adjective and noun agreement must shift to Genitive in negation.<br><strong>Additional Example:</strong>",
+            exampleSentence: "Nie mam niebieskiej czapki z daszkiem.",
+            exampleTranslation: "<i>I don't have a blue baseball cap.</i><br><b>Genitive Rule:</b> Feminine <i>niebieską czapkę</i> (Acc) becomes <i>niebieskiej czapki</i> (Gen)."
         }
     ];
 
@@ -434,7 +487,6 @@
     let timeLeft = 7;
     const TIME_LIMIT = 7;
 
-    // Inicjalizacja
     function initQuiz() {
         currentIndex = 0;
         score = 0;
@@ -451,22 +503,21 @@
         
         const q = sentences[currentIndex];
         
-        // UI
         document.getElementById('q-num').innerText = `Zdanie ${currentIndex + 1} / ${sentences.length}`;
         document.getElementById('feedback').innerText = '';
         document.getElementById('feedback').className = 'feedback';
         document.getElementById('grammar-box').style.display = 'none';
-        document.getElementById('action-btn').innerText = 'Sprawdź';
-        document.getElementById('action-btn').onclick = handleAction;
+        document.getElementById('action-btn').style.display = 'none';
+        document.getElementById('enter-hint').style.display = 'none';
         
-        // Progress bar
+        const dropzone = document.getElementById('dropzone');
+        dropzone.className = 'sentence-dropzone';
+
         const pct = ((currentIndex) / sentences.length) * 100;
         document.getElementById('progress-bar').style.width = `${pct}%`;
 
-        // Render dropzone
         renderDropzone();
 
-        // Render pool
         const pool = document.getElementById('words-pool');
         pool.innerHTML = '';
         
@@ -478,10 +529,8 @@
             tile.dataset.index = idx;
             tile.dataset.word = word;
 
-            // Click
             tile.onclick = () => selectWord(word, idx);
 
-            // Drag
             tile.ondragstart = (e) => {
                 e.dataTransfer.setData('text/plain', JSON.stringify({ word, idx }));
             };
@@ -499,7 +548,6 @@
         
         clearInterval(timer);
         const intervalTime = 100;
-        const decrement = (100 / (TIME_LIMIT * 10));
 
         timer = setInterval(() => {
             timeLeft -= 0.1;
@@ -515,20 +563,30 @@
 
     function handleTimeOut() {
         if (isChecked) return;
-        attempts++;
+        
         const feedback = document.getElementById('feedback');
-        feedback.innerText = '⏱️ Czas minął! Spróbuj ponownie.';
+        feedback.innerText = '⏱️ Czas minął!';
         feedback.className = 'feedback error';
+        
+        // Zaznacz jako błąd
+        const dropzone = document.getElementById('dropzone');
+        dropzone.classList.add('incorrect-state');
+
+        attempts++;
 
         if (attempts >= 3) {
-            revealCorrect();
+            revealCorrect(false); // Nie zaliczaj punktu
+        } else {
+            // Automatyczne przejście bez zaliczania punktu po 1.5 sekundy
+            setTimeout(() => {
+                if (!isChecked) nextQuestion();
+            }, 1200);
         }
     }
 
     function selectWord(word, idx) {
         if (isChecked) return;
         
-        // Oznaczenie kafelka w puli
         const poolTiles = document.querySelectorAll('#words-pool .word-tile');
         const tile = poolTiles[idx];
         
@@ -537,6 +595,12 @@
         tile.classList.add('used');
         selectedWords.push({ word, idx });
         renderDropzone();
+
+        // AUTOMATYCZNE SPRAWDZANIE po ułożeniu wszystkich słów
+        const q = sentences[currentIndex];
+        if (selectedWords.length === q.words.length) {
+            checkAnswerAuto();
+        }
     }
 
     function deselectWord(arrayIdx) {
@@ -547,6 +611,11 @@
         if (poolTiles[removed.idx]) {
             poolTiles[removed.idx].classList.remove('used');
         }
+        
+        const dropzone = document.getElementById('dropzone');
+        dropzone.className = 'sentence-dropzone';
+        document.getElementById('feedback').innerText = '';
+
         renderDropzone();
     }
 
@@ -563,7 +632,6 @@
         });
     }
 
-    // Drag and Drop
     function handleDragOver(e) {
         e.preventDefault();
         document.getElementById('dropzone').classList.add('drag-over');
@@ -582,65 +650,81 @@
         selectWord(data.word, data.idx);
     }
 
-    // Akcja Przycisk / Enter
-    function handleAction() {
-        if (!isChecked) {
-            checkAnswer();
-        } else {
-            nextQuestion();
-        }
-    }
-
-    function checkAnswer() {
+    // Automatyczna weryfikacja odpowiedzi
+    function checkAnswerAuto() {
         clearInterval(timer);
         const currentSentence = selectedWords.map(w => w.word).join(' ');
         const q = sentences[currentIndex];
         const feedback = document.getElementById('feedback');
+        const dropzone = document.getElementById('dropzone');
 
         if (currentSentence === q.correct) {
             isChecked = true;
             score++;
             feedback.innerText = '✅ Świetnie!';
             feedback.className = 'feedback success';
-            
-            // Pokaż gramatykę
-            const grammarBox = document.getElementById('grammar-box');
-            grammarBox.innerHTML = q.grammar;
-            grammarBox.style.display = 'block';
+            dropzone.className = 'sentence-dropzone correct-state';
 
-            document.getElementById('action-btn').innerText = 'Następne zdanie →';
+            // Style kafelków w dropzone na zielono
+            document.querySelectorAll('#dropzone .word-tile').forEach(t => t.classList.add('tile-success'));
+
+            showGrammarAndControls();
         } else {
             attempts++;
             feedback.innerText = '❌ Spróbuj ponownie.';
             feedback.className = 'feedback error';
+            dropzone.className = 'sentence-dropzone incorrect-state';
+
+            // Style kafelków w dropzone na czerwono
+            document.querySelectorAll('#dropzone .word-tile').forEach(t => t.classList.add('tile-error'));
 
             if (attempts >= 3) {
-                revealCorrect();
+                revealCorrect(false);
             } else {
-                startTimer(); // Restart timera dla nowej próby
+                // Pozwól spróbować ponownie po restarcie timera
+                setTimeout(() => {
+                    if (!isChecked) {
+                        dropzone.className = 'sentence-dropzone';
+                        document.querySelectorAll('#dropzone .word-tile').forEach(t => t.classList.remove('tile-error'));
+                        startTimer();
+                    }
+                }, 1000);
             }
         }
     }
 
-    function revealCorrect() {
+    function revealCorrect(earnedPoint = false) {
         clearInterval(timer);
         isChecked = true;
         const q = sentences[currentIndex];
         const feedback = document.getElementById('feedback');
+        const dropzone = document.getElementById('dropzone');
 
         feedback.innerText = `✅ Poprawne zdanie: ${q.correct}`;
         feedback.className = 'feedback success';
+        dropzone.className = 'sentence-dropzone correct-state';
 
-        // Pokaż gramatykę
-        const grammarBox = document.getElementById('grammar-box');
-        grammarBox.innerHTML = q.grammar;
-        grammarBox.style.display = 'block';
-
-        // Ustaw poprawne słowa w dropzone
         selectedWords = q.words.map((w, i) => ({ word: w, idx: i }));
         renderDropzone();
+        document.querySelectorAll('#dropzone .word-tile').forEach(t => t.classList.add('tile-success'));
 
-        document.getElementById('action-btn').innerText = 'Następne zdanie →';
+        showGrammarAndControls();
+    }
+
+    function showGrammarAndControls() {
+        const q = sentences[currentIndex];
+        const grammarBox = document.getElementById('grammar-box');
+        
+        grammarBox.innerHTML = `
+            <h4>${q.grammarTitle}</h4>
+            <div>${q.grammarBody}</div>
+            <div class="example-sentence">${q.exampleSentence}</div>
+            <div>${q.exampleTranslation}</div>
+        `;
+        grammarBox.style.display = 'block';
+
+        document.getElementById('action-btn').style.display = 'inline-block';
+        document.getElementById('enter-hint').style.display = 'block';
     }
 
     function nextQuestion() {
@@ -666,30 +750,28 @@
         else if (pct >= 50) stars = "⭐⭐☆";
         document.getElementById('stars').innerText = stars;
 
-        // Save progress LocalStorage
         let progress = JSON.parse(localStorage.getItem('polish_module_4_progress')) || {};
         if (!progress[6]) progress[6] = {};
         progress[6].completed = true;
         progress[6].score = pct;
         localStorage.setItem('polish_module_4_progress', JSON.stringify(progress));
 
-        // Start Confetti
         launchConfetti();
     }
 
-    // Enter Key Listener
+    // Obsługa Klawisza ENTER
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             const summaryDisplay = document.getElementById('summary').style.display;
             if (summaryDisplay === 'block') {
                 initQuiz();
-            } else {
-                handleAction();
+            } else if (isChecked) {
+                nextQuestion();
             }
         }
     });
 
-    // Prosty silnik Confetti w czystym JS
+    // Generator Confetti
     function launchConfetti() {
         const canvas = document.getElementById('confetti-canvas');
         const ctx = canvas.getContext('2d');
