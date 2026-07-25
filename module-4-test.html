@@ -6,170 +6,604 @@
     <title>Moduł 4 - Etap 6: Test Końcowy</title>
     <style>
         :root {
-            --primary: #2c3e50;
-            --accent: #D0A03C;
-            --accent-hover: #b88a2e;
-            --bg: #f8fafc;
+            /* Kolory dopasowane do przesłanego obrazka */
+            --primary-accent: #d0533f;         /* Terakotowy / rudy przycisk */
+            --primary-accent-hover: #b84331;
+            --border-green: #00a86b;           /* Zielona ramka kart */
+            --badge-green-bg: #e6f7f0;
+            --badge-green-text: #007a4d;
+            
+            --bg-color: #f8f9fa;
             --card-bg: #ffffff;
-            --text-main: #1e293b;
+            --text-dark: #2c3e50;
             --text-muted: #64748b;
-            --border-radius: 16px;
-            --shadow: 0 10px 15px -3px rgba(0,0,0,0.08);
-            --success: #10b981;
-            --error: #ef4444;
+            --border-light: #e2e8f0;
+            --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.05);
+            --error-red: #e74c3c;
+            --error-bg: #fadbd8;
+            --hint-bg: #f0fdf4;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { background: var(--bg); color: var(--text-main); padding: 24px 16px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 650px; text-align: center; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-        .top-nav { display: flex; justify-content: flex-start; margin-bottom: 20px; }
-        .back-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none; font-weight: 600; padding: 8px 16px; background: var(--card-bg); border-radius: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
 
-        .card { background: var(--card-bg); padding: 30px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-top: 20px; }
-        .question-title { font-size: 1.2rem; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+        }
 
-        .options { display: flex; flex-direction: column; gap: 10px; }
-        .opt-btn { padding: 14px; background: #ffffff; border: 2px solid #cbd5e1; border-radius: 10px; font-size: 1rem; cursor: pointer; text-align: left; font-weight: 600; transition: all 0.2s; }
-        .opt-btn:hover { border-color: var(--accent); }
-        .opt-btn.correct { background: #d1fae5; border-color: var(--success); color: #065f46; }
-        .opt-btn.incorrect { background: #fee2e2; border-color: var(--error); color: #991b1b; }
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
 
-        .btn { padding: 12px 24px; border-radius: 30px; border: none; background: var(--accent); color: white; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; }
-        .stars { font-size: 2.5rem; margin: 15px 0; }
-        .summary-card { display: none; }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .back-link:hover {
+            color: var(--primary-accent);
+        }
+
+        .counter-badge {
+            background-color: var(--badge-green-bg);
+            color: var(--badge-green-text);
+            font-weight: 700;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.95rem;
+        }
+
+        .header-title-box {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-title-box h1 {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 0.3rem;
+        }
+
+        .header-title-box p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 10px;
+            background-color: var(--border-light);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--border-green);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Karta stylizowana na wzór zielonej ramki z obrazka */
+        .exercise-card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-green);
+            margin-bottom: 1.5rem;
+        }
+
+        .type-tag {
+            display: inline-block;
+            background-color: var(--badge-green-bg);
+            color: var(--badge-green-text);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .question-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .dialogue-box {
+            background-color: #f8fafc;
+            border-left: 4px solid var(--border-green);
+            padding: 1rem 1.2rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        /* Dodatkowa sekcja z ciekawostkami lub gramatyką */
+        .extra-info-box {
+            background-color: var(--hint-bg);
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            color: #166534;
+        }
+
+        .extra-info-box strong {
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .opt-btn {
+            padding: 1rem 1.2rem;
+            background-color: var(--card-bg);
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .opt-btn:hover {
+            border-color: var(--primary-accent);
+            background-color: #fff5f3;
+        }
+
+        .opt-btn.correct {
+            background-color: var(--badge-green-bg);
+            border-color: var(--border-green);
+            color: var(--badge-green-text);
+        }
+
+        .opt-btn.incorrect {
+            background-color: var(--error-bg);
+            border-color: var(--error-red);
+            color: var(--error-red);
+        }
+
+        /* Przyciski jak na obrazku (ruse/terakota) */
+        .btn {
+            background-color: var(--primary-accent);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 0.9rem 2.2rem;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(208, 83, 63, 0.25);
+        }
+
+        .btn:hover {
+            background-color: var(--primary-accent-hover);
+        }
+
+        .completion-screen {
+            display: none;
+            text-align: center;
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--border-green);
+        }
+
+        .completion-screen h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stars {
+            font-size: 3rem;
+            margin: 1rem 0;
+        }
+
+        .score-display {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary-accent);
+            margin-bottom: 1.5rem;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="top-nav">
-        <a href="module-4-vocab.html" class="back-btn">← Powrót do Modułu 4</a>
+    <div class="container">
+        <div class="top-nav">
+            <a href="module-4-vocab.html" class="back-link">← Powrót do Modułu 4</a>
+            <span class="counter-badge" id="question-counter">Pytanie 1 / 20</span>
+        </div>
+
+        <div class="header-title-box">
+            <h1>Etap 6: Test Końcowy</h1>
+            <p>Wakacje i dni wolne – sprawdzenie wiedzy</p>
+        </div>
+
+        <div class="progress-track">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+
+        <div id="quiz-area">
+            <div class="exercise-card">
+                <div style="text-align: center;">
+                    <span class="type-tag" id="q-type">Zadanie</span>
+                </div>
+                
+                <div id="dialogue-container" class="dialogue-box" style="display: none;"></div>
+                <div class="question-title" id="q-title">Ładowanie pytania...</div>
+                
+                <div id="extra-info-container" class="extra-info-box" style="display: none;"></div>
+                
+                <div class="options-list" id="options-container"></div>
+            </div>
+        </div>
+
+        <div class="completion-screen" id="summary">
+            <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">🎯</div>
+            <h2>Podsumowanie Testu</h2>
+            <div class="stars" id="stars-display">⭐⭐⭐</div>
+            <p style="color: var(--text-muted); font-size: 1.1rem;">Twój wynik końcowy:</p>
+            <div class="score-display" id="score-text">0 / 20 (0%)</div>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="btn" onclick="initQuiz()">Powtórz</button>
+                <a href="module-4-vocab.html" class="btn" style="background-color: var(--text-muted); box-shadow: none;">Powrót</a>
+            </div>
+        </div>
     </div>
 
-    <h1>Etap 6: Test Końcowy</h1>
-    <p style="color: var(--text-muted); margin-top: 5px;">Sprawdź całą swoją wiedzę z Modułu 4</p>
+    <script>
+        const testBank = [
+            // 1-3. WYBIERZ POPRAWNE ZDANIE
+            { 
+                type: "Poprawne zdanie", 
+                title: "Wybierz poprawne zdanie:", 
+                options: [
+                    { text: "Jutro jedziemy na wakacje.", correct: true }, 
+                    { text: "Jedziemy jutro wakacje na.", correct: false }, 
+                    { text: "Na wakacje jedziemy jutro.", correct: false }
+                ] 
+            },
+            { 
+                type: "Poprawne zdanie", 
+                title: "Wybierz poprawne zdanie:", 
+                options: [
+                    { text: "Lubię pływać w jeziorze.", correct: true }, 
+                    { text: "Pływać w jeziorze lubię.", correct: false }, 
+                    { text: "W jeziorze lubię pływać.", correct: false }
+                ],
+                extraInfo: "💡 <strong>Warto wiedzieć:</strong><br>• pływać w morzu ➔ <em>to swim in the sea</em><br>• pływać w rzece ➔ <em>to swim in the river</em>"
+            },
+            { 
+                type: "Poprawne zdanie", 
+                title: "Wybierz poprawne zdanie:", 
+                options: [
+                    { text: "Dzisiaj muszę spakować walizkę.", correct: true }, 
+                    { text: "Spakować walizkę muszę dzisiaj.", correct: false }, 
+                    { text: "Walizkę spakować dzisiaj muszę.", correct: false }
+                ] 
+            },
+            
+            // 4-7. DIALOGI Z LUKAMI & KONTEKST
+            { 
+                type: "Dialog z luką", 
+                dialogue: "— Słońce bardzo mocno świeci!<br>— Weź ze sobą ________.", 
+                title: "Wybierz właściwą odpowiedź:", 
+                options: [
+                    { text: "czapkę z daszkiem", correct: true }, 
+                    { text: "znak drogowy", correct: false }, 
+                    { text: "letnią burzę", correct: false }
+                ] 
+            },
+            { 
+                type: "Dialog z luką", 
+                dialogue: "— Zwykle nastawiam budzik na 6:00, ale w wakacje nie nastawiam ________.", 
+                title: "Wybierz poprawną formę:", 
+                options: [
+                    { text: "budzika", correct: true }, 
+                    { text: "budzik", correct: false }, 
+                    { text: "budziku", correct: false }
+                ] 
+            },
+            { 
+                type: "Dialog z luką", 
+                dialogue: "— Masz ochotę na gorącą herbatę?<br>— Tak, idę właśnie ________.", 
+                title: "Wybierz właściwe dokończenie:", 
+                options: [
+                    { text: "nastawić czajnik", correct: true }, 
+                    { text: "wynająć auto", correct: false }, 
+                    { text: "spać pod namiotem", correct: false }
+                ],
+                extraInfo: "💡 <strong>Słowniczek: mieć ochotę na...</strong> (<em>to feel like / to want...</em>):<br>• mieć ochotę na pizzę ➔ <em>to feel like pizza</em><br>• mieć ochotę na coś ➔ <em>to feel like having something</em>"
+            },
+            { 
+                type: "Dialog z luką", 
+                dialogue: "— Jak dojedziemy z lotniska do hotelu?<br>— Najlepiej ________ na cały tydzień.", 
+                title: "Wybierz właściwą odpowiedź:", 
+                options: [
+                    { text: "wynająć auto", correct: true }, 
+                    { text: "jeździć na rowerze", correct: false }, 
+                    { text: "zbierać grzyby", correct: false }
+                ],
+                extraInfo: "✈️ <strong>Fun Fact:</strong><br>• <strong>LOT</strong> to nazwa polskich linii lotniczych.<br>• Słowo <strong>lot</strong> oznacza <em>flight</em>.<br>• Słowo <strong>lotnisko</strong> oznacza <em>airport</em>.<br>📌 <em>Przykład:</em> Nasz lot na lotnisko w Warszawie jest opóźniony."
+            },
 
-    <div class="card" id="quiz-area">
-        <div style="color: var(--text-muted); margin-bottom: 10px;" id="q-num">Pytanie 1 / 10</div>
-        <div class="question-title" id="q-title">Ładowanie pytania...</div>
-        <div class="options" id="options-container"></div>
-    </div>
+            // 8-12. UZUPEŁNIANIE ZDAŃ (TYLKO ZDANIE I LUKA)
+            { 
+                type: "Odmiana i uzupełnianie", 
+                title: "Lubimy spać pod ________.", 
+                options: [
+                    { text: "namiotem", correct: true }, 
+                    { text: "namiotu", correct: false }, 
+                    { text: "namiot", correct: false }
+                ] 
+            },
+            { 
+                type: "Odmiana i uzupełnianie", 
+                title: "Popołudniu lubię czytać w ________.", 
+                options: [
+                    { text: "hamaku", correct: true }, 
+                    { text: "hamakiem", correct: false }, 
+                    { text: "hamak", correct: false }
+                ] 
+            },
+            { 
+                type: "Odmiana i uzupełnianie", 
+                title: "Dzieci chętnie jeżdżą na ________.", 
+                options: [
+                    { text: "rowerze", correct: true }, 
+                    { text: "rowerem", correct: false }, 
+                    { text: "roweru", correct: false }
+                ] 
+            },
+            { 
+                type: "Odmiana i uzupełnianie", 
+                title: "Rano w lesie lubimy zbierać ________.", 
+                options: [
+                    { text: "grzyby", correct: true }, 
+                    { text: "grzybami", correct: false }, 
+                    { text: "grzybów", correct: false }
+                ] 
+            },
+            { 
+                type: "Odmiana i uzupełnianie", 
+                title: "Patrz na ten ________, tam jest zakaz!", 
+                options: [
+                    { text: "znak drogowy", correct: true }, 
+                    { text: "znaku drogowego", correct: false }, 
+                    { text: "znakiem drogowym", correct: false }
+                ] 
+            },
 
-    <div class="card summary-card" id="summary">
-        <h2>Podsumowanie Testu Końcowego</h2>
-        <div class="stars" id="stars-display">⭐⭐⭐</div>
-        <p style="margin: 10px 0; font-size: 1.2rem;">Twój wynik końcowy:</p>
-        <p style="font-size: 2rem; font-weight: bold; color: var(--accent); margin-bottom: 20px;" id="score-text">0 / 10 (0%)</p>
-        <button class="btn" onclick="initQuiz()">Powtórz Test</button>
-        <a href="module-4-vocab.html" class="btn" style="background: #94a3b8; margin-left: 10px;">Powrót do modułu</a>
-    </div>
-</div>
+            // 13-16. TŁUMACZENIE (TYLKO WYRAZ I OPCJE)
+            { 
+                type: "Tłumaczenie", 
+                title: "to pack a suitcase", 
+                options: [
+                    { text: "spakować walizkę", correct: true }, 
+                    { text: "wynająć auto", correct: false }, 
+                    { text: "nastawić budzik", correct: false }
+                ] 
+            },
+            { 
+                type: "Tłumaczenie", 
+                title: "summer storm", 
+                options: [
+                    { text: "letnia burza", correct: true }, 
+                    { text: "czapka z daszkiem", correct: false }, 
+                    { text: "znak drogowy", correct: false }
+                ] 
+            },
+            { 
+                type: "Tłumaczenie", 
+                title: "jechać na wakacje", 
+                options: [
+                    { text: "to go on holiday", correct: true }, 
+                    { text: "to ride a bike", correct: false }, 
+                    { text: "to sleep in a tent", correct: false }
+                ] 
+            },
+            { 
+                type: "Tłumaczenie", 
+                title: "to read in a hammock", 
+                options: [
+                    { text: "czytać w hamaku", correct: true }, 
+                    { text: "pływać w jeziorze", correct: false }, 
+                    { text: "zbierać grzyby", correct: false }
+                ] 
+            },
 
-<script>
-    const testBank = [
-        { title: "Co znaczy 'zbierać grzyby'?", options: [{ text: "pick mushrooms", correct: true }, { text: "swim in a lake", correct: false }, { text: "ride a bike", correct: false }] },
-        { title: "Uzupełnij: 'Na plaży robimy zamek z ________.'", options: [{ text: "piasku", correct: true }, { text: "namiotu", correct: false }, { text: "bluzy", correct: false }] },
-        { title: "Co oznacza wyrażenie 'to set an alarm clock'?", options: [{ text: "nastawiać budzik", correct: true }, { text: "nastawiać czajnik", correct: false }, { text: "pływać w jeziorze", correct: false }] },
-        { title: "Poprawna forma: 'Lubiemy spać pod ________.'", options: [{ text: "namiotem", correct: true }, { text: "namiot", correct: false }, { text: "namiotu", correct: false }] },
-        { title: "Co ubrać w chłodny wieczór na wakacjach?", options: [{ text: "Ciepła bluza", correct: true }, { text: "Znak drogowy", correct: false }, { text: "Biała flaga", correct: false }] },
-        { title: "Gdzie spacerujemy podczas wakacji?", options: [{ text: "W lesie", correct: true }, { text: "W las", correct: false }, { text: "W lesiem", correct: false }] },
-        { title: "Co robimy aparatem fotograficznym?", options: [{ text: "Robić zdjęcia", correct: true }, { text: "Czytać w hamaku", correct: false }, { text: "Wynająć auto", correct: false }] },
-        { title: "Co robimy na rowerze?", options: [{ text: "Jeździć", correct: true }, { text: "Spakować", correct: false }, { text: "Nastawiać", correct: false }] },
-        { title: "Co to jest 'dżem truskawkowy'?", options: [{ text: "Strawberry jam", correct: true }, { text: "Warm hoodie", correct: false }, { text: "Summer storm", correct: false }] },
-        { title: "Gdzie czytamy książkę w ogrodzie?", options: [{ text: "W hamaku", correct: true }, { text: "W walizce", correct: false }, { text: "W czajniku", correct: false }] }
-    ];
+            // 17-20. DOPASOWANIE I KONTEKST
+            { 
+                type: "Dopasowanie", 
+                title: "Co wkładasz na głowę, kiedy jest gorąco?", 
+                options: [
+                    { text: "czapka z daszkiem", correct: true }, 
+                    { text: "znak drogowy", correct: false }, 
+                    { text: "letnia burza", correct: false }
+                ] 
+            },
+            { 
+                type: "Dopasowanie", 
+                title: "Jaka pogoda może nagle przydarzyć się w lipcu?", 
+                options: [
+                    { text: "letnia burza", correct: true }, 
+                    { text: "nastawić czajnik", correct: false }, 
+                    { text: "spakować walizkę", correct: false }
+                ] 
+            },
+            { 
+                type: "Dopasowanie", 
+                title: "Co robisz, kiedy stoisz na drodze i szukasz informacji o jeździe?", 
+                options: [
+                    { text: "patrzę na znak drogowy", correct: true }, 
+                    { text: "pływam w jeziorze", correct: false }, 
+                    { text: "czytam w hamaku", correct: false }
+                ] 
+            },
+            { 
+                type: "Dopasowanie", 
+                title: "Co robisz, kiedy jesteś na kempingu w nocy?", 
+                options: [
+                    { text: "śpię pod namiotem", correct: true }, 
+                    { text: "wynajmuję auto", correct: false }, 
+                    { text: "nastawiam czajnik", correct: false }
+                ] 
+            }
+        ];
 
-    let currentIndex = 0;
-    let attempts = 0;
-    let correctCount = 0;
+        let currentIndex = 0;
+        let attempts = 0;
+        let correctCount = 0;
 
-    function initQuiz() {
-        currentIndex = 0;
-        correctCount = 0;
-        document.getElementById('quiz-area').style.display = 'block';
-        document.getElementById('summary').style.display = 'none';
-        showQuestion();
-    }
+        function initQuiz() {
+            currentIndex = 0;
+            correctCount = 0;
+            document.getElementById('quiz-area').style.display = 'block';
+            document.getElementById('summary').style.display = 'none';
+            showQuestion();
+        }
 
-    function showQuestion() {
-        attempts = 0;
-        const q = testBank[currentIndex];
-        document.getElementById('q-num').innerText = `Pytanie ${currentIndex + 1} / ${testBank.length}`;
-        document.getElementById('q-title').innerText = q.title;
+        function showQuestion() {
+            attempts = 0;
+            const q = testBank[currentIndex];
+            
+            document.getElementById('question-counter').textContent = `Pytanie ${currentIndex + 1} / ${testBank.length}`;
+            document.getElementById('progress-bar').style.width = `${((currentIndex) / testBank.length) * 100}%`;
+            document.getElementById('q-type').textContent = q.type;
+            
+            // Obsługa pola dialogu
+            const dialogueBox = document.getElementById('dialogue-container');
+            if (q.dialogue) {
+                dialogueBox.innerHTML = q.dialogue;
+                dialogueBox.style.display = 'block';
+            } else {
+                dialogueBox.style.display = 'none';
+            }
 
-        const container = document.getElementById('options-container');
-        container.innerHTML = '';
+            // Obsługa sekcji z dodatkowymi przykładami / wiedzą
+            const extraBox = document.getElementById('extra-info-container');
+            if (q.extraInfo) {
+                extraBox.innerHTML = q.extraInfo;
+                extraBox.style.display = 'block';
+            } else {
+                extraBox.style.display = 'none';
+            }
 
-        q.options.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'opt-btn';
-            btn.innerText = opt.text;
-            btn.onclick = () => handleSelect(btn, opt.correct);
-            container.appendChild(btn);
-        });
-    }
+            document.getElementById('q-title').textContent = q.title;
 
-    function handleSelect(btn, isCorrect) {
-        if (isCorrect) {
-            btn.classList.add('correct');
-            correctCount++;
-            disableOptions();
-            setTimeout(nextQuestion, 1000);
-        } else {
-            attempts++;
-            btn.classList.add('incorrect');
-            btn.disabled = true;
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
 
-            if (attempts >= 3) {
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'opt-btn';
+                btn.textContent = opt.text;
+                btn.onclick = () => handleSelect(btn, opt.correct);
+                container.appendChild(btn);
+            });
+        }
+
+        function handleSelect(btn, isCorrect) {
+            if (isCorrect) {
+                btn.classList.add('correct');
+                correctCount++;
                 disableOptions();
-                highlightCorrect();
-                setTimeout(nextQuestion, 1500);
+                setTimeout(nextQuestion, 1000);
+            } else {
+                attempts++;
+                btn.classList.add('incorrect');
+                btn.disabled = true;
+
+                if (attempts >= 3) {
+                    disableOptions();
+                    highlightCorrect();
+                    setTimeout(nextQuestion, 1500);
+                }
             }
         }
-    }
 
-    function disableOptions() {
-        document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
-    }
-
-    function highlightCorrect() {
-        const q = testBank[currentIndex];
-        document.querySelectorAll('.opt-btn').forEach((b, idx) => {
-            if (q.options[idx].correct) b.classList.add('correct');
-        });
-    }
-
-    function nextQuestion() {
-        currentIndex++;
-        if (currentIndex < testBank.length) {
-            showQuestion();
-        } else {
-            finishStage();
+        function disableOptions() {
+            document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
         }
-    }
 
-    function finishStage() {
-        document.getElementById('quiz-area').style.display = 'none';
-        document.getElementById('summary').style.display = 'block';
-        
-        const pct = Math.round((correctCount / testBank.length) * 100);
-        document.getElementById('score-text').innerText = `${correctCount} / ${testBank.length} (${pct}%)`;
+        function highlightCorrect() {
+            const q = testBank[currentIndex];
+            document.querySelectorAll('.opt-btn').forEach((b, idx) => {
+                if (q.options[idx].correct) b.classList.add('correct');
+            });
+        }
 
-        // Nagroda w postaci gwiazdek
-        const starsDisplay = document.getElementById('stars-display');
-        if (pct >= 80) starsDisplay.innerText = '⭐⭐⭐';
-        else if (pct >= 50) starsDisplay.innerText = '⭐⭐';
-        else starsDisplay.innerText = '⭐';
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < testBank.length) {
+                showQuestion();
+            } else {
+                finishStage();
+            }
+        }
 
-        let progress = JSON.parse(localStorage.getItem('polish_module_4_progress')) || {};
-        if (!progress[6]) progress[6] = {};
-        progress[6].completed = true;
-        localStorage.setItem('polish_module_4_progress', JSON.stringify(progress));
-    }
+        function finishStage() {
+            document.getElementById('progress-bar').style.width = '100%';
+            document.getElementById('quiz-area').style.display = 'none';
+            document.getElementById('summary').style.display = 'block';
+            
+            const pct = Math.round((correctCount / testBank.length) * 100);
+            document.getElementById('score-text').textContent = `${correctCount} / ${testBank.length} (${pct}%)`;
 
-    window.onload = initQuiz;
-</script>
+            const starsDisplay = document.getElementById('stars-display');
+            if (pct >= 80) starsDisplay.textContent = '⭐⭐⭐';
+            else if (pct >= 50) starsDisplay.textContent = '⭐⭐';
+            else starsDisplay.textContent = '⭐';
 
+            let progress = JSON.parse(localStorage.getItem('polish_module_4_progress')) || {};
+            if (!progress[6]) progress[6] = {};
+            progress[6].completed = true;
+            localStorage.setItem('polish_module_4_progress', JSON.stringify(progress));
+        }
+
+        window.onload = initQuiz;
+    </script>
 </body>
 </html>
