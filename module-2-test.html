@@ -392,7 +392,7 @@
 
             <!-- Nawigacja: Wstecz i Dalej -->
             <div class="nav-controls">
-                <button class="prev-btn" id="prev-btn" onclick="prevQuestion()">← Wstecz</button>
+                <button class="prev-btn" id="prev-btn" onclick="prevQuestion()">← Cofnij / Poprzednie słowo</button>
                 <button class="next-btn" id="next-btn" onclick="nextQuestion()">Następne pytanie →</button>
             </div>
         </div>
@@ -416,27 +416,27 @@
             // --- CZĘŚĆ 1: PODPISAĆ WYRAZY - WPISYWANIE (5 PYTAŃ) ---
             {
                 type: "input",
-                title: "Wpisz słowo po polsku: 🇬🇧 «grandmother»",
+                title: "Wpisz słowo po polsku: «grandmother» po polsku",
                 correctWord: "babcia"
             },
             {
                 type: "input",
-                title: "Wpisz słowo po polsku: 🇬🇧 «uncle»",
+                title: "Wpisz słowo po polsku: «uncle» po polsku",
                 correctWord: "wujek"
             },
             {
                 type: "input",
-                title: "Wpisz słowo po polsku: 🇬🇧 «recipe»",
+                title: "Wpisz słowo po polsku: «recipe» po polsku",
                 correctWord: "przepis"
             },
             {
                 type: "input",
-                title: "Wpisz słowo po polsku: 🇬🇧 «pastry shop / bakery»",
+                title: "Wpisz słowo po polsku: «pastry shop / bakery» po polsku",
                 correctWord: "cukiernia"
             },
             {
                 type: "input",
-                title: "Wpisz słowo po polsku: 🇬🇧 «retirement»",
+                title: "Wpisz słowo po polsku: «retirement» po polsku",
                 correctWord: "emerytura"
             },
 
@@ -619,12 +619,32 @@
 
         let currentQIndex = 0;
         let attempts = 0;
-        // Przechowywanie stanu odpowiedzi dla każdego pytania
         let userAnswers = new Array(testQuestions.length).fill(null);
+
+        // Obsługa klawisza ENTER
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                const current = testQuestions[currentQIndex];
+                const savedAns = userAnswers[currentQIndex];
+
+                if (current.type === 'input') {
+                    if (savedAns && savedAns.completed) {
+                        nextQuestion();
+                    } else {
+                        checkInputAnswer();
+                    }
+                } else {
+                    if (savedAns && savedAns.completed) {
+                        nextQuestion();
+                    }
+                }
+            }
+        });
 
         function renderQuestion() {
             const current = testQuestions[currentQIndex];
             
+            document.getElementById('step-counter').textContent = `Pytanie ${currentQIndex + 1} / ${testQuestions.length}`;
             document.getElementById('question-title').textContent = `${currentQIndex + 1}. ${current.title}`;
             
             const typeInput = document.getElementById('type-input');
@@ -637,10 +657,8 @@
             optionsGrid.style.display = 'none';
             explanationBox.classList.remove('visible');
 
-            // Kontrola przycisku Wstecz
             document.getElementById('prev-btn').disabled = (currentQIndex === 0);
 
-            // Stan poprzednio zapisanej odpowiedzi
             const savedAns = userAnswers[currentQIndex];
 
             if (current.type === 'input') {
@@ -662,7 +680,7 @@
                         feedback.className = 'feedback-msg correct';
                     } else {
                         inputElem.className = 'input-field incorrect';
-                        feedback.textContent = `❌ Prawidłowa odpowiedź: "${current.correctWord}"`;
+                        feedback.textContent = `❌ Brak prób. Poprawna odpowiedź: "${current.correctWord}"`;
                         feedback.className = 'feedback-msg incorrect';
                     }
                     enableNextButton(true);
@@ -672,7 +690,7 @@
                     inputElem.className = 'input-field';
                     btnSubmit.disabled = false;
                     enableNextButton(false);
-                    inputElem.focus();
+                    setTimeout(() => inputElem.focus(), 50);
                 }
 
             } else if (current.type === 'pair' || current.type === 'dialogGap') {
@@ -727,7 +745,6 @@
             updateProgress();
         }
 
-        // --- WPISYWANIE SŁOWA (MAX 3 PRÓBY) ---
         function checkInputAnswer() {
             const current = testQuestions[currentQIndex];
             const inputElem = document.getElementById('user-input');
@@ -767,7 +784,6 @@
             }
         }
 
-        // --- SELEKCJA OPCJI (WYBÓR ABC / SŁOWA Z LUKI) ---
         function selectOption(selectedBtn, idx, current) {
             const allBtns = document.querySelectorAll('#options-grid .option-btn');
             allBtns.forEach(btn => btn.disabled = true);
@@ -813,7 +829,7 @@
                 currentQIndex++;
                 renderQuestion();
             } else {
-                showCompletion();
+                showCompletionScreen();
             }
         }
 
@@ -825,41 +841,24 @@
         }
 
         function updateProgress() {
-            const total = testQuestions.length;
-            const pct = ((currentQIndex + 1) / total) * 100;
+            const pct = Math.round(((currentQIndex) / testQuestions.length) * 100);
             document.getElementById('progress-bar').style.width = `${pct}%`;
-            document.getElementById('step-counter').textContent = `Pytanie ${currentQIndex + 1} / ${total}`;
         }
 
-        function calculateScore() {
-            let totalScore = 0;
-            userAnswers.forEach(ans => {
-                if (ans && ans.isCorrect) {
-                    totalScore++;
-                }
-            });
-            return totalScore;
-        }
-
-        function showCompletion() {
+        function showCompletionScreen() {
             document.getElementById('quiz-card').style.display = 'none';
-            document.getElementById('completion-screen').style.display = 'block';
             document.getElementById('progress-bar').style.width = '100%';
+            
+            let score = 0;
+            userAnswers.forEach(ans => {
+                if (ans && ans.isCorrect) score++;
+            });
 
-            const score = calculateScore();
-            const total = testQuestions.length;
-            const pct = Math.round((score / total) * 100);
+            const percent = Math.round((score / testQuestions.length) * 100);
 
-            document.getElementById('final-score').textContent = `${score} / ${total}`;
-            document.getElementById('final-percent').textContent = `${pct}%`;
-
-            let desc = "Oto Twój wynik za cały moduł.";
-            if (pct === 100) desc = "🏆 Genialnie! Perfekcyjny wynik!";
-            else if (pct >= 80) desc = "👏 Bardzo dobry wynik! Świetna robota!";
-            else if (pct >= 50) desc = "👍 Dobry wynik, ale możesz jeszcze powtórzyć materiał.";
-            else desc = "💪 Warto powtórzyć słownictwo i spróbować ponownie!";
-
-            document.getElementById('completion-desc').textContent = desc;
+            document.getElementById('final-score').textContent = `${score} / ${testQuestions.length}`;
+            document.getElementById('final-percent').textContent = `${percent}%`;
+            document.getElementById('completion-screen').style.display = 'block';
         }
 
         function restartTest() {
@@ -872,19 +871,11 @@
         }
 
         function markStageComplete() {
-            const score = calculateScore();
-            const total = testQuestions.length;
-            const pct = Math.round((score / total) * 100);
-            
-            // Zapis wyniku w localStorage dla modułu 2
-            localStorage.setItem('module2_test_score', pct);
-            localStorage.setItem('module2_completed', 'true');
+            // Miejsce na integrację z logiką zapisu postępu
         }
 
-        // Inicjalizacja pierwszej karty po załadowaniu
-        document.addEventListener("DOMContentLoaded", () => {
-            renderQuestion();
-        });
+        // Inicjalizacja
+        renderQuestion();
     </script>
 </body>
 </html>
