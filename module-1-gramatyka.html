@@ -139,7 +139,7 @@
             color: var(--primary-green);
         }
 
-        /* Opcje odpowiedzi (Duolingo style) */
+        /* Opcje odpowiedzi */
         .options-grid {
             display: flex;
             flex-direction: column;
@@ -345,7 +345,6 @@
             to { opacity: 1; }
         }
 
-        /* Confetti Canvas */
         #confetti-canvas {
             position: fixed;
             top: 0;
@@ -364,9 +363,9 @@
     <div class="container">
         <!-- Nawigacja górna -->
         <div class="top-nav">
-            <a href="index.html" class="back-link">← Wróć do modułów</a>
+            <a href="module-1-vocab.html" class="back-link">← Wróć do modułów</a>
             <div class="breadcrumb">
-                <a href="index.html">🏠 Strona główna</a> &gt; <strong>Gramatyka</strong>
+                <a href="module-1-vocab.html">🏠 Strona główna</a> &gt; <strong>Gramatyka</strong>
             </div>
         </div>
 
@@ -387,9 +386,7 @@
             </div>
 
             <!-- Opcje do wyboru -->
-            <div class="options-grid" id="options-container">
-                <!-- Generowane dynamicznie w JS -->
-            </div>
+            <div class="options-grid" id="options-container"></div>
 
             <!-- Feedback po wyborze -->
             <div class="feedback-box" id="feedback-box"></div>
@@ -416,18 +413,11 @@
             <p style="color: var(--text-muted);">Ukończyłeś lekcję gramatyki z Modułu 1.</p>
             <div class="stars" id="stars-rating">⭐⭐⭐</div>
             <div class="score-text">Twój wynik: <span id="final-score">0</span> / 22</div>
-            <a href="index.html" class="btn-finish" onclick="completeModuleStage()">Wróć do listy lekcji</a>
+            <a href="module-1-vocab.html" class="btn-finish" id="btn-finish" onclick="completeModuleStage()">Wróć do modułu</a>
         </div>
     </div>
 
     <script>
-        /*
-         * BAZA PYTAŃ GRAMATYCZNYCH (22 pytania)
-         * Wykorzystuje WYŁĄCZNIE dozwolony zasób słownictwa:
-         * dom, mieszkanie, pokój, salon, kuchnia, łazienka, ogród, garaż, okno, drzwi,
-         * stół, krzesło, kanapa, lodówka, kawa, herbata, mleko, woda niegazowana,
-         * truskawki, borówki, owoce, ciasto jabłkowe.
-         */
         const questionsData = [
             {
                 sentence: "Piję ",
@@ -821,6 +811,7 @@
         const feedbackBoxEl = document.getElementById('feedback-box');
         const grammarCardEl = document.getElementById('grammar-card');
         const btnNextEl = document.getElementById('btn-next');
+        const btnFinishEl = document.getElementById('btn-finish');
 
         // Ładowanie pytania
         function loadQuestion() {
@@ -873,10 +864,10 @@
                 questionTextEl.innerHTML = `${currentQ.sentence}<span style="color: var(--correct-green); border-bottom-color: var(--correct-green);">${currentQ.blankTarget}</span>${currentQ.sentenceAfter}`;
             } else {
                 selectedBtn.classList.add('incorrect');
-                feedbackBoxEl.textContent = "❌ Spróbuj ponownie następnym razem!";
+                feedbackBoxEl.textContent = `❌ Niepoprawnie. Poprawna odpowiedź to: "${currentQ.blankTarget}"`;
                 feedbackBoxEl.className = "feedback-box incorrect";
-                
-                // Podświetlenie prawidłowej odpowiedzi
+
+                // Podświetlenie właściwej opcji
                 allBtns.forEach(btn => {
                     if (btn.textContent === currentQ.blankTarget) {
                         btn.classList.add('correct');
@@ -884,14 +875,12 @@
                 });
             }
 
-            scoreLiveEl.textContent = `Punkty: ${score}`;
-
-            // Wyświetlenie objaśnienia gramatycznego
+            // Wypełnienie i wyświetlenie opisu gramatycznego
             document.getElementById('grammar-case').textContent = currentQ.grammar.case;
             document.getElementById('grammar-rule').textContent = currentQ.grammar.rule;
             document.getElementById('grammar-question').textContent = currentQ.grammar.question;
             document.getElementById('grammar-correct').textContent = currentQ.grammar.correctForm;
-
+            
             const examplesListEl = document.getElementById('grammar-examples');
             examplesListEl.innerHTML = '';
             currentQ.grammar.examples.forEach(ex => {
@@ -910,80 +899,49 @@
             if (currentIndex < questionsData.length) {
                 loadQuestion();
             } else {
-                showFinalResults();
+                showResults();
             }
         }
 
-        // Podsumowanie końcowe
-        function showFinalResults() {
+        // Wyświetlenie ekranu końcowego
+        function showResults() {
             quizCard.style.display = 'none';
             resultsCard.style.display = 'block';
-            
             document.getElementById('final-score').textContent = score;
-            
+
             // Gwiazdki na podstawie wyniku
+            const percentage = (score / questionsData.length) * 100;
             const starsEl = document.getElementById('stars-rating');
-            if (score >= 20) {
-                starsEl.textContent = "⭐⭐⭐";
-            } else if (score >= 14) {
-                starsEl.textContent = "⭐⭐";
+            if (percentage >= 80) {
+                starsEl.textContent = '⭐⭐⭐';
+            } else if (percentage >= 50) {
+                starsEl.textContent = '⭐⭐';
             } else {
-                starsEl.textContent = "⭐";
+                starsEl.textContent = '⭐';
             }
-
-            runConfetti();
         }
 
-        // Zapisanie postępu w LocalStorage dla Modułu 1
         function completeModuleStage() {
-            const MODULE_KEY = 'm1_progress';
-            let progress = { stage1: false, stage2: false, stage3: false, stage4: false, stage5: false, stage6: false };
-            
-            const saved = localStorage.getItem(MODULE_KEY);
-            if (saved) {
-                try {
-                    progress = JSON.parse(saved);
-                } catch(e) {
-                    console.error("Błąd odczytu z localStorage", e);
-                }
-            }
-
-            // Oznaczenie Etapu 4 jako ukończony
-            progress.stage4 = true;
-            localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
+            // Miejsce na opcjonalny zapis postępu
         }
 
-        // Efekt Confetti na koniec
-        function runConfetti() {
-            const canvas = document.getElementById('confetti-canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            const particles = Array.from({ length: 80 }, () => ({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height - canvas.height,
-                size: Math.random() * 8 + 4,
-                color: ['#2ecc71', '#3498db', '#f1c40f', '#e74c3c'][Math.floor(Math.random() * 4)],
-                speed: Math.random() * 3 + 2
-            }));
-
-            function draw() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(p => {
-                    p.y += p.speed;
-                    ctx.fillStyle = p.color;
-                    ctx.fillRect(p.x, p.y, p.size, p.size);
-                });
-                if (particles.some(p => p.y < canvas.height)) {
-                    requestAnimationFrame(draw);
+        // Obsługa klawisza ENTER
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                // Jeśli jesteśmy w trakcie quizu i pojawił się przycisk "Następne pytanie"
+                if (quizCard.style.display !== 'none' && btnNextEl.style.display === 'inline-block') {
+                    nextQuestion();
+                } 
+                // Jeśli ukończono quiz i wyświetla się ekran końcowy
+                else if (resultsCard.style.display === 'block') {
+                    window.location.href = 'module-1-vocab.html';
                 }
             }
-            draw();
-        }
+        });
 
-        // Inicjalizacja przy załadowaniu strony
-        document.addEventListener('DOMContentLoaded', loadQuestion);
+        // Start quizu przy załadowaniu strony
+        loadQuestion();
     </script>
 </body>
 </html>
