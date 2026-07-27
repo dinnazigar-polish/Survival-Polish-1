@@ -131,10 +131,10 @@
         }
 
         .english-word-display {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: 800;
             color: var(--text-dark);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             text-transform: lowercase;
         }
 
@@ -183,6 +183,19 @@
             border-radius: 12px;
             font-size: 0.95rem;
             font-weight: 600;
+        }
+
+        .note-box {
+            display: none;
+            background-color: #eef2ff;
+            color: #3730a3;
+            border: 1px solid #c7d2fe;
+            padding: 0.9rem 1.2rem;
+            border-radius: 12px;
+            font-size: 0.92rem;
+            text-align: left;
+            margin-top: 0.5rem;
+            max-width: 480px;
         }
 
         .feedback-msg {
@@ -294,12 +307,19 @@
         }
 
         /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 0.8rem;
+            width: 100%;
+            max-width: 380px;
+        }
+
         .btn {
             background-color: var(--primary-green);
             color: #ffffff;
             font-weight: 700;
             font-size: 1rem;
-            padding: 0.9rem 2.2rem;
+            padding: 0.9rem 1.5rem;
             border-radius: 30px;
             border: none;
             cursor: pointer;
@@ -313,6 +333,14 @@
 
         .btn:hover {
             background-color: var(--primary-green-hover);
+        }
+
+        .btn-secondary {
+            background-color: #94a3b8;
+        }
+
+        .btn-secondary:hover {
+            background-color: #64748b;
         }
 
         .btn:disabled {
@@ -329,12 +357,23 @@
 
         .completion-screen h2 {
             font-size: 2rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         .completion-screen p {
             color: var(--text-muted);
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stats-box {
+            background-color: var(--badge-green-bg);
+            border: 2px solid var(--primary-green);
+            border-radius: 16px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-green-hover);
         }
 
         @media (max-width: 500px) {
@@ -350,7 +389,6 @@
         <!-- Top Navigation -->
         <div class="top-nav">
             <div class="nav-left">
-                <!-- ZMIENIONO HREF -->
                 <a href="module-3-vocab.html" class="back-link">
                     ← Powrót do Modułu 3
                 </a>
@@ -360,7 +398,7 @@
                 🏠 <a href="index.html">Strona główna</a> &gt; <strong>Moduł 3</strong>
             </div>
 
-            <span class="counter-badge" id="counter-badge">1 / 28</span>
+            <span class="counter-badge" id="counter-badge">1 / 32</span>
         </div>
 
         <!-- Progress Bar -->
@@ -385,10 +423,14 @@
                 >
                 
                 <div class="hint-box" id="hint-box"></div>
+                <div class="note-box" id="note-box"></div>
                 <div class="feedback-msg" id="feedback-msg"></div>
 
-                <button type="submit" class="btn" id="check-btn">Sprawdź</button>
-                <button type="button" class="btn hidden" id="next-word-btn" onclick="nextTypingWord()">Następne słowo ➡️</button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary hidden" id="prev-word-btn" onclick="prevTypingWord()">⬅️ Poprzednie</button>
+                    <button type="submit" class="btn" id="check-btn">Sprawdź</button>
+                    <button type="button" class="btn hidden" id="next-word-btn" onclick="nextTypingWord()">Następne ➡️</button>
+                </div>
             </form>
         </div>
 
@@ -407,51 +449,76 @@
                 <p class="example" id="edu-example">Robię zakupy w supermarkecie.</p>
             </div>
 
-            <button class="btn hidden" id="part2-next-btn" onclick="completeModule()">Przejdź dalej 🎉</button>
+            <button class="btn hidden" id="part2-next-btn" onclick="completeModule()">Przejdź do Etapu 4 ➡️</button>
         </div>
 
         <!-- COMPLETION SCREEN -->
         <div id="completion-screen" class="card completion-screen hidden">
-            <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+            <div style="font-size: 4rem; margin-bottom: 0.5rem;">🎉</div>
             <h2>Świetnie! Gratulacje!</h2>
             <p>Ukończyłeś ćwiczenia z pisania oraz łączenia wyrażeń.</p>
+            
+            <div class="stats-box" id="stats-box">
+                Wynik pisania: 0 / 0 (0%)
+            </div>
+
             <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                <!-- ZMIENIONO HREF -->
-                <a href="module-3-vocab.html" class="btn" style="width: auto;">⬅ Powrót do Modułu 3</a>
+                <a href="module-4-vocab.html" class="btn" style="width: auto;">Przejdź do Etapu 4 →</a>
             </div>
         </div>
     </div>
 
     <script>
         const vocabularyData = [
-            { en: "eggs", pl: "jajka" },
-            { en: "bread rolls", pl: "bułki" },
-            { en: "bread", pl: "chleb" },
-            { en: "tomato", pl: "pomidor" },
-            { en: "cucumber", pl: "ogórek" },
-            { en: "lettuce / salad", pl: "sałata" },
-            { en: "cheese", pl: "ser" },
-            { en: "juice", pl: "sok" },
-            { en: "cake / birthday cake", pl: "tort" },
-            { en: "cookie / biscuit", pl: "ciastko" },
-            { en: "gift / present", pl: "prezent" },
-            { en: "building blocks", pl: "klocki" },
-            { en: "soap", pl: "mydło" },
-            { en: "shampoo", pl: "szampon" },
-            { en: "bag / shopping bag", pl: "torba" },
-            { en: "to do shopping", pl: "robić zakupy" },
-            { en: "to help", pl: "pomagać" },
-            { en: "cash desk / checkout", pl: "kasa" },
-            { en: "payment card", pl: "karta płatnicza" },
-            { en: "cash", pl: "gotówka" },
-            { en: "car park / parking", pl: "parking" },
-            { en: "parking ticket", pl: "bilet parkingowy" },
-            { en: "parking meter", pl: "parkometr" },
-            { en: "bus", pl: "autobus" },
-            { en: "tram", pl: "tramwaj" },
-            { en: "big trolley", pl: "duży wózek" },
-            { en: "small trolley / basket", pl: "mały wózek" },
-            { en: "receipt", pl: "paragon" }
+            { en: "eggs", pl: ["jajka"] },
+            { en: "bread rolls", pl: ["bułki"] },
+            { en: "bread", pl: ["chleb"] },
+            { en: "tomato", pl: ["pomidor"] },
+            { en: "cucumber", pl: ["ogórek"] },
+            { en: "lettuce / salad", pl: ["sałata"] },
+            { en: "cheese", pl: ["ser"] },
+            { en: "juice", pl: ["sok"] },
+            { en: "cake / birthday cake", pl: ["tort"] },
+            { en: "apple pie / apple cake", pl: ["szarlotka", "jabłecznik", "ciasto jabłkowe", "szarlotka / jabłecznik"] },
+            { 
+                en: "blueberries", 
+                pl: ["borówki"], 
+                note: "💡 <strong>Warto wiedzieć:</strong> Słowo <em>borówka</em> oznacza jedną sztukę. Polacy zwykle mówią o owocach, ciastach i deserach w liczbie mnogiej (np. <em>borówki</em>, <em>truskawki</em>)." 
+            },
+            { en: "cookie / biscuit", pl: ["ciastko"] },
+            { en: "gift / present", pl: ["prezent"] },
+            { en: "building blocks", pl: ["klocki"] },
+            { en: "soap", pl: ["mydło"] },
+            { en: "shampoo", pl: ["szampon"] },
+            { en: "bag / shopping bag", pl: ["torba"] },
+            { 
+                en: "door", 
+                pl: ["drzwi"], 
+                note: "💡 <strong>Warto wiedzieć:</strong> W języku polskim słowo <strong>drzwi</strong> występuje ZAWSZE w liczbie mnogiej!<br>• <em>Zamknij proszę drzwi.</em> – Please, close the door.<br>• Odmiana: <em>za drzwiami</em> (behind the door), <em>przy drzwiach</em> (at/by the door)." 
+            },
+            { 
+                en: "fridge", 
+                pl: ["lodówka"], 
+                note: "💡 <strong>Słowniczek:</strong><br>• <strong>lód</strong> ➔ ice<br>• <strong>lodówka</strong> ➔ fridge<br>• <strong>zamrażarka</strong> ➔ freezer" 
+            },
+            { 
+                en: "still water", 
+                pl: ["woda niegazowana"], 
+                note: "💡 <strong>Warto wiedzieć:</strong><br>• Przeciwieństwo: <strong>woda gazowana</strong> (sparkling water)<br>• Woda może być: <em>zimna</em>, <em>z lodówki</em>, <em>z lodem i cytryną</em>." 
+            },
+            { en: "to do shopping", pl: ["robić zakupy"] },
+            { en: "to help", pl: ["pomagać"] },
+            { en: "cash desk / checkout", pl: ["kasa"] },
+            { en: "payment card", pl: ["karta płatnicza"] },
+            { en: "cash", pl: ["gotówka"] },
+            { en: "car park / parking", pl: ["parking"] },
+            { en: "parking ticket", pl: ["bilet parkingowy"] },
+            { en: "parking meter", pl: ["parkometr"] },
+            { en: "bus", pl: ["autobus"] },
+            { en: "tram", pl: ["tramwaj"] },
+            { en: "big trolley", pl: ["duży wózek"] },
+            { en: "small trolley / basket", pl: ["mały wózek"] },
+            { en: "receipt", pl: ["paragon"] }
         ];
 
         const collocationsData = [
@@ -480,6 +547,7 @@
         let shuffledTypingVocab = [];
         let currentTypingIdx = 0;
         let typingAttempts = 0;
+        let wordScores = {}; // śledzenie zaliczonych haseł
 
         let selectedLeft = null;
         let selectedRight = null;
@@ -497,6 +565,7 @@
         function initPart1() {
             shuffledTypingVocab = shuffle(vocabularyData);
             currentTypingIdx = 0;
+            wordScores = {};
             loadTypingWord();
         }
 
@@ -516,30 +585,58 @@
             input.focus();
 
             document.getElementById('hint-box').style.display = 'none';
+            
+            const noteBox = document.getElementById('note-box');
+            if (currentItem.note) {
+                noteBox.innerHTML = currentItem.note;
+                noteBox.style.display = 'block';
+            } else {
+                noteBox.style.display = 'none';
+            }
+
             document.getElementById('feedback-msg').textContent = '';
             document.getElementById('feedback-msg').className = 'feedback-msg';
 
             document.getElementById('check-btn').classList.remove('hidden');
             document.getElementById('next-word-btn').classList.add('hidden');
+
+            // Pokazuj przycisk poprzedni, jeśli nie jesteśmy na pierwszym słowie
+            const prevBtn = document.getElementById('prev-word-btn');
+            if (currentTypingIdx > 0) {
+                prevBtn.classList.remove('hidden');
+            } else {
+                prevBtn.classList.add('hidden');
+            }
         }
 
         function handleTypingSubmit(e) {
-            e.preventDefault();
+            if (e) e.preventDefault();
             
+            const nextBtn = document.getElementById('next-word-btn');
+            if (!nextBtn.classList.contains('hidden')) {
+                nextTypingWord();
+                return;
+            }
+
             const input = document.getElementById('word-input');
             const feedback = document.getElementById('feedback-msg');
-            const targetWord = shuffledTypingVocab[currentTypingIdx].pl.trim().toLowerCase();
+            const currentItem = shuffledTypingVocab[currentTypingIdx];
             const userWord = input.value.trim().toLowerCase();
 
-            if (userWord === targetWord) {
+            const isCorrect = currentItem.pl.some(validAns => validAns.toLowerCase() === userWord);
+
+            if (isCorrect) {
                 input.className = 'input-field correct';
                 feedback.textContent = '✅ Dobrze!';
                 feedback.className = 'feedback-msg correct';
                 input.disabled = true;
 
+                // ZALICZONE
+                wordScores[currentTypingIdx] = true;
+
                 document.getElementById('check-btn').classList.add('hidden');
-                document.getElementById('next-word-btn').classList.remove('hidden');
-                document.getElementById('next-word-btn').focus();
+                nextBtn.classList.remove('hidden');
+                nextBtn.focus();
             } else {
                 typingAttempts++;
                 input.classList.add('wrong');
@@ -550,22 +647,34 @@
                     input.classList.remove('wrong');
                 }, 400);
 
+                const primaryAns = currentItem.pl[0];
+
                 if (typingAttempts === 2) {
                     const hintBox = document.getElementById('hint-box');
-                    const firstLetter = targetWord.charAt(0).toUpperCase();
+                    const firstLetter = primaryAns.charAt(0).toUpperCase();
                     hintBox.textContent = `💡 Pierwsza litera: "${firstLetter}"`;
                     hintBox.style.display = 'block';
                 }
 
                 if (typingAttempts >= 3) {
                     input.disabled = true;
-                    feedback.innerHTML = `✅ Poprawna odpowiedź: <strong>${shuffledTypingVocab[currentTypingIdx].pl}</strong>`;
-                    feedback.className = 'feedback-msg correct';
+                    feedback.innerHTML = `❌ Poprawna odpowiedź: <strong>${currentItem.pl.join(' / ')}</strong>`;
+                    feedback.className = 'feedback-msg incorrect';
                     
+                    // NIEZALICZONE (bo wykorzystano 3 próby i podano gotową odpowiedź)
+                    wordScores[currentTypingIdx] = false;
+
                     document.getElementById('check-btn').classList.add('hidden');
-                    document.getElementById('next-word-btn').classList.remove('hidden');
-                    document.getElementById('next-word-btn').focus();
+                    nextBtn.classList.remove('hidden');
+                    nextBtn.focus();
                 }
+            }
+        }
+
+        function prevTypingWord() {
+            if (currentTypingIdx > 0) {
+                currentTypingIdx--;
+                loadTypingWord();
             }
         }
 
@@ -689,6 +798,16 @@
             }
             progress.stage3 = true;
             localStorage.setItem(MODULE_KEY, JSON.stringify(progress));
+
+            // Podliczenie wyników ze słówek
+            let correctTotal = 0;
+            const totalWords = shuffledTypingVocab.length;
+            for (let i = 0; i < totalWords; i++) {
+                if (wordScores[i] === true) correctTotal++;
+            }
+            const pct = Math.round((correctTotal / totalWords) * 100);
+
+            document.getElementById('stats-box').innerHTML = `📈 Twój wynik z pisania:<br><strong>${correctTotal} / ${totalWords} (${pct}%)</strong>`;
 
             document.getElementById('part2-container').classList.add('hidden');
             document.getElementById('completion-screen').classList.remove('hidden');
