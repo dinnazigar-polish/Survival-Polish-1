@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moduł 1 - Test Końcowy: Dom i Jedzenie</title>
+    <title>Moduł 1 – Test Końcowy: Dom i Jedzenie</title>
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
             --primary: #1e293b;
@@ -17,6 +19,7 @@
             --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
             --success: #10b981;
             --error: #ef4444;
+            --border-light: #e2e8f0;
         }
 
         * { 
@@ -76,6 +79,34 @@
             border: 2px solid transparent;
         }
 
+        /* Top Progress Bar & Header */
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 12px;
+            background-color: var(--border-light);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent);
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
         .question-title { 
             font-size: 1.25rem; 
             font-weight: 700; 
@@ -84,6 +115,7 @@
             line-height: 1.4;
         }
 
+        /* Dynamic Exercise Content Layouts */
         .options { 
             display: flex; 
             flex-direction: column; 
@@ -93,7 +125,7 @@
         .opt-btn { 
             padding: 14px 18px; 
             background: #ffffff; 
-            border: 2px solid #e2e8f0; 
+            border: 2px solid var(--border-light); 
             border-radius: 12px; 
             font-size: 1rem; 
             cursor: pointer; 
@@ -118,6 +150,161 @@
             background: #fee2e2 !important; 
             border-color: var(--error) !important; 
             color: #991b1b !important; 
+        }
+
+        /* Picture Options (Type 6) */
+        .picture-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .picture-card {
+            background: #ffffff;
+            border: 2px solid var(--border-light);
+            border-radius: 12px;
+            padding: 15px 5px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .picture-card:hover:not(.disabled) {
+            border-color: var(--accent);
+            background: #f0fdf4;
+            transform: translateY(-2px);
+        }
+
+        .picture-card .icon {
+            font-size: 3rem;
+        }
+
+        .picture-card .label {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .picture-card.correct {
+            background: #d1fae5 !important;
+            border-color: var(--success) !important;
+        }
+
+        .picture-card.incorrect {
+            background: #fee2e2 !important;
+            border-color: var(--error) !important;
+        }
+
+        /* Word Bank (Type 4) */
+        .sentence-builder-zone {
+            min-height: 55px;
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            background: #f8fafc;
+        }
+
+        .word-pool {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .word-chip {
+            padding: 8px 16px;
+            background: #ffffff;
+            border: 2px solid #cbd5e1;
+            border-radius: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.15s;
+        }
+
+        .word-chip:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Unscramble Input (Type 5) */
+        .unscramble-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .scrambled-badge {
+            font-size: 1.8rem;
+            letter-spacing: 4px;
+            font-weight: 800;
+            color: var(--accent);
+            background: #f0fdf4;
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: 2px dashed var(--accent);
+        }
+
+        .text-input {
+            width: 100%;
+            max-width: 320px;
+            padding: 12px;
+            font-size: 1.1rem;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+            outline: none;
+        }
+
+        .text-input:focus {
+            border-color: var(--accent);
+        }
+
+        /* Feedback Display Box */
+        .feedback-box {
+            display: none;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            text-align: left;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .feedback-box.correct {
+            display: block;
+            background-color: #d1fae5;
+            border: 1px solid var(--success);
+            color: #065f46;
+        }
+
+        .feedback-box.incorrect {
+            display: block;
+            background-color: #fee2e2;
+            border: 1px solid var(--error);
+            color: #991b1b;
+        }
+
+        .feedback-title {
+            font-weight: 800;
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+        }
+
+        .feedback-explanation {
+            font-size: 0.95rem;
+            line-height: 1.4;
         }
 
         .nav-controls { 
@@ -147,7 +334,6 @@
             cursor: not-allowed; 
         }
 
-        /* Dedykowany przycisk akcji (btn) */
         .btn { 
             padding: 14px 28px; 
             border-radius: 30px; 
@@ -168,13 +354,26 @@
             transform: scale(1.02); 
         }
 
+        /* Summary Screen Styling */
         .summary-card { 
             display: none; 
         }
 
+        .badge-box {
+            display: inline-block;
+            background: #f0fdf4;
+            border: 2px solid var(--accent);
+            color: #065f46;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 800;
+            margin: 15px 0;
+            font-size: 1.1rem;
+        }
+
         .stars { 
             font-size: 2.5rem; 
-            margin: 15px 0; 
+            margin: 10px 0; 
             letter-spacing: 5px; 
         }
 
@@ -201,234 +400,404 @@
         .btn-secondary:hover {
             background: #64748b;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="top-nav">
-        <a href="module-1-vocab.html" class="back-btn">← Powrót do Modułu 1</a>
+        <a href="module-1-vocab.html" class="back-btn">⬅ Powrót do modułu</a>
     </div>
 
-    <h1>Test Końcowy: Moduł 1</h1>
-    <p style="color: var(--text-muted); margin-top: 5px;">Dom i Jedzenie – Sprawdzian wiedzy</p>
+    <h1>Test Końcowy</h1>
+    <p style="color: var(--text-muted); margin-top: 5px; margin-bottom: 15px;">Dom i Jedzenie – Sprawdzian wiedzy</p>
 
-    <!-- KARTA QUIZU -->
+    <!-- QUIZ CARD -->
     <div class="card" id="quiz-area">
-        <div style="color: var(--text-muted); margin-bottom: 12px; font-weight: 600;" id="q-num">Pytanie 1 / 20</div>
+        <div class="progress-header">
+            <span id="q-num">Pytanie 1 / 30</span>
+            <span id="score-live">Punkty: 0</span>
+        </div>
+
+        <div class="progress-track">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+
         <div class="question-title" id="q-title">...</div>
         
-        <div class="options" id="options-container"></div>
+        <!-- Interactive Exercise Canvas -->
+        <div id="exercise-canvas"></div>
 
+        <!-- Feedback Box -->
+        <div class="feedback-box" id="feedback-box">
+            <div class="feedback-title" id="feedback-title"></div>
+            <div class="feedback-explanation" id="feedback-explanation"></div>
+        </div>
+
+        <!-- Navigation Controls -->
         <div class="nav-controls">
             <button class="nav-btn" id="prev-btn" onclick="prevQuestion()">← Poprzednie</button>
             <button class="nav-btn" id="next-btn" onclick="manualNextQuestion()">Następne →</button>
         </div>
     </div>
 
-    <!-- KARTA PODSUMOWANIA -->
+    <!-- SUMMARY CARD -->
     <div class="card summary-card" id="summary">
-        <h2>Podsumowanie Testu</h2>
-        <div class="stars" id="stars-rating">⭐⭐⭐</div>
-        <p style="margin: 10px 0; font-size: 1.1rem; color: var(--text-muted);">Twój ostateczny wynik:</p>
-        <div class="score-display" id="score-text">0 / 20 (0%)</div>
+        <h2>🎉 Gratulacje!</h2>
+        <p style="margin-top: 5px; color: var(--text-muted);">Ukończyłeś moduł: <strong>Dom i jedzenie</strong></p>
+        
+        <div class="badge-box">🏠 Mistrz słownictwa</div>
+        <div class="stars" id="stars-rating">⭐⭐⭐⭐⭐</div>
+        <div class="score-display" id="score-text">0 / 30 (0%)</div>
         
         <div class="summary-actions">
-            <button class="btn" onclick="initQuiz()">Powtórz Test 🔄</button>
-            <a href="module-1-vocab.html" class="btn btn-secondary">Powrót do modułu</a>
+            <button class="btn" onclick="initQuiz()">🔄 Powtórz test</button>
+            <a href="module-1-vocab.html" class="btn btn-secondary">⬅ Powrót do modułu</a>
+            <a href="module-2-vocab.html" class="btn">➡ Następny moduł</a>
         </div>
     </div>
 </div>
 
 <script>
-    const questions = [
-        // 1. Tłumaczenie
+    // Master Question Pool (30 unique questions covering 10 distinct exercise types)
+    const rawQuestions = [
+        // Type 1: Multiple Choice (English word to Polish)
         {
-            title: "Jak przetłumaczysz na język polski słowo „refrigerator” / „fridge”?",
+            type: 1,
+            title: "Choose the correct Polish translation for: <strong>fridge</strong>",
             options: [
-                { text: "pralka", correct: false },
-                { text: "lodówka", correct: true },
-                { text: "kuchnia", correct: false }
-            ]
+                { text: "A. lodówka", correct: true },
+                { text: "B. kanapa", correct: false },
+                { text: "C. ogród", correct: false }
+            ],
+            explanation: "'Lodówka' means fridge in Polish."
         },
-        // 2. Dopasowanie
         {
-            title: "Wybierz poprawne tłumaczenie dla słowa: „garaż”",
+            type: 1,
+            title: "Choose the correct Polish translation for: <strong>garden</strong>",
             options: [
-                { text: "garden", correct: false },
-                { text: "garage", correct: true },
-                { text: "kitchen", correct: false }
-            ]
+                { text: "A. garaż", correct: false },
+                { text: "B. ogród", correct: true },
+                { text: "C. pokój", correct: false }
+            ],
+            explanation: "'Ogród' means garden in Polish."
         },
-        // 3. Uzupełnienie luki w zdaniu
         {
-            title: "Uzupełnij zdanie: „W upalne dni piję tylko...”",
+            type: 1,
+            title: "Choose the correct Polish translation for: <strong>chair</strong>",
             options: [
-                { text: "wodę niegazowaną", correct: true },
-                { text: "herbata", correct: false },
-                { text: "mleko niegazowana", correct: false }
-            ]
+                { text: "A. stół", correct: false },
+                { text: "B. krzesło", correct: true },
+                { text: "C. okno", correct: false }
+            ],
+            explanation: "'Krzesło' means chair in Polish."
         },
-        // 4. Ułożenie / Wybór poprawnego zdania
+
+        // Type 2: Polish -> English
         {
-            title: "Wybierz poprawnie ułożone zdanie:",
+            type: 2,
+            title: "Choose the correct English word for: <strong>kanapa</strong>",
             options: [
-                { text: "W salonie stoi wygodna kanapa.", correct: true },
-                { text: "Stoi wygodna kanapa w salonie jest.", correct: false },
-                { text: "Kanapa w salonie wygodna jest nie.", correct: false }
-            ]
+                { text: "A. sofa", correct: true },
+                { text: "B. table", correct: false },
+                { text: "C. milk", correct: false }
+            ],
+            explanation: "'Kanapa' means sofa or couch in English."
         },
-        // 5. Dialog
         {
-            title: "Uzupełnij dialog:<br>– Co zjesz na deser?<br>– Poproszę kawałek...",
+            type: 2,
+            title: "Choose the correct English word for: <strong>mieszkanie</strong>",
             options: [
-                { text: "ciasta jabłkowego", correct: true },
-                { text: "borówki", correct: false },
-                { text: "chleb", correct: false }
-            ]
+                { text: "A. garden", correct: false },
+                { text: "B. apartment", correct: true },
+                { text: "C. window", correct: false }
+            ],
+            explanation: "'Mieszkanie' translates to apartment or flat."
         },
-        // 6. Tłumaczenie
         {
-            title: "Co oznacza słowo „blueberries”?",
+            type: 2,
+            title: "Choose the correct English word for: <strong>truskawki</strong>",
             options: [
-                { text: "truskawki", correct: false },
-                { text: "borówki", correct: true },
-                { text: "owoce", correct: false }
-            ]
+                { text: "A. blueberries", correct: false },
+                { text: "B. strawberries", correct: true },
+                { text: "C. apples", correct: false }
+            ],
+            explanation: "'Truskawki' means strawberries."
         },
-        // 7. Miejsca w domu
+
+        // Type 3: Fill in the gap (A1 Grammar)
         {
-            title: "Gdzie znajduje się prysznic i wanna?",
+            type: 3,
+            title: "Fill in the gap: <strong>Mam ______.</strong> (I have a house.)",
             options: [
-                { text: "w kuchni", correct: false },
-                { text: "w łazience", correct: true },
-                { text: "w garażu", correct: false }
-            ]
+                { text: "A. dom", correct: true },
+                { text: "B. domu", correct: false },
+                { text: "C. domem", correct: false }
+            ],
+            explanation: "In Accusative case, inanimate masculine nouns like 'dom' remain unchanged."
         },
-        // 8. Tłumaczenie
         {
-            title: "Wybierz polskie słowo dla „living room”:",
+            type: 3,
+            title: "Fill in the gap: <strong>Piję ______.</strong> (I am drinking coffee.)",
             options: [
-                { text: "salon", correct: true },
-                { text: "pokój", correct: false },
-                { text: "mieszkanie", correct: false }
-            ]
+                { text: "A. kawa", correct: false },
+                { text: "B. kawę", correct: true },
+                { text: "C. kawy", correct: false }
+            ],
+            explanation: "Feminine nouns ending in -a change to -ę in the Accusative case after 'piję'."
         },
-        // 9. Napoje
         {
-            title: "Uzupełnij zdanie: „Rano zawsze piję gorącą...”",
+            type: 3,
+            title: "Fill in the gap: <strong>Nie mam ______.</strong> (I don't have coffee.)",
             options: [
-                { text: "kawę", correct: true },
-                { text: "kawa", correct: false },
-                { text: "kawą", correct: false }
-            ]
+                { text: "A. kawa", correct: false },
+                { text: "B. kawę", correct: false },
+                { text: "C. kawy", correct: true }
+            ],
+            explanation: "Negation ('nie mam') requires the Genitive case ending -y/-ie."
         },
-        // 10. Meble
+
+        // Type 4: Build the sentence
         {
-            title: "Co to jest „chair”?",
-            options: [
-                { text: "stół", correct: false },
-                { text: "krzesło", correct: true },
-                { text: "okno", correct: false }
-            ]
+            type: 4,
+            title: "Arrange the words in the correct order: <strong>(in a house / live / I)</strong>",
+            words: ["w", "mieszkam", "domu"],
+            correctSentence: "Mieszkam w domu.",
+            explanation: "Standard Polish word order: Verb first/second followed by location ('Mieszkam w domu.')."
         },
-        // 11. Owoce
         {
-            title: "Które słowo oznacza „strawberries”?",
-            options: [
-                { text: "borówki", correct: false },
-                { text: "truskawki", correct: true },
-                { text: "owoce", correct: false }
-            ]
+            type: 4,
+            title: "Arrange the words in the correct order: <strong>(coffee / drink / I)</strong>",
+            words: ["kawę", "piję"],
+            correctSentence: "Piję kawę.",
+            explanation: "Natural structure: Subject-Verb-Object ('Piję kawę.')."
         },
-        // 12. Dialog
         {
-            title: "Uzupełnij dialog:<br>– Gdzie są dzieci?<br>– Bawią się w...",
-            options: [
-                { text: "ogrodzie", correct: true },
-                { text: "garaż", correct: false },
-                { text: "drzwi", correct: false }
-            ]
+            type: 4,
+            title: "Arrange the words in the correct order: <strong>(is / comfortable / sofa)</strong>",
+            words: ["jest", "kanapa", "wygodna"],
+            correctSentence: "Kanapa jest wygodna.",
+            explanation: "Subject ('Kanapa') + Verb ('jest') + Adjective ('wygodna')."
         },
-        // 13. Części domu
+
+        // Type 5: Unscramble words
         {
-            title: "Wybierz angielski odpowiednik słowa: „mieszkanie”",
-            options: [
-                { text: "house", correct: false },
-                { text: "apartment", correct: true },
-                { text: "room", correct: false }
-            ]
+            type: 5,
+            title: "Unscramble the letters to spell <strong>house</strong>:",
+            scrambled: "adom",
+            correctWord: "dom",
+            explanation: "The correct Polish word for house is 'dom'."
         },
-        // 14. Meble i wyposażenie
         {
-            title: "Uzupełnij zdanie: „Obiad jemy przy...”",
-            options: [
-                { text: "stole", correct: true },
-                { text: "stół", correct: false },
-                { text: "stolikiem", correct: false }
-            ]
+            type: 5,
+            title: "Unscramble the letters to spell <strong>fridge</strong>:",
+            scrambled: "ódkloaw",
+            correctWord: "lodówka",
+            explanation: "The correct Polish word for fridge is 'lodówka'."
         },
-        // 15. Tłumaczenie
         {
-            title: "Słowo „window” to po polsku:",
-            options: [
-                { text: "drzwi", correct: false },
-                { text: "okno", correct: true },
-                { text: "dom", correct: false }
-            ]
+            type: 5,
+            title: "Unscramble the letters to spell <strong>garage</strong>:",
+            scrambled: "ażgar",
+            correctWord: "garaż",
+            explanation: "The correct Polish word for garage is 'garaż'."
         },
-        // 16. Kategoria ogólna
+
+        // Type 6: Choose the correct picture
         {
-            title: "Truskawki i borówki to...",
-            options: [
-                { text: "owoce", correct: true },
-                { text: "warzywa", correct: false },
-                { text: "napoje", correct: false }
-            ]
+            type: 6,
+            title: "Find: <strong>okno</strong> (window)",
+            pictures: [
+                { icon: "🪟", label: "A", correct: true },
+                { icon: "🚪", label: "B", correct: false },
+                { icon: "🛋️", label: "C", correct: false }
+            ],
+            explanation: "🪟 represents 'okno' (window)."
         },
-        // 17. Wyposażenie
         {
-            title: "Wybierz słowo oznaczające „door”:",
-            options: [
-                { text: "drzwi", correct: true },
-                { text: "okno", correct: false },
-                { text: "dom", correct: false }
-            ]
+            type: 6,
+            title: "Find: <strong>krzesło</strong> (chair)",
+            pictures: [
+                { icon: "🛏️", label: "A", correct: false },
+                { icon: "🪑", label: "B", correct: true },
+                { icon: "🪴", label: "C", correct: false }
+            ],
+            explanation: "🪑 represents 'krzesło' (chair)."
         },
-        // 18. Dialog
         {
-            title: "Uzupełnij dialog:<br>– Gdzie jest mleko?<br>– Jest w...",
-            options: [
-                { text: "lodówce", correct: true },
-                { text: "łazience", correct: false },
-                { text: "ogrodzie", correct: false }
-            ]
+            type: 6,
+            title: "Find: <strong>truskawka</strong> (strawberry)",
+            pictures: [
+                { icon: "🍓", label: "A", correct: true },
+                { icon: "🫐", label: "B", correct: false },
+                { icon: "🍎", label: "C", correct: false }
+            ],
+            explanation: "🍓 represents 'truskawka' (strawberry)."
         },
-        // 19. Tłumaczenie
+
+        // Type 7: Grammar (Choose correct form with explanation)
         {
-            title: "Jak przetłumaczysz „tea”?",
+            type: 7,
+            title: "Grammar: Choose the correct form:<br><strong>Idę do ______.</strong> (I am going to the kitchen.)",
             options: [
-                { text: "kawa", correct: false },
-                { text: "herbata", correct: true },
-                { text: "mleko", correct: false }
-            ]
+                { text: "A. kuchnia", correct: false },
+                { text: "B. kuchni", correct: true },
+                { text: "C. kuchnię", correct: false }
+            ],
+            explanation: "We use the Genitive form ('kuchni') after the preposition 'do'."
         },
-        // 20. Ułożenie zdania
         {
-            title: "Wybierz poprawne zdanie opisujące dom:",
+            type: 7,
+            title: "Grammar: Choose the correct form:<br><strong>Jestem w ______.</strong> (I am in the living room.)",
             options: [
-                { text: "Mój dom ma duży ogród i garaż.", correct: true },
-                { text: "Mój dom ogród ma duży i garaż.", correct: false },
-                { text: "Dom mój garaż ma i duży ogród.", correct: false }
-            ]
+                { text: "A. salon", correct: false },
+                { text: "B. salonie", correct: true },
+                { text: "C. salonem", correct: false }
+            ],
+            explanation: "We use the Locative form ('salonie') after the preposition 'w' for location."
+        },
+        {
+            type: 7,
+            title: "Grammar: Choose the correct form:<br><strong>Siedzę na ______.</strong> (I am sitting on the sofa.)",
+            options: [
+                { text: "A. kanapa", correct: false },
+                { text: "B. kanapie", correct: true },
+                { text: "C. kanapę", correct: false }
+            ],
+            explanation: "We use the Locative case ('kanapie') after 'na' when specifying static position."
+        },
+
+        // Type 8: Collocations
+        {
+            type: 8,
+            title: "Which word naturally completes the verb: <strong>otworzyć → ______</strong>",
+            options: [
+                { text: "A. drzwi", correct: true },
+                { text: "B. herbatę", correct: false },
+                { text: "C. ogród", correct: false }
+            ],
+            explanation: "Natural collocation: 'otworzyć drzwi' (to open the door)."
+        },
+        {
+            type: 8,
+            title: "Which word naturally completes the verb: <strong>jeść → ______</strong>",
+            options: [
+                { text: "A. ciasto jabłkowe", correct: true },
+                { text: "B. wodę", correct: false },
+                { text: "C. garaż", correct: false }
+            ],
+            explanation: "Natural collocation: 'jeść ciasto jabłkowe' (to eat apple pie)."
+        },
+        {
+            type: 8,
+            title: "Which word naturally completes the verb: <strong>usiąść na → ______</strong>",
+            options: [
+                { text: "A. kanapie", correct: true },
+                { text: "B. oknie", correct: false },
+                { text: "C. chlebie", correct: false }
+            ],
+            explanation: "Natural collocation: 'usiąść na kanapie' (to sit on the couch)."
+        },
+
+        // Type 9: True or False
+        {
+            type: 9,
+            title: "True or False?<br><strong>„Lodówka służy do przechowywania jedzenia.”</strong>",
+            options: [
+                { text: "✅ Prawda", correct: true },
+                { text: "❌ Fałsz", correct: false }
+            ],
+            explanation: "True! Fridges are used for storing food."
+        },
+        {
+            type: 9,
+            title: "True or False?<br><strong>„W łazience zwykle stoi kanapa.”</strong>",
+            options: [
+                { text: "✅ Prawda", correct: false },
+                { text: "❌ Fałsz", correct: true }
+            ],
+            explanation: "False! Sofas are kept in the living room, not the bathroom."
+        },
+        {
+            type: 9,
+            title: "True or False?<br><strong>„Borówki i truskawki to owoce.”</strong>",
+            options: [
+                { text: "✅ Prawda", correct: true },
+                { text: "❌ Fałsz", correct: false }
+            ],
+            explanation: "True! Blueberries and strawberries are fruits."
+        },
+
+        // Type 10: Short Dialogue
+        {
+            type: 10,
+            title: "Complete the dialogue:<br>👩 <strong>Co pijesz?</strong>",
+            options: [
+                { text: "A. Piję herbatę.", correct: true },
+                { text: "B. Mam ogród.", correct: false },
+                { text: "C. To jest garaż.", correct: false }
+            ],
+            explanation: "'Piję herbatę' (I am drinking tea) answers 'What are you drinking?'."
+        },
+        {
+            type: 10,
+            title: "Complete the dialogue:<br>👨 <strong>Gdzie mieszkasz?</strong>",
+            options: [
+                { text: "A. Mieszkam w domu.", correct: true },
+                { text: "B. Piję mleko.", correct: false },
+                { text: "C. To jest lodówka.", correct: false }
+            ],
+            explanation: "'Mieszkam w domu' (I live in a house) answers 'Where do you live?'."
+        },
+        {
+            type: 10,
+            title: "Complete the dialogue:<br>👩 <strong>Gdzie jest mleko?</strong>",
+            options: [
+                { text: "A. Jest w lodówce.", correct: true },
+                { text: "B. Jest w garażu.", correct: false },
+                { text: "C. Jest w ogrodzie.", correct: false }
+            ],
+            explanation: "Milk is kept in the fridge ('Jest w lodówce')."
         }
     ];
 
+    let activeQuestions = [];
     let currentIndex = 0;
-    let attempts = 0;
-    let answeredQuestions = {}; // Mapa przechowywania stanu: { index: { answered: bool, correct: bool, selectedOpt: idx } }
+    let answeredQuestions = {}; // Format: { index: { answered: bool, correct: bool, userAns: any } }
+    let selectedSentenceWords = [];
+
+    // Ensures no two consecutive exercises are of the same Type
+    function prepareQuestionsSequence() {
+        let pool = [...rawQuestions];
+        // Fisher-Yates shuffle initial pool
+        for (let i = pool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+
+        let result = [];
+        while (pool.length > 0) {
+            let lastType = result.length > 0 ? result[result.length - 1].type : null;
+            let foundIdx = pool.findIndex(q => q.type !== lastType);
+            
+            if (foundIdx !== -1) {
+                result.push(pool[foundIdx]);
+                pool.splice(foundIdx, 1);
+            } else {
+                // Fallback if strict alternation is mathematically impossible
+                result.push(pool.shift());
+            }
+        }
+        return result;
+    }
 
     function initQuiz() {
+        activeQuestions = prepareQuestionsSequence();
         currentIndex = 0;
         answeredQuestions = {};
         document.getElementById('quiz-area').style.display = 'block';
@@ -437,76 +806,214 @@
     }
 
     function showQuestion() {
-        attempts = 0;
-        const q = questions[currentIndex];
-        
-        document.getElementById('q-num').innerText = `Pytanie ${currentIndex + 1} / ${questions.length}`;
+        const q = activeQuestions[currentIndex];
+        selectedSentenceWords = [];
+
+        // Progress elements
+        document.getElementById('q-num').innerText = `Pytanie ${currentIndex + 1} / ${activeQuestions.length}`;
         document.getElementById('q-title').innerHTML = q.title;
+        
+        let correctCount = Object.values(answeredQuestions).filter(val => val.correct).length;
+        document.getElementById('score-live').innerText = `Punkty: ${correctCount}`;
+        document.getElementById('progress-bar').style.width = `${((currentIndex) / activeQuestions.length) * 100}%`;
 
-        // Nawigacja
+        // Controls
         document.getElementById('prev-btn').disabled = currentIndex === 0;
-        document.getElementById('next-btn').innerText = (currentIndex === questions.length - 1) ? 'Zakończ →' : 'Następne →';
+        document.getElementById('next-btn').innerText = (currentIndex === activeQuestions.length - 1) ? 'Zakończ →' : 'Następne →';
 
-        const container = document.getElementById('options-container');
-        container.innerHTML = '';
+        // Hide Feedback
+        const feedbackBox = document.getElementById('feedback-box');
+        feedbackBox.className = 'feedback-box';
+        feedbackBox.style.display = 'none';
+
+        const canvas = document.getElementById('exercise-canvas');
+        canvas.innerHTML = '';
 
         const userState = answeredQuestions[currentIndex];
+
+        // Render based on exercise type
+        if (q.type === 4) {
+            renderSentenceBuilder(q, canvas, userState);
+        } else if (q.type === 5) {
+            renderUnscramble(q, canvas, userState);
+        } else if (q.type === 6) {
+            renderPictureGrid(q, canvas, userState);
+        } else {
+            renderStandardOptions(q, canvas, userState);
+        }
+
+        // Restore feedback if already answered
+        if (userState && userState.answered) {
+            displayFeedback(userState.correct, q.explanation);
+        }
+    }
+
+    // TYPE 1, 2, 3, 7, 8, 9, 10 Handler
+    function renderStandardOptions(q, container, userState) {
+        const optsDiv = document.createElement('div');
+        optsDiv.className = 'options';
 
         q.options.forEach((opt, idx) => {
             const btn = document.createElement('button');
             btn.className = 'opt-btn';
-            btn.innerText = opt.text;
+            btn.innerHTML = opt.text;
 
-            // Przywracanie stanu po powrocie do pytania
             if (userState && userState.answered) {
                 btn.disabled = true;
-                if (opt.correct) {
-                    btn.classList.add('correct');
-                } else if (userState.selectedOpt === idx) {
-                    btn.classList.add('incorrect');
-                }
+                if (opt.correct) btn.classList.add('correct');
+                else if (userState.userAns === idx) btn.classList.add('incorrect');
             } else {
-                btn.onclick = () => handleSelect(btn, opt.correct, idx);
+                btn.onclick = () => handleChoice(idx, opt.correct, q.explanation);
             }
-
-            container.appendChild(btn);
+            optsDiv.appendChild(btn);
         });
+
+        container.appendChild(optsDiv);
     }
 
-    function handleSelect(btn, isCorrect, optIdx) {
-        if (isCorrect) {
-            btn.classList.add('correct');
-            disableOptions();
-            answeredQuestions[currentIndex] = { answered: true, correct: true, selectedOpt: optIdx };
-            setTimeout(autoNextQuestion, 1000);
-        } else {
-            attempts++;
-            btn.classList.add('incorrect');
-            btn.disabled = true;
+    // TYPE 6: Picture Grid Handler
+    function renderPictureGrid(q, container, userState) {
+        const grid = document.createElement('div');
+        grid.className = 'picture-grid';
 
-            // Próg 3 nieudanych prób
-            if (attempts >= 3) {
-                disableOptions();
-                highlightCorrect();
-                answeredQuestions[currentIndex] = { answered: true, correct: false, selectedOpt: optIdx };
-                setTimeout(autoNextQuestion, 1500);
+        q.pictures.forEach((pic, idx) => {
+            const card = document.createElement('div');
+            card.className = 'picture-card';
+            card.innerHTML = `<div class="icon">${pic.icon}</div><div class="label">${pic.label}</div>`;
+
+            if (userState && userState.answered) {
+                card.classList.add('disabled');
+                if (pic.correct) card.classList.add('correct');
+                else if (userState.userAns === idx) card.classList.add('incorrect');
+            } else {
+                card.onclick = () => handleChoice(idx, pic.correct, q.explanation);
             }
+            grid.appendChild(card);
+        });
+
+        container.appendChild(grid);
+    }
+
+    // TYPE 4: Sentence Builder Handler
+    function renderSentenceBuilder(q, container, userState) {
+        const dropZone = document.createElement('div');
+        dropZone.className = 'sentence-builder-zone';
+        dropZone.id = 'drop-zone';
+
+        const pool = document.createElement('div');
+        pool.className = 'word-pool';
+        pool.id = 'word-pool';
+
+        container.appendChild(dropZone);
+        container.appendChild(pool);
+
+        if (userState && userState.answered) {
+            dropZone.innerHTML = userState.userAns.map(w => `<span class="word-chip">${w}</span>`).join('');
+            return;
         }
-    }
 
-    function disableOptions() {
-        document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
-    }
-
-    function highlightCorrect() {
-        const q = questions[currentIndex];
-        document.querySelectorAll('.opt-btn').forEach((b, idx) => {
-            if (q.options[idx].correct) b.classList.add('correct');
+        // Shuffle pool
+        let shuffled = [...q.words].sort(() => Math.random() - 0.5);
+        shuffled.forEach(word => {
+            const chip = document.createElement('span');
+            chip.className = 'word-chip';
+            chip.innerText = word;
+            chip.onclick = () => {
+                if (chip.parentElement === pool) {
+                    dropZone.appendChild(chip);
+                    selectedSentenceWords.push(word);
+                } else {
+                    pool.appendChild(chip);
+                    selectedSentenceWords = selectedSentenceWords.filter(w => w !== word);
+                }
+                
+                if (selectedSentenceWords.length === q.words.length) {
+                    let built = selectedSentenceWords.join(' ') + '.';
+                    let isCorrect = built.toLowerCase() === q.correctSentence.toLowerCase();
+                    handleChoice([...selectedSentenceWords], isCorrect, q.explanation);
+                }
+            };
+            pool.appendChild(chip);
         });
+    }
+
+    // TYPE 5: Unscramble Handler
+    function renderUnscramble(q, container, userState) {
+        const box = document.createElement('div');
+        box.className = 'unscramble-container';
+
+        const badge = document.createElement('div');
+        badge.className = 'scrambled-badge';
+        badge.innerText = q.scrambled;
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'text-input';
+        input.placeholder = 'Wpisz słowo...';
+
+        const checkBtn = document.createElement('button');
+        checkBtn.className = 'btn';
+        checkBtn.innerText = 'Sprawdź';
+
+        if (userState && userState.answered) {
+            input.value = userState.userAns;
+            input.disabled = true;
+            checkBtn.disabled = true;
+        } else {
+            checkBtn.onclick = () => {
+                let val = input.value.trim().toLowerCase();
+                let isCorrect = val === q.correctWord.toLowerCase();
+                handleChoice(val, isCorrect, q.explanation);
+            };
+            input.onkeydown = (e) => {
+                if (e.key === 'Enter') checkBtn.click();
+            };
+        }
+
+        box.appendChild(badge);
+        box.appendChild(input);
+        box.appendChild(checkBtn);
+        container.appendChild(box);
+    }
+
+    function handleChoice(userAns, isCorrect, explanation) {
+        if (answeredQuestions[currentIndex]?.answered) return;
+
+        answeredQuestions[currentIndex] = {
+            answered: true,
+            correct: isCorrect,
+            userAns: userAns
+        };
+
+        displayFeedback(isCorrect, explanation);
+        
+        // Refresh question view to show locks/colors
+        setTimeout(() => {
+            showQuestion();
+            if (isCorrect && currentIndex < activeQuestions.length - 1) {
+                setTimeout(autoNextQuestion, 1200);
+            }
+        }, 300);
+    }
+
+    function displayFeedback(isCorrect, explanation) {
+        const box = document.getElementById('feedback-box');
+        const title = document.getElementById('feedback-title');
+        const exp = document.getElementById('feedback-explanation');
+
+        box.style.display = 'block';
+        if (isCorrect) {
+            box.className = 'feedback-box correct';
+            title.innerText = '✅ Dobrze!';
+        } else {
+            box.className = 'feedback-box incorrect';
+            title.innerText = '❌ Spróbuj jeszcze raz.';
+        }
+        exp.innerText = explanation;
     }
 
     function autoNextQuestion() {
-        if (currentIndex < questions.length - 1) {
+        if (currentIndex < activeQuestions.length - 1) {
             currentIndex++;
             showQuestion();
         } else {
@@ -515,7 +1022,7 @@
     }
 
     function manualNextQuestion() {
-        if (currentIndex < questions.length - 1) {
+        if (currentIndex < activeQuestions.length - 1) {
             currentIndex++;
             showQuestion();
         } else {
@@ -533,32 +1040,45 @@
     function finishStage() {
         document.getElementById('quiz-area').style.display = 'none';
         document.getElementById('summary').style.display = 'block';
+
+        let correctCount = Object.values(answeredQuestions).filter(val => val.correct).length;
+        const pct = Math.round((correctCount / activeQuestions.length) * 100);
         
-        // Zliczanie poprawnych punktów
-        let correctCount = 0;
-        Object.values(answeredQuestions).forEach(val => {
-            if (val.correct) correctCount++;
-        });
+        document.getElementById('score-text').innerText = `${correctCount} / ${activeQuestions.length} (${pct}%)`;
 
-        const pct = Math.round((correctCount / questions.length) * 100);
-        document.getElementById('score-text').innerText = `${correctCount} / ${questions.length} (${pct}%)`;
-
-        // Ocena gwiazdkowa
+        // Star calculation
         const starsContainer = document.getElementById('stars-rating');
-        if (pct >= 85) {
-            starsContainer.innerText = "⭐⭐⭐";
-        } else if (pct >= 50) {
-            starsContainer.innerText = "⭐⭐";
-        } else {
-            starsContainer.innerText = "⭐";
-        }
+        if (pct >= 90) starsContainer.innerText = "⭐⭐⭐⭐⭐";
+        else if (pct >= 75) starsContainer.innerText = "⭐⭐⭐⭐";
+        else if (pct >= 50) starsContainer.innerText = "⭐⭐⭐";
+        else if (pct >= 30) starsContainer.innerText = "⭐⭐";
+        else starsContainer.innerText = "⭐";
 
-        // Zapis postępu w localStorage
+        // Save progress to LocalStorage
         let progress = JSON.parse(localStorage.getItem('polish_module_1_progress')) || {};
         progress.testCompleted = true;
         progress.testScore = pct;
         localStorage.setItem('polish_module_1_progress', JSON.stringify(progress));
+
+        // Trigger celebratory confetti animation
+        if (typeof confetti === 'function') {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
     }
+
+    // Global Key Listener for Enter Key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            const userState = answeredQuestions[currentIndex];
+            if (userState && userState.answered && document.getElementById('quiz-area').style.display !== 'none') {
+                manualNextQuestion();
+            }
+        }
+    });
 
     window.onload = initQuiz;
 </script>
