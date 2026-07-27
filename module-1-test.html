@@ -9,7 +9,7 @@
     <style>
         :root {
             --primary: #1e293b;
-            --accent: #10b981; /* Soczysta zieleń */
+            --accent: #10b981;
             --accent-hover: #059669;
             --bg: #f8fafc;
             --card-bg: #ffffff;
@@ -79,7 +79,6 @@
             border: 2px solid transparent;
         }
 
-        /* Top Progress Bar & Header */
         .progress-header {
             display: flex;
             justify-content: space-between;
@@ -115,7 +114,6 @@
             line-height: 1.4;
         }
 
-        /* Dynamic Exercise Content Layouts */
         .options { 
             display: flex; 
             flex-direction: column; 
@@ -152,7 +150,6 @@
             color: #991b1b !important; 
         }
 
-        /* Picture Options (Type 6) */
         .picture-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -198,7 +195,6 @@
             border-color: var(--error) !important;
         }
 
-        /* Word Bank (Type 4) */
         .sentence-builder-zone {
             min-height: 55px;
             border: 2px dashed #cbd5e1;
@@ -237,7 +233,6 @@
             color: var(--accent);
         }
 
-        /* Unscramble Input (Type 5) */
         .unscramble-container {
             display: flex;
             flex-direction: column;
@@ -272,7 +267,6 @@
             border-color: var(--accent);
         }
 
-        /* Feedback Display Box */
         .feedback-box {
             display: none;
             padding: 15px;
@@ -354,7 +348,6 @@
             transform: scale(1.02); 
         }
 
-        /* Summary Screen Styling */
         .summary-card { 
             display: none; 
         }
@@ -430,7 +423,6 @@
 
         <div class="question-title" id="q-title">...</div>
         
-        <!-- Interactive Exercise Canvas -->
         <div id="exercise-canvas"></div>
 
         <!-- Feedback Box -->
@@ -464,317 +456,317 @@
 </div>
 
 <script>
-    // Master Question Pool (30 unique questions covering 10 distinct exercise types)
     const rawQuestions = [
-        // Type 1: Multiple Choice (English word to Polish)
+        // Type 1: English word to Polish
         {
             type: 1,
-            title: "Choose the correct Polish translation for: <strong>fridge</strong>",
+            title: "<strong>Fridge</strong> po polsku?",
             options: [
                 { text: "A. lodówka", correct: true },
                 { text: "B. kanapa", correct: false },
                 { text: "C. ogród", correct: false }
             ],
-            explanation: "'Lodówka' means fridge in Polish."
+            explanation: "Fridge to po polsku lodówka."
         },
         {
             type: 1,
-            title: "Choose the correct Polish translation for: <strong>garden</strong>",
+            title: "<strong>Garden</strong> po polsku?",
             options: [
                 { text: "A. garaż", correct: false },
                 { text: "B. ogród", correct: true },
                 { text: "C. pokój", correct: false }
             ],
-            explanation: "'Ogród' means garden in Polish."
+            explanation: "Garden to po polsku ogród."
         },
         {
             type: 1,
-            title: "Choose the correct Polish translation for: <strong>chair</strong>",
+            title: "<strong>Chair</strong> po polsku?",
             options: [
                 { text: "A. stół", correct: false },
                 { text: "B. krzesło", correct: true },
                 { text: "C. okno", correct: false }
             ],
-            explanation: "'Krzesło' means chair in Polish."
+            explanation: "Chair to po polsku krzesło."
         },
 
         // Type 2: Polish -> English
         {
             type: 2,
-            title: "Choose the correct English word for: <strong>kanapa</strong>",
+            title: "<strong>Kanapa</strong> po angielsku?",
             options: [
                 { text: "A. sofa", correct: true },
                 { text: "B. table", correct: false },
                 { text: "C. milk", correct: false }
             ],
-            explanation: "'Kanapa' means sofa or couch in English."
+            explanation: "Kanapa to po angielsku sofa."
         },
         {
             type: 2,
-            title: "Choose the correct English word for: <strong>mieszkanie</strong>",
+            title: "<strong>Mieszkanie</strong> po angielsku?",
             options: [
                 { text: "A. garden", correct: false },
                 { text: "B. apartment", correct: true },
                 { text: "C. window", correct: false }
             ],
-            explanation: "'Mieszkanie' translates to apartment or flat."
+            explanation: "Mieszkanie to po angielsku apartment."
         },
         {
             type: 2,
-            title: "Choose the correct English word for: <strong>truskawki</strong>",
+            title: "<strong>Truskawki</strong> po angielsku?",
             options: [
                 { text: "A. blueberries", correct: false },
                 { text: "B. strawberries", correct: true },
                 { text: "C. apples", correct: false }
             ],
-            explanation: "'Truskawki' means strawberries."
+            explanation: "Truskawki to po angielsku strawberries."
         },
 
-        // Type 3: Fill in the gap (A1 Grammar)
+        // Type 3: Fill in the gap
         {
             type: 3,
-            title: "Fill in the gap: <strong>Mam ______.</strong> (I have a house.)",
+            title: "Mam ______.",
             options: [
                 { text: "A. dom", correct: true },
                 { text: "B. domu", correct: false },
                 { text: "C. domem", correct: false }
             ],
-            explanation: "In Accusative case, inanimate masculine nouns like 'dom' remain unchanged."
+            explanation: "Czasownik 'mieć' wymaga biernika (Accusative). Dla słowa 'dom' forma to 'dom'."
         },
         {
             type: 3,
-            title: "Fill in the gap: <strong>Piję ______.</strong> (I am drinking coffee.)",
+            title: "Piję ______.",
             options: [
                 { text: "A. kawa", correct: false },
                 { text: "B. kawę", correct: true },
                 { text: "C. kawy", correct: false }
             ],
-            explanation: "Feminine nouns ending in -a change to -ę in the Accusative case after 'piję'."
+            explanation: "Rzeczowniki żeńskie w bierniku (Accusative) kończą się na -ę."
         },
         {
             type: 3,
-            title: "Fill in the gap: <strong>Nie mam ______.</strong> (I don't have coffee.)",
+            title: "Nie mam ______.",
             options: [
                 { text: "A. kawa", correct: false },
                 { text: "B. kawę", correct: false },
                 { text: "C. kawy", correct: true }
             ],
-            explanation: "Negation ('nie mam') requires the Genitive case ending -y/-ie."
+            explanation: "Przeczenie 'nie mam' wymaga dopełniacza (Genitive) - 'kawy'."
         },
 
         // Type 4: Build the sentence
         {
             type: 4,
-            title: "Arrange the words in the correct order: <strong>(in a house / live / I)</strong>",
+            title: "Ułóż zdanie:",
             words: ["w", "mieszkam", "domu"],
             correctSentence: "Mieszkam w domu.",
-            explanation: "Standard Polish word order: Verb first/second followed by location ('Mieszkam w domu.')."
+            explanation: "Poprawny szyk to: Mieszkam w domu."
         },
         {
             type: 4,
-            title: "Arrange the words in the correct order: <strong>(coffee / drink / I)</strong>",
+            title: "Ułóż zdanie:",
             words: ["kawę", "piję"],
             correctSentence: "Piję kawę.",
-            explanation: "Natural structure: Subject-Verb-Object ('Piję kawę.')."
+            explanation: "Poprawny szyk to: Piję kawę."
         },
         {
             type: 4,
-            title: "Arrange the words in the correct order: <strong>(is / comfortable / sofa)</strong>",
+            title: "Ułóż zdanie:",
             words: ["jest", "kanapa", "wygodna"],
             correctSentence: "Kanapa jest wygodna.",
-            explanation: "Subject ('Kanapa') + Verb ('jest') + Adjective ('wygodna')."
+            explanation: "Poprawny szyk to: Kanapa jest wygodna."
         },
 
         // Type 5: Unscramble words
         {
             type: 5,
-            title: "Unscramble the letters to spell <strong>house</strong>:",
+            title: "Rozszyfruj słowo:",
             scrambled: "adom",
             correctWord: "dom",
-            explanation: "The correct Polish word for house is 'dom'."
+            explanation: "Poprawne słowo to dom."
         },
         {
             type: 5,
-            title: "Unscramble the letters to spell <strong>fridge</strong>:",
+            title: "Rozszyfruj słowo:",
             scrambled: "ódkloaw",
             correctWord: "lodówka",
-            explanation: "The correct Polish word for fridge is 'lodówka'."
+            explanation: "Poprawne słowo to lodówka."
         },
         {
             type: 5,
-            title: "Unscramble the letters to spell <strong>garage</strong>:",
+            title: "Rozszyfruj słowo:",
             scrambled: "ażgar",
             correctWord: "garaż",
-            explanation: "The correct Polish word for garage is 'garaż'."
+            explanation: "Poprawne słowo to garaż."
         },
 
         // Type 6: Choose the correct picture
         {
             type: 6,
-            title: "Find: <strong>okno</strong> (window)",
+            title: "Znajdź: <strong>okno</strong>",
             pictures: [
                 { icon: "🪟", label: "A", correct: true },
                 { icon: "🚪", label: "B", correct: false },
                 { icon: "🛋️", label: "C", correct: false }
             ],
-            explanation: "🪟 represents 'okno' (window)."
+            explanation: "🪟 to okno."
         },
         {
             type: 6,
-            title: "Find: <strong>krzesło</strong> (chair)",
+            title: "Znajdź: <strong>krzesło</strong>",
             pictures: [
                 { icon: "🛏️", label: "A", correct: false },
                 { icon: "🪑", label: "B", correct: true },
                 { icon: "🪴", label: "C", correct: false }
             ],
-            explanation: "🪑 represents 'krzesło' (chair)."
+            explanation: "🪑 to krzesło."
         },
         {
             type: 6,
-            title: "Find: <strong>truskawka</strong> (strawberry)",
+            title: "Znajdź: <strong>truskawka</strong>",
             pictures: [
                 { icon: "🍓", label: "A", correct: true },
                 { icon: "🫐", label: "B", correct: false },
                 { icon: "🍎", label: "C", correct: false }
             ],
-            explanation: "🍓 represents 'truskawka' (strawberry)."
+            explanation: "🍓 to truskawka."
         },
 
-        // Type 7: Grammar (Choose correct form with explanation)
+        // Type 7: Grammar
         {
             type: 7,
-            title: "Grammar: Choose the correct form:<br><strong>Idę do ______.</strong> (I am going to the kitchen.)",
+            title: "Idę do ______.",
             options: [
                 { text: "A. kuchnia", correct: false },
                 { text: "B. kuchni", correct: true },
                 { text: "C. kuchnię", correct: false }
             ],
-            explanation: "We use the Genitive form ('kuchni') after the preposition 'do'."
+            explanation: "Po słowie 'do' używamy dopełniacza (kuchni)."
         },
         {
             type: 7,
-            title: "Grammar: Choose the correct form:<br><strong>Jestem w ______.</strong> (I am in the living room.)",
+            title: "Jestem w ______.",
             options: [
                 { text: "A. salon", correct: false },
                 { text: "B. salonie", correct: true },
                 { text: "C. salonem", correct: false }
             ],
-            explanation: "We use the Locative form ('salonie') after the preposition 'w' for location."
+            explanation: "Po słowie 'w' przy określaniu miejsca używamy miejscownika (salonie)."
         },
         {
             type: 7,
-            title: "Grammar: Choose the correct form:<br><strong>Siedzę na ______.</strong> (I am sitting on the sofa.)",
+            title: "Siedzę na ______.",
             options: [
                 { text: "A. kanapa", correct: false },
                 { text: "B. kanapie", correct: true },
                 { text: "C. kanapę", correct: false }
             ],
-            explanation: "We use the Locative case ('kanapie') after 'na' when specifying static position."
+            explanation: "Po 'na' przy określaniu miejsca używamy miejscownika (kanapie)."
         },
 
         // Type 8: Collocations
         {
             type: 8,
-            title: "Which word naturally completes the verb: <strong>otworzyć → ______</strong>",
+            title: "otworzyć → ______",
             options: [
                 { text: "A. drzwi", correct: true },
                 { text: "B. herbatę", correct: false },
                 { text: "C. ogród", correct: false }
             ],
-            explanation: "Natural collocation: 'otworzyć drzwi' (to open the door)."
+            explanation: "Naturalne połączenie to: otworzyć drzwi."
         },
         {
             type: 8,
-            title: "Which word naturally completes the verb: <strong>jeść → ______</strong>",
+            title: "jeść → ______",
             options: [
                 { text: "A. ciasto jabłkowe", correct: true },
                 { text: "B. wodę", correct: false },
                 { text: "C. garaż", correct: false }
             ],
-            explanation: "Natural collocation: 'jeść ciasto jabłkowe' (to eat apple pie)."
+            explanation: "Naturalne połączenie to: jeść ciasto jabłkowe."
         },
         {
             type: 8,
-            title: "Which word naturally completes the verb: <strong>usiąść na → ______</strong>",
+            title: "usiąść na → ______",
             options: [
                 { text: "A. kanapie", correct: true },
                 { text: "B. oknie", correct: false },
                 { text: "C. chlebie", correct: false }
             ],
-            explanation: "Natural collocation: 'usiąść na kanapie' (to sit on the couch)."
+            explanation: "Naturalne połączenie to: usiąść na kanapie."
         },
 
-        // Type 9: True or False
+        // Type 9: Modified simple questions (previously True/False)
         {
             type: 9,
-            title: "True or False?<br><strong>„Lodówka służy do przechowywania jedzenia.”</strong>",
+            title: "Mleko i ser są w ______.",
             options: [
-                { text: "✅ Prawda", correct: true },
-                { text: "❌ Fałsz", correct: false }
+                { text: "A. lodówce", correct: true },
+                { text: "B. szafie", correct: false },
+                { text: "C. garażu", correct: false }
             ],
-            explanation: "True! Fridges are used for storing food."
+            explanation: "Mleko i ser trzymamy w lodówce."
         },
         {
             type: 9,
-            title: "True or False?<br><strong>„W łazience zwykle stoi kanapa.”</strong>",
+            title: "Kanapa stoi zazwyczaj w ______.",
             options: [
-                { text: "✅ Prawda", correct: false },
-                { text: "❌ Fałsz", correct: true }
+                { text: "A. salonie", correct: true },
+                { text: "B. łazience", correct: false },
+                { text: "C. kuchni", correct: false }
             ],
-            explanation: "False! Sofas are kept in the living room, not the bathroom."
+            explanation: "Kanapa znajduje się w salonie."
         },
         {
             type: 9,
-            title: "True or False?<br><strong>„Borówki i truskawki to owoce.”</strong>",
+            title: "Borówki i truskawki to ______.",
             options: [
-                { text: "✅ Prawda", correct: true },
-                { text: "❌ Fałsz", correct: false }
+                { text: "A. owoce", correct: true },
+                { text: "B. warzywa", correct: false },
+                { text: "C. meble", correct: false }
             ],
-            explanation: "True! Blueberries and strawberries are fruits."
+            explanation: "Borówki i truskawki to owoce."
         },
 
         // Type 10: Short Dialogue
         {
             type: 10,
-            title: "Complete the dialogue:<br>👩 <strong>Co pijesz?</strong>",
+            title: "👩 <strong>Co pijesz?</strong>",
             options: [
                 { text: "A. Piję herbatę.", correct: true },
                 { text: "B. Mam ogród.", correct: false },
                 { text: "C. To jest garaż.", correct: false }
             ],
-            explanation: "'Piję herbatę' (I am drinking tea) answers 'What are you drinking?'."
+            explanation: "Odpowiedź na pytanie o picie to 'Piję herbatę'."
         },
         {
             type: 10,
-            title: "Complete the dialogue:<br>👨 <strong>Gdzie mieszkasz?</strong>",
+            title: "👨 <strong>Gdzie mieszkasz?</strong>",
             options: [
                 { text: "A. Mieszkam w domu.", correct: true },
                 { text: "B. Piję mleko.", correct: false },
                 { text: "C. To jest lodówka.", correct: false }
             ],
-            explanation: "'Mieszkam w domu' (I live in a house) answers 'Where do you live?'."
+            explanation: "Odpowiedź na 'Gdzie mieszkasz?' to 'Mieszkam w domu'."
         },
         {
             type: 10,
-            title: "Complete the dialogue:<br>👩 <strong>Gdzie jest mleko?</strong>",
+            title: "👩 <strong>Gdzie jest mleko?</strong>",
             options: [
                 { text: "A. Jest w lodówce.", correct: true },
                 { text: "B. Jest w garażu.", correct: false },
                 { text: "C. Jest w ogrodzie.", correct: false }
             ],
-            explanation: "Milk is kept in the fridge ('Jest w lodówce')."
+            explanation: "Mleko trzymamy w lodówce."
         }
     ];
 
     let activeQuestions = [];
     let currentIndex = 0;
-    let answeredQuestions = {}; // Format: { index: { answered: bool, correct: bool, userAns: any } }
+    let answeredQuestions = {}; 
     let selectedSentenceWords = [];
 
-    // Ensures no two consecutive exercises are of the same Type
     function prepareQuestionsSequence() {
         let pool = [...rawQuestions];
-        // Fisher-Yates shuffle initial pool
         for (let i = pool.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [pool[i], pool[j]] = [pool[j], pool[i]];
@@ -789,7 +781,6 @@
                 result.push(pool[foundIdx]);
                 pool.splice(foundIdx, 1);
             } else {
-                // Fallback if strict alternation is mathematically impossible
                 result.push(pool.shift());
             }
         }
@@ -809,7 +800,6 @@
         const q = activeQuestions[currentIndex];
         selectedSentenceWords = [];
 
-        // Progress elements
         document.getElementById('q-num').innerText = `Pytanie ${currentIndex + 1} / ${activeQuestions.length}`;
         document.getElementById('q-title').innerHTML = q.title;
         
@@ -817,11 +807,9 @@
         document.getElementById('score-live').innerText = `Punkty: ${correctCount}`;
         document.getElementById('progress-bar').style.width = `${((currentIndex) / activeQuestions.length) * 100}%`;
 
-        // Controls
         document.getElementById('prev-btn').disabled = currentIndex === 0;
         document.getElementById('next-btn').innerText = (currentIndex === activeQuestions.length - 1) ? 'Zakończ →' : 'Następne →';
 
-        // Hide Feedback
         const feedbackBox = document.getElementById('feedback-box');
         feedbackBox.className = 'feedback-box';
         feedbackBox.style.display = 'none';
@@ -831,7 +819,6 @@
 
         const userState = answeredQuestions[currentIndex];
 
-        // Render based on exercise type
         if (q.type === 4) {
             renderSentenceBuilder(q, canvas, userState);
         } else if (q.type === 5) {
@@ -842,13 +829,11 @@
             renderStandardOptions(q, canvas, userState);
         }
 
-        // Restore feedback if already answered
         if (userState && userState.answered) {
             displayFeedback(userState.correct, q.explanation);
         }
     }
 
-    // TYPE 1, 2, 3, 7, 8, 9, 10 Handler
     function renderStandardOptions(q, container, userState) {
         const optsDiv = document.createElement('div');
         optsDiv.className = 'options';
@@ -871,7 +856,6 @@
         container.appendChild(optsDiv);
     }
 
-    // TYPE 6: Picture Grid Handler
     function renderPictureGrid(q, container, userState) {
         const grid = document.createElement('div');
         grid.className = 'picture-grid';
@@ -894,7 +878,6 @@
         container.appendChild(grid);
     }
 
-    // TYPE 4: Sentence Builder Handler
     function renderSentenceBuilder(q, container, userState) {
         const dropZone = document.createElement('div');
         dropZone.className = 'sentence-builder-zone';
@@ -912,7 +895,6 @@
             return;
         }
 
-        // Shuffle pool
         let shuffled = [...q.words].sort(() => Math.random() - 0.5);
         shuffled.forEach(word => {
             const chip = document.createElement('span');
@@ -937,7 +919,6 @@
         });
     }
 
-    // TYPE 5: Unscramble Handler
     function renderUnscramble(q, container, userState) {
         const box = document.createElement('div');
         box.className = 'unscramble-container';
@@ -987,7 +968,6 @@
 
         displayFeedback(isCorrect, explanation);
         
-        // Refresh question view to show locks/colors
         setTimeout(() => {
             showQuestion();
             if (isCorrect && currentIndex < activeQuestions.length - 1) {
@@ -1046,7 +1026,6 @@
         
         document.getElementById('score-text').innerText = `${correctCount} / ${activeQuestions.length} (${pct}%)`;
 
-        // Star calculation
         const starsContainer = document.getElementById('stars-rating');
         if (pct >= 90) starsContainer.innerText = "⭐⭐⭐⭐⭐";
         else if (pct >= 75) starsContainer.innerText = "⭐⭐⭐⭐";
@@ -1054,13 +1033,11 @@
         else if (pct >= 30) starsContainer.innerText = "⭐⭐";
         else starsContainer.innerText = "⭐";
 
-        // Save progress to LocalStorage
         let progress = JSON.parse(localStorage.getItem('polish_module_1_progress')) || {};
         progress.testCompleted = true;
         progress.testScore = pct;
         localStorage.setItem('polish_module_1_progress', JSON.stringify(progress));
 
-        // Trigger celebratory confetti animation
         if (typeof confetti === 'function') {
             confetti({
                 particleCount: 100,
@@ -1070,7 +1047,6 @@
         }
     }
 
-    // Global Key Listener for Enter Key
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
             const userState = answeredQuestions[currentIndex];
